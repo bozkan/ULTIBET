@@ -4,24 +4,25 @@
       "from":[  
       ],
       "to":[  
-        "vojta",
-         "honza",
-         "tereza"
+        "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH"
       ],
       "amount":[  
          100,
-         200,
-         300
+         100,
+         100
       ],
+      "signatures:" [],
       "server":"1234",
       "timestamp":13453453049
    },
    {  
       "type":"escrow",
       "from":[  
-         "vojta",
-         "honza",
-         "tereza"
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH"
       ],
       "to":[  
       ],
@@ -30,21 +31,25 @@
          100,
          100
       ],
+      "signatures:" ["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
+      "HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
+      "HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0="],
       "server":"1234",
       "timestamp":13453453049
    },
    {  
       "type":"transfer",
       "from":[  
-         "vojta",
-         "tom",
-         "john"
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH"
       ],
       "to":[  
-         "vojta",
-         "vojta",
-         "vojta"
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+         "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH"
       ],
+      "signatures:" [],
       "amount":[  
          100,
          100,

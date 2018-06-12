@@ -57,6 +57,10 @@ module.exports = {
 		// validation for transfer transactions
 		if (transaction.type == "escrow")
 		{
+
+			if (transaction.from.length != transaction.signatures.length)
+				return { "res": false, "message": "Error: Missing signatures." } 
+
 			// check if player has enough money to transfer
 			for (var i = 0, n = transaction.from.length; i < n; i++)
 			{
@@ -73,7 +77,7 @@ module.exports = {
 				
 				// check if signature of player is valid in escrow
 				if (!helpers.verifySignature(
-					transaction.amount[i], 
+					JSON.stringify(transaction.amount[i]), 
 					transaction.from[i],
 					transaction.signatures[i]
 				))
