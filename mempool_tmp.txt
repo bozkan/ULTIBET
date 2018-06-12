@@ -1,0 +1,2 @@
+{ type: "coinbase", from: "", to: "17xY4nkJxkiXvNa3a21mkpNfFo5jMEzm1P", stamp: 3, signature: "HIzckxHimoqV09fLOA9NjugNZj9r0Enj5Ll4u0xUg4a7MXUMK06hEqHI1G6vdupPvOykEX7vvmJ1v74W2vOhGd4=", origin: "0003" }
+{ type: "exchange", from: "17xY4nkJxkiXvNa3a21mkpNfFo5jMEzm1P", to: "17xY4nkJxkiXvNa3a21mkpNfFo5jMEzm1P", stamp: 4, signature: "HIzckxHimoqV09fLOA9NjugNZj9r0Enj5Ll4u0xUg4a7MXUMK06hEqHI1G6vdupPvOykEX7vvmJ1v74W2vOhGd4=", origin: "" }

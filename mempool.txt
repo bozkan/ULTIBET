@@ -1,0 +1,1 @@
+[{"type":"coinbase","from":["vojta","tom","john"],"to":["gines","jinny","lotus"],"amount":[100,2000,300,123234],"chainHash":"","timestamp":13453453049}]
