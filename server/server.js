@@ -20,6 +20,31 @@ io.on('connection', function (socket){
 		console.log("Emitting new transaction...")
 	});
 
+	// when receiving an ask
+	socket.on('ask', function () {
+		// emit to all nodes
+		io.sockets.emit('send_hash', socket.id)
+		console.log("Asking for hashes...")
+	});
+
+	// when receiving hashes -> emit them to the asking client
+	socket.on('emit_hash', function (id, hash) {
+		socket.to(id).emit('receive_hash', hash, socket.id);
+		console.log("Sending hash...")
+		console.log(hash)
+	});
+
+	// when asking specific node for chain
+	socket.on('ask_node', function (id) {
+		socket.to(id).emit('send_chain', socket.id)
+		console.log("Asking specific node for chain...")
+	});
+
+	// when sending chain from specific node
+	socket.on('emit_chain_from_node', function (chain, id) {
+		socket.to(id).emit('receive_chain_from_node', chain)
+		console.log("Sending specific chain to node...")
+	});
 });
 
 http.listen(1338, function () {

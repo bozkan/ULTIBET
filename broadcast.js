@@ -33,8 +33,6 @@ module.exports = {
 	transaction: function(type, from, to, amount, chainHash, timestamp, mempoolFile)
 	{
 		// right now this broadcasts to local mempool, but it should broadcast to actual mempool in the future
-		signature = signature.replace(/\+/g, "%2B")
-		origin = origin.replace(/\+/g, "%2B")
 		var transaction = JSON.stringify(new Transaction(type, from, to, amount, chainHash, timestamp))
 		var res = request('POST', transactionServer, {
 			headers: {       
