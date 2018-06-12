@@ -7,8 +7,8 @@ const difficulty = 4; // blockchain difficulty
 const updateInterval = 10000 // how often to update mempool (lower number = more often therefore lower chance of orphaned chain, but longer time to mine)
 const remoteBlockchainFile = "remoteBlockchain.txt" // local file of remote (incoming) blockchain
 const relayServer = 'http://vojtadrmota.com:1338' // location of relay server
-const blockchainServer = "http://betpeers.vojtadrmota.com:80/blockchain.php" // blockchain relay
-const transactionServer = "http://betpeers.vojtadrmota.com:80/transaction.php" // transaction relay
+const blockchainServer = "http://bitpeers.vojtadrmota.com:80/blockchain.php" // blockchain relay
+const transactionServer = "http://bitpeers.vojtadrmota.com:80/transaction.php" // transaction relay
 const maxAmount = 1000 // maximum amount of money players can start with
 
 // export

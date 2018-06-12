@@ -38,16 +38,6 @@ function blockMined(chain, transactionIndex)
 	helpers.exportBlockchain(blockchainFile, chain);
 	// broadcast blockchain
 	broadcast.blockchain(blockchainFile)
-	// broadcast new transaction -> remove this in production
-	broadcast.transaction(
-		"coinbase", 
-		["vojta", "tom", "john"], 
-		["gines", "jinny", "lotus"], 
-		[100, 2000, 300, 123234], 
-		"", 
-		13453453049,
-		mempoolFile
-	)
 	// remove just-mined transaction from my mempool
 	mempool.remove(transactionIndex)
 	// start mining new block

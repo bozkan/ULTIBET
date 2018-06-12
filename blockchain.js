@@ -112,7 +112,13 @@ module.exports = {
 		{
 			var block = chain[i]
 			if (block.payload.type == "transfer" && block.payload.to.indexOf(player) != -1)
-				winAmount += block.payload.amount[block.payload.to.indexOf(player)] // return coinbase amount
+			{
+				for (var j = 0, k = block.payload.to.length; j < k; j++)
+				{
+					if (block.payload.to[j] == player)
+						winAmount += block.payload.amount[j]
+				}
+			}
 		}
 
 		return winAmount // return winning amounts
@@ -128,7 +134,13 @@ module.exports = {
 		{
 			var block = chain[i]
 			if (block.payload.type == "transfer" && block.payload.from.indexOf(player) != -1)
-				lossAmount += block.payload.amount[block.payload.from.indexOf(player)] // return coinbase amount
+			{
+				for (var j = 0, k = block.payload.from.length; j < k; j++)
+				{
+					if (block.payload.from[j] == player)
+						lossAmount += block.payload.amount[j]
+				}
+			}
 		}
 
 		return lossAmount // return loss amounts

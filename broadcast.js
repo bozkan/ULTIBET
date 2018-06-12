@@ -30,10 +30,24 @@ module.exports = {
 
 	// broadcasts the transaction to the relay server
 
-	transaction: function(type, from, to, amount, chainHash, timestamp, mempoolFile)
+	transaction: function(type, from, to, amount, server, timestamp, mempoolFile)
 	{
+
+		var transaction = JSON.stringify(new Transaction(type, from, to, amount, server, timestamp))
+		var current = fs.readFileSync(mempoolFile)
+		if (current != "")
+		{
+			current = JSON.parse(current)
+			current.push(transaction)
+		}
+		else
+		{
+			current = [JSON.stringify(transaction)]
+		}
+		fs.writeFileSync(mempoolFile, JSON.stringify(current))
+
 		// right now this broadcasts to local mempool, but it should broadcast to actual mempool in the future
-		var transaction = JSON.stringify(new Transaction(type, from, to, amount, chainHash, timestamp))
+		var transaction = JSON.stringify(new Transaction(type, from, to, amount, server, timestamp))
 		var res = request('POST', transactionServer, {
 			headers: {       
     			'content-type': 'application/x-www-form-urlencoded'

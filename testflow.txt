@@ -4,14 +4,14 @@
       "from":[  
       ],
       "to":[  
-        "vojta",
+         "vojta",
          "honza",
          "tereza"
       ],
       "amount":[  
          100,
          200,
-         300
+         300,
       ],
       "server":"1234",
       "timestamp":13453453049
@@ -19,7 +19,7 @@
    {  
       "type":"escrow",
       "from":[  
-         "vojta",
+        "vojta",
          "honza",
          "tereza"
       ],
@@ -28,17 +28,17 @@
       "amount":[  
          100,
          100,
-         100
+         100,
       ],
       "server":"1234",
       "timestamp":13453453049
    },
-   {  
+    {  
       "type":"transfer",
-      "from":[  
-         "vojta",
-         "tom",
-         "john"
+      "from":[
+          "tereza",
+          "honza",
+          "vojta"
       ],
       "to":[  
          "vojta",
@@ -48,7 +48,7 @@
       "amount":[  
          100,
          100,
-         100
+         100,
       ],
       "server":"1234",
       "timestamp":13453453049
