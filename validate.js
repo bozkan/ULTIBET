@@ -50,7 +50,8 @@ module.exports = {
 		{
 			// check if input and output amounts are the same
 			if ((transaction.from.length + transaction.to.length) != (transaction.amount.length + transaction.to.length))
-			return { "res": false, "message": "Error: Transaction contains unequal amount of inputs and outputs." } 
+				return { "res": false, "message": "Error: Transaction contains unequal amount of inputs and outputs." } 
+
 		}
 
 		// validation for transfer transactions
@@ -69,6 +70,16 @@ module.exports = {
 
 				if (transaction.amount[i] > playerAmount)
 					return { "res": false, "message": "Error: Player #"+(i+1)+" is trying to escrow more money than he has." }
+				
+				// check if signature of player is valid in escrow
+				if (!helpers.verifySignature(
+					transaction.amount[i], 
+					transaction.from[i],
+					transaction.signatures[i]
+				))
+				{
+					return {"res": false, "message": "Transaction signature #"+(i+1)+" invalid."}
+				}
 			}
 		}
 

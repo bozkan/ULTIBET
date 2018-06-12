@@ -77,6 +77,9 @@ module.exports = {
 		// hash
 		if ((typeof transaction.server) === 'undefined')
 			return { "res": false, "message": "Error: Missing server."}
+		// signatures
+		if ((typeof transaction.signatures) === 'undefined')
+			return { "res": false, "message": "Error: Missing signatures."}
 		// timestamp
 		if ((typeof transaction.timestamp) === 'undefined')
 			return { "res": false, "message": "Error: Missing timestamp."}

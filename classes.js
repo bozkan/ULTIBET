@@ -110,13 +110,14 @@ class User
 
 class Transaction
 {
-    constructor(type, from, to, amount, chainHash, timestamp)
+    constructor(type, from, to, amount, server, signatures, timestamp)
     {
         this.type = type
         this.from = from
         this.to = to
         this.amount = amount
-        this.chainHash = chainHash
+        this.server = server
+        this.signatures = signatures
         this.timestamp = timestamp
     }
 }
