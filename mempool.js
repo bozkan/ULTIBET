@@ -73,10 +73,10 @@ module.exports = {
 			return { "res": false, "message": "Error: Missing to."}
 		// amount
 		if ((typeof transaction.amount) === 'undefined')
-			return { "res": false, "message": "Error: Missing stamp."}
+			return { "res": false, "message": "Error: Missing amount."}
 		// hash
-		if ((typeof transaction.chainHash) === 'undefined')
-			return { "res": false, "message": "Error: Missing signature."}
+		if ((typeof transaction.server) === 'undefined')
+			return { "res": false, "message": "Error: Missing server."}
 		// timestamp
 		if ((typeof transaction.timestamp) === 'undefined')
 			return { "res": false, "message": "Error: Missing timestamp."}
