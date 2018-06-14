@@ -13,6 +13,7 @@ var LoadBlockchain = classes.LoadBlockchain;
 var config = require('./config.js')
 
 const blockchainFile = config.blockchainFile
+const timeDifference = config.timeDifference
 
 var alreadyEscrow = []
 
@@ -270,7 +271,29 @@ module.exports = {
 		}
 
 		return payouts
+  },
 
+  timeDiff: function(server, event, currentTime)
+  {
+		// find the block where the escrow took place
+		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		var timestamp = 0
+		
+		for (var i = 0, n = chain.length; i < n; i++)
+		{
+			var block = chain[i]
+
+			if (block.payload.type == "escrow" && block.payload.server == server && block.payload.event == event)
+				timestamp = block.timestamp
+		}
+
+		if (timestamp == 0)
+			return false // couldn't find escrow: big problem
+
+		if ((curretTime - timestamp) > timeDifference)
+			return true // more than 2 mins passed
+		else
+			return false // less than 2 mins passed
   }
 
 }

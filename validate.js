@@ -51,6 +51,11 @@ module.exports = {
 			// check if input and output amounts are the same
 			if ((transaction.from.length + transaction.to.length) != (transaction.amount.length + transaction.to.length))
 				return { "res": false, "message": "Error: Transaction contains unequal amount of inputs and outputs." } 
+			
+			// check that transfer isn't happening less than 2 mins since escrow
+			var currentTime = Date.now()
+			if (!blockchain.timeDiff(transaction.server, transaction.event, currentTime))
+				return { "res": false, "message": "2 minutes haven't passed yet (OK)." } 
 
 		}
 
@@ -97,7 +102,7 @@ module.exports = {
 			}
 
 			// check if an escrow for this event already exists
-			if (blockchain.trackEvent(transaction.event))
+			if (blockchain.trackEvent(transaction.event, transaction.server))
 				return {"res": false, "message": "Error: An escrow for this transaction already exists."}
 		}
 

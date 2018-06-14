@@ -10,6 +10,7 @@ const relayServer = 'http://vojtadrmota.com:1338' // location of relay server
 const blockchainServer = "http://bitpeers.vojtadrmota.com:80/blockchain.php" // blockchain relay
 const transactionServer = "http://bitpeers.vojtadrmota.com:80/transaction.php" // transaction relay
 const maxAmount = 1000 // maximum amount of money players can start with
+const timeDifference = 120000 // amount of time that needs to pass between escrow and transfer in ms.
 
 // export
 
@@ -25,3 +26,4 @@ exports.relayServer = relayServer
 exports.blockchainServer = blockchainServer
 exports.transactionServer = transactionServer
 exports.maxAmount = maxAmount
+exports.timeDifference = timeDifference
