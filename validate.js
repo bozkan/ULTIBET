@@ -1,7 +1,3 @@
-var bitcoin = require('bitcoinjs-lib')
-var bitcoinMessage = require('bitcoinjs-message')
-var CoinKey = require('coinkey')
-var imageHash = require('hasha')
 var colors = require('colors/safe')
 
 var blockchain = require('./blockchain.js')
@@ -9,11 +5,8 @@ var helpers = require('./functions.js')
 var mempool = require('./mempool.js')
 var difficultyCheck = require('./difficulty.js')
 var config = require('./config.js')
-var broadcast = require('./broadcast.js')
 
-const blockchainFile = config.blockchainFile
 const remoteBlockchainFile = config.remoteBlockchainFile
-const difficultyHistoryFile = config.difficultyHistoryFile
 const updateInterval = config.updateInterval 
 const difficulty = config.difficulty
 const maxAmount = config.maxAmount
