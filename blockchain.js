@@ -236,7 +236,7 @@ module.exports = {
 		// escrows now holds all the relevant escrows to this event
 		for (var i = 0, n = escrows.length; i < n; i++)
 		{
-			var payouts = []
+			var payouts = {"from": [], "to": [], "amount": [], "event": eventid, "server": escrows[i].server}
 			var losers = []
 			var winners = []
 			
@@ -245,7 +245,9 @@ module.exports = {
 				// if player won, transfer escrow to him
 				if (escrows[i].wagers[j] == team)
 				{
-					payouts.push({"from": escrows[i].players[j], "to": escrows[i].players[j], "amount": escrows[i].amounts[j]})
+					payouts.from.push(escrows[i].players[j])
+					payouts.to.push(escrows[i].players[j])
+					payouts.amount.push(escrows[i].amounts[j])
 					winners.push(escrows[i].players[j])
 				}
 				// if player lost, transfer (his escrow)/winners to each winner
@@ -260,7 +262,9 @@ module.exports = {
 			{
 				for (var z = 0, y = winners.length; z < y; z++)
 				{
-					payouts.push({"from": losers[j].player, "to": winners[z], "amount": (losers[j].amount / winners.length)})
+					payouts.from.push(losers[j].player)
+					payouts.to.push(winners[z])
+					payouts.amount.push((losers[j].amount / winners.length))
 				}
 			}
 		}

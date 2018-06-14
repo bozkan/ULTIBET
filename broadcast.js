@@ -32,7 +32,7 @@ module.exports = {
 
 	transaction: function(type, event, from, to, amount, wagers, server, signatures, timestamp, mempoolFile)
 	{
-		signatures = signatures.replace(/\+/g, "%2B")
+		//signatures = signatures.replace(/\+/g, "%2B")
 
 		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, signatures, timestamp))
 		var current = fs.readFileSync(mempoolFile)
@@ -45,7 +45,7 @@ module.exports = {
 		{
 			current = [JSON.stringify(transaction)]
 		}
-		fs.writeFileSync(mempoolFile, JSON.stringify(current))
+		fs.writeFileSync(mempoolFile, JSON.stringify(current).replace(/\\/g, '').replace('[""', '[').replace('""]', ']').replace('"{', '{').replace('}"', '}'))
 
 		// right now this broadcasts to local mempool, but it should broadcast to actual mempool in the future
 		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, signatures, timestamp))

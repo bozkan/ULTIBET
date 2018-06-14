@@ -110,7 +110,7 @@ class User
 
 class Transaction
 {
-    constructor(type, from, to, amount, server, signatures, timestamp)
+    constructor(type, event, from, to, amount, wagers, server, signatures, timestamp)
     {
         this.type = type
         this.from = from
@@ -119,6 +119,8 @@ class Transaction
         this.server = server
         this.signatures = signatures
         this.timestamp = timestamp
+        this.event = event
+        this.wagers = wagers
     }
 }
 

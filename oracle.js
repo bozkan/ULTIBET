@@ -9,8 +9,12 @@ Pass in a matchid and it will:
 
 var execPhp = require('exec-php')
 var blockchain = require('./blockchain.js')
+var broadcast = require('./broadcast.js')
+var config = require('./config.js')
 
-matchid = 51652
+var mempoolFile = config.mempoolFile
+
+var matchid = 51652 // change this to be dynamic
 
 // retrieve all new events
 
@@ -20,7 +24,6 @@ execPhp('oracle.php', function(error, php, outprint)
     {
         result = JSON.parse(result)
         result.reverse()
-        var alreadyEscrow = []
 
         for (var i = 0, n = result.length; i < n; i++)
         {
@@ -34,7 +37,8 @@ execPhp('oracle.php', function(error, php, outprint)
             // send payouts to mempool
             if (payouts != 0)
             {
-                console.log(payouts)
+                var timestamp = Date.now()
+                broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, [], timestamp, mempoolFile)
             }
         }
     })
