@@ -143,7 +143,7 @@ module.exports = {
 		for (var i = 0, n = chain.length; i < n; i++)
 		{
 			var block = chain[i]
-			if (block.payload.type == "transfer" && block.payload.server == server && block.payload.from.indexOf(player) != -1)
+			if (block.payload.type == "escrow" && block.payload.server == server && block.payload.from.indexOf(player) != -1)
 			{
 				for (var j = 0, k = block.payload.from.length; j < k; j++)
 				{
