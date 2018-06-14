@@ -54,23 +54,33 @@ module.exports = {
 
 		}
 
-		// validation for transfer transactions
+		// validation for escrow transactions
 		if (transaction.type == "escrow")
 		{
 
 			if (transaction.from.length != transaction.signatures.length)
 				return { "res": false, "message": "Error: Missing signatures." } 
 
+			// check if all the amounts are the same
+			var amount = transaction[0].amount
+			for (var i = 0, n = transaction.amount.length; i < n; i++)
+			{
+				if (transaction[i].amount != amount)
+					return { "res": false, "message": "Error: Amounts betted are not equal." }
+				else
+					amount = transaction[i].amount
+			}
+
 			// check if player has enough money to transfer
 			for (var i = 0, n = transaction.from.length; i < n; i++)
 			{
 				var playerAmount = 0
 				// start with coinbase transaction
-				playerAmount = blockchain.getCoinbase(transaction.from[i])
+				playerAmount = blockchain.getCoinbase(transaction.from[i], transaction.server)
 				// add every time the player wins (he is in the 'to' field)
-				playerAmount += blockchain.getWins(transaction.from[i])
+				playerAmount += blockchain.getWins(transaction.from[i], transaction.server)
 				// subtract every time the player loses (he is in the 'from' field)
-				playerAmount -= blockchain.getLosses(transaction.from[i])
+				playerAmount -= blockchain.getLosses(transaction.from[i], transaction.server)
 
 				if (transaction.amount[i] > playerAmount)
 					return { "res": false, "message": "Error: Player #"+(i+1)+" is trying to escrow more money than he has." }
@@ -82,9 +92,13 @@ module.exports = {
 					transaction.signatures[i]
 				))
 				{
-					return {"res": false, "message": "Transaction signature #"+(i+1)+" invalid."}
+					return {"res": false, "message": "Error: Transaction signature #"+(i+1)+" invalid."}
 				}
 			}
+
+			// check if an escrow for this event already exists
+			if (blockchain.trackEvent(transaction.event))
+				return {"res": false, "message": "Error: An escrow for this transaction already exists."}
 		}
 
 		return { "res": true, "message": "Success." }

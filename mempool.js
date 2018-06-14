@@ -68,13 +68,19 @@ module.exports = {
 		// from
 		if ((typeof transaction.from) === 'undefined')
 			return { "res": false, "message": "Error: Missing from."}
+		// from
+		if ((typeof transaction.event) === 'undefined')
+			return { "res": false, "message": "Error: Missing event."}
 		// to
 		if ((typeof transaction.to) === 'undefined')
 			return { "res": false, "message": "Error: Missing to."}
 		// amount
 		if ((typeof transaction.amount) === 'undefined')
 			return { "res": false, "message": "Error: Missing amount."}
-		// hash
+		// wager
+		if ((typeof transaction.wagers) === 'undefined')
+			return { "res": false, "message": "Error: Missing wager."}
+		// server
 		if ((typeof transaction.server) === 'undefined')
 			return { "res": false, "message": "Error: Missing server."}
 		// signatures

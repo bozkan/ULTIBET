@@ -1,1 +1,78 @@
-{"chain":[{"height":1,"previousHash":"","timestamp":1528819299088,"payload":"Genesis Block","signature":"HBrLDbPBl+3QVwzgDfLhUllvbIRjmeoXfkgUfxDSDT2Gfgh/SBpZU2azA8/nlUgkSfiJRysNlPd77HlSHUH7V+A=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":19970318,"hash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d"},{"height":2,"previousHash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d","timestamp":1528819316918,"payload":{"type":"coinbase","from":[],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"amount":[100,100,100],"signatures":[],"server":"1234","timestamp":13453453049},"signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":82489,"hash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85"},{"height":3,"previousHash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85","timestamp":1528819319727,"payload":{"type":"transfer","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"signatures":[],"amount":[100,100,100],"server":"1234","timestamp":13453453049},"signature":"HM1zp/Jrt49cpk6zQu8j1nsiVf56WevKxo8pxay2QGeQCiGV9qRHBf3XjaayRkT4NqGSWcMDomIR0niiJDGdTHY=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":473461,"hash":"0000ea2dd478a7ef799cdbf4a22043b88e6f739bc9455433da669f0a5ab98e3f1659015309569cc083dd595513cf6429a135ac7c63949611c2a2821ab0a94734"},{"height":4,"previousHash":"0000ea2dd478a7ef799cdbf4a22043b88e6f739bc9455433da669f0a5ab98e3f1659015309569cc083dd595513cf6429a135ac7c63949611c2a2821ab0a94734","timestamp":1528819320874,"payload":{"type":"escrow","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":[],"amount":[100,100,100],"signatures":["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=","HOX463wzLDdRw3QycW6Yvj7mXvzg/yuz/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=","HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],"server":"1234","timestamp":13453453049},"signature":"G59Ogdhnp/l0Lln1R1cFbdULrnShxH8l0H+pfdwpeyEfCwjdbG4LTZg0nZ+d56AEoqCa1RJAaHt6/7DTxO2LHXg=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":457669,"hash":"0000146073fe4152390e172156ba4fc2b4a0ba858123bb614d7fdb572a3985217fd92b7113800dd121061601dbe35b782135cc69f9527b834f403485cfc6b149"},{"height":5,"previousHash":"0000146073fe4152390e172156ba4fc2b4a0ba858123bb614d7fdb572a3985217fd92b7113800dd121061601dbe35b782135cc69f9527b834f403485cfc6b149","timestamp":1528819338645,"payload":{"type":"transfer","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"signatures":[],"amount":[100,100,100],"server":"1234","timestamp":13453453049},"signature":"HM1zp/Jrt49cpk6zQu8j1nsiVf56WevKxo8pxay2QGeQCiGV9qRHBf3XjaayRkT4NqGSWcMDomIR0niiJDGdTHY=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":1137319,"hash":"0000df691a841e49de6843bcff7e286f012b20b373fd726e4c86edb2c6409ae98c9734fb77cebdeeb3f8d3a26eb985e10f07cf3d56aa7dd898575483966aa8cf"},{"height":6,"previousHash":"0000df691a841e49de6843bcff7e286f012b20b373fd726e4c86edb2c6409ae98c9734fb77cebdeeb3f8d3a26eb985e10f07cf3d56aa7dd898575483966aa8cf","timestamp":1528819347133,"payload":{"type":"coinbase","from":[],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"amount":[100,100,100],"signatures":[],"server":"1234","timestamp":13453453049},"signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":517553,"hash":"00005c7fdbc3c7faf38385e56d976f278a38c416801f02555c796c391a99ba6071c827fea7e9810dca53fe5f14b133f29a059654d09d64b6890a7e196b2842f9"},{"height":7,"previousHash":"00005c7fdbc3c7faf38385e56d976f278a38c416801f02555c796c391a99ba6071c827fea7e9810dca53fe5f14b133f29a059654d09d64b6890a7e196b2842f9","timestamp":1528819347889,"payload":{"type":"escrow","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":[],"amount":[100,100,100],"signatures":["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=","HOX463wzLDdRw3QycW6Yvj7mXdzg/yuz/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=","HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],"server":"1234","timestamp":13453453049},"signature":"HND4CqcCb98cMLJJkKrSL+2ppU7Q6SSgJM6SBRE6mlbPKOFU6juzFwl5acFEy8aMtIkg+DjKUbQd9DhWgWmJchM=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":491000,"hash":"000076c48411f59a9b1ecfacf04f2e71a4f72b6c95235a06cd61f6631353b89828c77fab7c3596443d06e966299c6aca6c24718ca2a92c4de27409915a06056f"},{"height":8,"previousHash":"000076c48411f59a9b1ecfacf04f2e71a4f72b6c95235a06cd61f6631353b89828c77fab7c3596443d06e966299c6aca6c24718ca2a92c4de27409915a06056f","timestamp":1528819375130,"payload":{"type":"coinbase","from":[],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"amount":[100,100,100],"signatures":[],"server":"1234","timestamp":13453453049},"signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":906748,"hash":"000080361eeb74ac2a8cdaa992df7951448e49594b119125ae4f47126a358bc769729567e0596fb7047f546f6083ad1aa3747e65ac937e50d9a7bf1441189c34"},{"height":9,"previousHash":"000080361eeb74ac2a8cdaa992df7951448e49594b119125ae4f47126a358bc769729567e0596fb7047f546f6083ad1aa3747e65ac937e50d9a7bf1441189c34","timestamp":1528819376371,"payload":{"type":"transfer","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"signatures":[],"amount":[100,100,100],"server":"1234","timestamp":13453453049},"signature":"HM1zp/Jrt49cpk6zQu8j1nsiVf56WevKxo8pxay2QGeQCiGV9qRHBf3XjaayRkT4NqGSWcMDomIR0niiJDGdTHY=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":235750,"hash":"0000f200a996d38c91e25fc649fb87096bd87bd2211629962464d0f53ac7adec539a30a458572959aef44b5c0154d98c156d0262305a7fd98f5c5758cdb4fce5"},{"height":10,"previousHash":"0000f200a996d38c91e25fc649fb87096bd87bd2211629962464d0f53ac7adec539a30a458572959aef44b5c0154d98c156d0262305a7fd98f5c5758cdb4fce5","timestamp":1528819379622,"payload":{"type":"escrow","from":["1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH","1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC","12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"],"to":[],"amount":[100,100,100],"signatures":["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=","HOX463wzLDdRw3QycW6Yvj7mXvzg/z/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=","HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],"server":"1234","timestamp":13453453049},"signature":"G94khzTfBr5i2L+d8sFZpfN4Ydexk3c1hWdO4d644zyme260shkeYOb4yB3ySNJIngA0xpyLMUOLKEI5jjn+5Do=","issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs","nonce":897570,"hash":"0000bf7bb55b9458fbaf58a8049f9d6f73f183ff183c6c6aadbc9b2075b45858a952992df3550a56c0e6c12f5d70bbc5057c1067f7393631d718ba077004e62a"}],"difficulty":4,"interval":10000}
+{  
+   "chain":[  
+      {  
+         "height":1,
+         "previousHash":"",
+         "timestamp":1528819299088,
+         "payload":"Genesis Block",
+         "signature":"HBrLDbPBl+3QVwzgDfLhUllvbIRjmeoXfkgUfxDSDT2Gfgh/SBpZU2azA8/nlUgkSfiJRysNlPd77HlSHUH7V+A=",
+         "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
+         "nonce":19970318,
+         "hash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d"
+      },
+      {  
+         "height":2,
+         "previousHash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d",
+         "timestamp":1528819316918,
+         "payload":{  
+            "type":"escrow",
+            "event": 3,
+            "from":[  
+                "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+                "1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC",
+                "12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"
+            ],
+            "to":[  
+            ],
+            "amount":[  
+                100,
+                100,
+                100
+            ],
+            "wagers":["Lithuania", "Poland", "Poland"],
+            "signatures": ["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
+            "HOX463wzLDdRw3QycW6Yvj7mXvzg/z/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=",
+            "HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],
+            "server":"1234",
+            "timestamp":13453453049
+         },
+         "signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=",
+         "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
+         "nonce":82489,
+         "hash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85"
+      },
+      {  
+         "height":3,
+         "previousHash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d",
+         "timestamp":1528819316918,
+         "payload":{  
+            "type":"escrow",
+            "event": 2,
+            "from":[  
+                "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
+                "1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC",
+                "12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"
+            ],
+            "to":[  
+            ],
+            "amount":[  
+                200,
+                200,
+                200
+            ],
+            "wagers":["Lithuania", "Poland", "Poland"],
+            "signatures": ["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
+            "HOX463wzLDdRw3QycW6Yvj7mXvzg/z/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=",
+            "HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],
+            "server":"1234",
+            "timestamp":13453453049
+         },
+         "signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=",
+         "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
+         "nonce":82489,
+         "hash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85"
+      }
+   ],
+   "difficulty":4,
+   "interval":10000
+}
