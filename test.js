@@ -21,17 +21,3 @@
 // var signature = bitcoinMessage.sign("100", privateKey, keyPair.compressed).toString('base64')
 
 // console.log(signature)
-function containsObject(obj, list) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i] === obj) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-var ab = [{"a": 1}]
-
-containsObject({"a": 1}, ab)

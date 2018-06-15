@@ -29,6 +29,10 @@ module.exports = {
 		// validation for coinbase transactions
 		if (transaction.type == "coinbase")
 		{
+			// check if a coinbase transaction for this server already exists
+			if (blockchain.findCoinbase(transaction.server))
+				return { "res": false, "message": "Error: A coinbase transaction already exists." }
+
 			// check if amount for each player is less than max
 			for (var i = 0, n = transaction.amount.length; i < n; i++)
 			{

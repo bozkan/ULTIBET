@@ -294,6 +294,18 @@ module.exports = {
 			return true // more than 2 mins passed
 		else
 			return false // less than 2 mins passed
+  },
+
+  findCoinbase: function (server)
+  {
+	var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+	for (var i = 0, n = chain.length; i < n; i++)
+	{
+		block = chain[i]
+		if (block.payload.server == server)
+			return true // if there already is a coinbase
+	}
+	return false // if there is not yet a coinbase
   }
 
 }
