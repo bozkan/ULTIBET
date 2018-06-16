@@ -1,5 +1,4 @@
 <?php
-
 function countAddresses($chain)
 {
 	$addresses = [];

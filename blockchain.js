@@ -296,14 +296,20 @@ module.exports = {
 			return false // less than 2 mins passed
   },
 
-  findCoinbase: function (server)
+  findCoinbase: function (server, players)
   {
 	var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
 	for (var i = 0, n = chain.length; i < n; i++)
 	{
 		block = chain[i]
-		if (block.payload.server == server)
-			return true // if there already is a coinbase
+		if (block.payload.type == "coinbase" && block.payload.server == server)
+		{
+			for (var j = 0, k = players.length; j < k; j++)
+			{
+				if (block.payload.to.indexOf(players[j]) != -1)
+					return true // if a coinbase for this player on this server already exists
+			}
+		}
 	}
 	return false // if there is not yet a coinbase
   }

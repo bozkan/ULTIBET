@@ -2,6 +2,20 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var servers = []
+
+app.get("/", function(req, res){
+	res.sendFile(__dirname + '/masterserver.html')
+})
+
+app.get("/create", function(req, res){
+	res.sendFile(__dirname + '/create.html')
+})
+
+app.get("/play", function(req, res){
+	res.sendFile(__dirname + '/create.html')
+})
+
 io.on('connection', function (socket){
 
 	console.log('New connection.');
@@ -45,8 +59,11 @@ io.on('connection', function (socket){
 		socket.to(id).emit('receive_chain_from_node', chain)
 		console.log("Sending specific chain to node...")
 	});
+
+
+
 });
 
-http.listen(1338, function () {
+var server = http.listen(1338, function () {
   console.log('listening on *:1338');
 });
