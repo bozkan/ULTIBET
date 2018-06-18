@@ -25,34 +25,59 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
-    <div class="container">
+    <script>
+        $(function () {
+          var socket = io();
+          var address = Math.floor(Math.random() * 1000)
+          socket.emit('new user', address);
 
+          $('#login_form').submit(function(){
+            socket.emit('user login', $('#login').val());
+          });
+          $('#register_form').submit(function(){
+            socket.emit('user register', $('#register').val());
+          });
+        });
+      </script>
+
+    <div class="container">
+      <center><form id="register_form">Register <input type="text" id="register" /><input type="submit" /></form></center>
       <div class="starter-template">
         <img src="http://envision.vojtadrmota.com/soccerball.png" width="60px" height="60px" />
         <h1>Betpeers</h1>
         <p class="lead">A truly peer-to-peer betting platform. </p>
         <h2>Server List</h2>
         <br>
-        <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  RonaldoisKing
-                  <span class="badge badge-primary badge-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  MEsiiiiiiii
-                  <span class="badge badge-primary badge-pill">2</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  AmURicaa
-                  <span class="badge badge-primary badge-pill">1</span>
-                </li>
-              </ul>
+        <ul class="list-group" id="serverlist">
+          </ul>
             <br>
         <a href="/create"><button type="button" class="btn btn-primary">Create Server</button></a>
     </div>
 
     </div><!-- /.container -->
 
+  <script>
+      if ("<%= servers %>".length == 0)
+      {
+        var p_servers = [];
+      }
+      else
+      {
+        var p_servers = "<%= servers %>".split(",");
+      }
+
+      if (p_servers.length < 1)
+      {
+        $("#serverlist").append('No servers currently running.')
+      }
+      else
+      {
+        for (var i = 0, n = p_servers.length; i < n; i++)
+        {
+          $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center">'+p_servers[i]+'<span class="badge badge-primary badge-pill">14</span></li></a>');
+        }
+      }
+    </script>
   </body>
 </html>
 

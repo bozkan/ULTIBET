@@ -29,7 +29,7 @@
       $(function () {
         var socket = io();
         $('form').submit(function(){
-          socket.emit('create server', $('#servername').val());
+          socket.emit('create game', $('#servername').val(), $('#gameid').val());
           window.location = './';
           return false;
         });
@@ -42,14 +42,15 @@
         <img src="http://envision.vojtadrmota.com/soccerball.png" width="60px" height="60px" />
         <h1>Betpeers</h1>
         <p class="lead">A truly peer-to-peer betting platform. </p>
-        <h2>Create Server</h2>
+        <h2>Start a Game</h2>
         <br>
         <form>
             <div class="form-group">
-                <input type="text" class="form-control" id="servername" name="servername" placeholder="Server name">
+                <input type="text" class="form-control" id="gameid" name="gameid" placeholder="Enter game id">
+                <input type="hidden" id="servername" value="<%= server %>" />
                 <small id="emailHelp" class="form-text text-muted">Only alphanumeric characters allowed.</small>
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Start!</button>
         </form>
     </div>
 

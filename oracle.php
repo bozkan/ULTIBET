@@ -11,7 +11,7 @@ function oracle($matchid)
 	}
 
 	// open new file
-	// $data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");
+	//$data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");
 	$data_new = file_get_contents("new.html");
 	
 
@@ -45,7 +45,14 @@ function oracle($matchid)
 	$commentary_new = str_replace("</ul>", "", $commentary);
 
 	// open old file
-	$data = file_get_contents("old_".$id.".html");
+	if (file_exists("old_".$id.".html"))
+	{
+		$data = file_get_contents("old_".$id.".html");
+	}
+	else
+	{
+		$data = "";
+	}
 
 	$commentary2 = getString($data, '<ul class="commentary">','</ul>');
 
@@ -195,19 +202,19 @@ function oracle($matchid)
 				if ($success == 1)
 				{
 					// match event
-					array_push($res, ["category" => "event", "type" => $type, "eventid" => $eventid, "team" => $team, "time" => $time]);
+					array_push($res, ["category" => "event", "matchid" => $matchid, "type" => $type, "eventid" => $eventid, "team" => $team, "time" => $time]);
 				}
 				else
 				{
 					// first or second half ends
-					array_push($res, ["category" => "half", "type" => $type, "home" => $home, "away" => $away]);
+					array_push($res, ["category" => "half", "matchid" => $matchid, "type" => $type, "home" => $home, "away" => $away]);
 				}
 				
 			}
 		}
 	}
 
-	array_push($res, ["category" => "timer", "matchminute" => $matchminute]);
+	array_push($res, ["category" => "timer", "matchminute" => $matchminute, "matchid" => $matchid]);
 	$res = json_encode($res);
 	return $res;
 }

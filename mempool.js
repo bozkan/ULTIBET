@@ -83,6 +83,9 @@ module.exports = {
 		// server
 		if ((typeof transaction.server) === 'undefined')
 			return { "res": false, "message": "Error: Missing server."}
+		// match
+		if ((typeof transaction.match) === 'undefined')
+			return { "res": false, "message": "Error: Missing match."}
 		// signatures
 		if ((typeof transaction.signatures) === 'undefined')
 			return { "res": false, "message": "Error: Missing signatures."}

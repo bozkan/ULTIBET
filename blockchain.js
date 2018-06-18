@@ -188,7 +188,7 @@ module.exports = {
 			return false
   },
 
-  findPayouts: function (eventid, team)
+  findPayouts: function (eventid, team, matchid)
   {
 		// iterate through blocks
 		// save escrows, including wagers, players, server, and amounts
@@ -205,7 +205,7 @@ module.exports = {
 			var block = chain[i]
 
 			// push escrow
-			if (block.payload.type == "escrow" && block.payload.event == eventid)
+			if (block.payload.type == "escrow" && block.payload.event == eventid && block.payload.match == matchid)
 			{
 				// only push if escrow for this event and server doesn't yet exist
 				if (alreadyEscrow.indexOf(block.payload.server + block.payload.event.toString()) == -1)
@@ -224,20 +224,20 @@ module.exports = {
 			}
 
 			// pop escrow based on server and event
-			if (block.payload.type == "transfer" && block.payload.event == eventid)
+			if (block.payload.type == "transfer" && block.payload.event == eventid && block.payload.match == matchid)
 				escrows = escrows.filter(removeEscrow(block.payload.server, block.payload.event))
 
 		}
 
 		// if there are no escrows for this event, return
 		if (escrows.length < 1)
-			return 0
+			return []
 
 		// find winners and generate transactions
 		// escrows now holds all the relevant escrows to this event
 		for (var i = 0, n = escrows.length; i < n; i++)
 		{
-			var payouts = {"from": [], "to": [], "amount": [], "event": eventid, "server": escrows[i].server}
+			var payouts = {"from": [], "to": [], "amount": [], "event": eventid, "server": escrows[i].server, "match": matchid}
 			var losers = []
 			var winners = []
 			

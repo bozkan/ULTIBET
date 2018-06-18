@@ -3,7 +3,7 @@
       {  
          "height":1,
          "previousHash":"",
-         "timestamp":1528819299088,
+         "timestamp":1529343115123,
          "payload":"Genesis Block",
          "signature":"HBrLDbPBl+3QVwzgDfLhUllvbIRjmeoXfkgUfxDSDT2Gfgh/SBpZU2azA8/nlUgkSfiJRysNlPd77HlSHUH7V+A=",
          "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
@@ -13,64 +13,68 @@
       {  
          "height":2,
          "previousHash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d",
-         "timestamp":1528819316918,
+         "timestamp":1529343122257,
          "payload":{  
             "type":"escrow",
-            "event": 3,
             "from":[  
-                "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
-                "1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC",
-                "12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"
+               "1EXvqbzGGopgikMd6gr8Q3C62NAE8dJECB",
+               "17noJB7Jqm6d6hxmMx6kVhJTNt4ZrVfAru"
             ],
             "to":[  
+
             ],
             "amount":[  
-                100,
-                100,
-                100
+               13,
+               13
             ],
-            "wagers":["Lithuania", "Poland", "Poland"],
-            "signatures": ["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
-            "HOX463wzLDdRw3QycW6Yvj7mXvzg/z/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=",
-            "HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],
-            "server":"1234",
-            "timestamp":13453453049
+            "server":"SEDEN",
+            "signatures":[  
+               "HH2VTstIbFCCtPNqxQKqB36CD1ySZle/2YBh1AIzZjm+LdzEe5KODXMPMOLcVNrLezXeOnXJdJHHt8OOD4CVFtw=",
+               "GzI207aRGrFmSUxfx73DmHrquAZ3WjQfnP4IoR96VjmYNUaMU+Ol/gLPenmXTXj81+XTlt3zu55b1iKX1zbQhjU="
+            ],
+            "timestamp":1529343087860,
+            "event":"3",
+            "wagers":[  
+               "Sweden",
+               "Sweden"
+            ],
+            "match":"47439"
          },
-         "signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=",
+         "signature":"G70UpG/+Dsn2X1YZYCijNgYYFS4NY6nsJE8g9MUViHmEBgcN/K5kMEbxrIo905ewLJKiVlWzXkGrbgCPYELuqGM=",
          "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
-         "nonce":82489,
-         "hash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85"
+         "nonce":381723,
+         "hash":"0000cc733c8937f77d69216f598b5d720f7fface75a8272e4f5454c45c827909cc051fcd06ae7742d6ed68afecf3e945c83d7a06c32997fb0af7677d48a8b68c"
       },
       {  
          "height":3,
-         "previousHash":"0618c48771b01f9818356d6e3dc96b8d9e2b7e37cb078f5120d10567d6dccf8c542b09f1f0cf59fe08252f86aaa056f2a064096cc37bef2e27ee5d90d45b9c0d",
-         "timestamp":1528819316918,
+         "previousHash":"0000cc733c8937f77d69216f598b5d720f7fface75a8272e4f5454c45c827909cc051fcd06ae7742d6ed68afecf3e945c83d7a06c32997fb0af7677d48a8b68c",
+         "timestamp":1529343144849,
          "payload":{  
-            "type":"escrow",
-            "event": 2,
+            "type":"transfer",
             "from":[  
-                "1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH",
-                "1Bu9wAoRh5XqH6uvSZokPumcJdedD2pwGC",
-                "12vzjcj62znrpSThDrjzinbCTsQNbGSKjs"
+
             ],
             "to":[  
+
             ],
             "amount":[  
-                200,
-                200,
-                200
+
             ],
-            "wagers":["Lithuania", "Poland", "Poland"],
-            "signatures": ["HPbprlqA0+m8u67HawrDj184FbmkCFzzrNBjQ3+1LCVVVw2NNr3kj/rhKQCRNdLJZIU1mzlpjnWOKWT+aUOEYg0=",
-            "HOX463wzLDdRw3QycW6Yvj7mXvzg/z/OwTa9fOBDx4esV0zb8jo7LnyeXhKVqCCCqk3U9sTSSNqAhW8N32BNs=",
-            "HHSNpybEYlbZ7Edx9oZszP6ff2xy4wwkcCY+i2U2KYosN8chqRhqns6iFVjY+WuJhhUwlmUVUD4UbshVb6T+XZo="],
-            "server":"2222",
-            "timestamp":13453453049
+            "server":"SEDEN",
+            "signatures":[  
+
+            ],
+            "timestamp":1529343139336,
+            "event":3,
+            "wagers":[  
+
+            ],
+            "match":47439
          },
-         "signature":"GzhZDRNQFhG1bRpEwRa88+q/fpmJIlbE/wWDlep56Og7J0MsPSd1FkriTqMHm3leI/JqjYW+p/NSfIPYD27pA9M=",
+         "signature":"HCFy40L8Rxet1V5Kqkb+re9wTsrlN6mPOietTpdOosIDT5lhMjAEZOyOXHasoh0dmr3loYJl7HpvhUK4K+9Ox1I=",
          "issuer":"12vzjcj62znrpSThDrjzinbCTsQNbGSKjs",
-         "nonce":82489,
-         "hash":"00003e46635a9f05a1173bc7ca1afcdfdbe6928a878251d0cf365df49d5ad0c6f2d73337b7673d6a99353730c762474e304f6087ca917cbfe4be0620e4389d85"
+         "nonce":673235,
+         "hash":"0000ac41896c07b6d39b473db00ff92ad3dd15514fac31fe119616178c4f78b469a6c37c0049beb409dfd490e3ca59fa461b1853b69e82830a0cc72a66fae223"
       }
    ],
    "difficulty":4,

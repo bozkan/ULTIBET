@@ -17,44 +17,26 @@ var User = classes.User
 
 const credentialsFile = config.credentialsFile
 
-// check if user already registered
+module.exports = {
 
-if (fs.existsSync(credentialsFile)) 
-{
-    console.log("You have already registered. Check credentials.txt for info.")
-    process.exit(1)
-}
-
-// prompt for username
-
-prompt.start()
-
-var schema = {
-    properties: {
-      name: {
-      	description: 'Pick a username',
-        pattern: /^[a-zA-Z\-]+$/,
-        message: 'Name must be only letters or dashes',
-       	required: true
-      }
-    }
-  }
-
-prompt.get(schema, 
-	function (err, result) 
+	register: function(username)
 	{
-    	// generate user
 
-    	let user = new User(result.name)
-    	let credentials = helpers.credentials(user)
+		// generate user
 
-    	// save credentials
+		let user = new User(username)
+		let credentials = helpers.credentials(user)
 
-    	helpers.saveUser(credentialsFile, credentials)
+		// save credentials
 
-    	// print credentials
+		// helpers.saveUser(credentialsFile, credentials)
 
-    	console.log("Your public address: "+user.publicKey)
-    	console.log("Your private key (SECRET): "+user.privateKey)
+		// print credentials
+
+		console.log("Your public address: "+user.publicKey)
+		console.log("Your private key (SECRET): "+user.privateKey)
+
+		return [user.publicKey, user.privateKey]
+
 	}
-)
+}

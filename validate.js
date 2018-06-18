@@ -132,11 +132,6 @@ module.exports = {
 		if (!payloadCheck.res)
 			return {"res": false, "message": "Block payload invalid. " + payloadCheck.message}
 
-		// check that miner didn't mine his/her own block
-		// disable this during debugging
-		if (block.issuer == block.payload.from)
-			return {"res": false, "message": "Block miner mined own reward."}
-
 		// ensure that timestamp wasn't tampered with
 		if (!helpers.timestampCheck(block.timestamp, localChain))
 			return {"res": false, "message": "Block timestamp invalid. Possibly, local chain is outdated: download new state."}

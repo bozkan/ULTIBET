@@ -14,16 +14,16 @@ var config = require('./config.js')
 
 var mempoolFile = config.mempoolFile
 
-var matchid = 51652 // change this to be dynamic
+var matchid = 47439 // change this to be dynamic
 
 // retrieve all new events
-
 execPhp('oracle.php', function(error, php, outprint)
 {
     php.oracle(matchid, function(err, result, output, printed)
     {
         result = JSON.parse(result)
         result.reverse()
+        console.log(result)
 
         for (var i = 0, n = result.length; i < n; i++)
         {
@@ -32,13 +32,13 @@ execPhp('oracle.php', function(error, php, outprint)
                 continue
 
             // check if there are any escrows that should be paid out
-            var payouts = blockchain.findPayouts(result[i].eventid, result[i].team)
+            var payouts = blockchain.findPayouts(result[i].eventid, result[i].team, result[i].matchid)
 
             // send payouts to mempool
-            if (payouts != 0)
+            if (payouts.length != 0)
             {
                 var timestamp = Date.now()
-                broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, [], timestamp, mempoolFile)
+                broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, payouts.match, [], timestamp, mempoolFile)
             }
         }
     })
