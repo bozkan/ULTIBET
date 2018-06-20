@@ -29,7 +29,7 @@
       $(function () {
         var socket = io();
         $('form').submit(function(){
-          socket.emit('create game', $('#servername').val(), $('#gameid').val());
+          socket.emit('create game', $('#servername').val(), $('#gameid').val(), $('#coinbase').val());
           window.location = './';
           return false;
         });
@@ -47,6 +47,7 @@
         <form>
             <div class="form-group">
                 <input type="text" class="form-control" id="gameid" name="gameid" placeholder="Enter game id">
+                <input type="text" class="form-control" id="coinbase" name="coinbase" placeholder="Enter starting balance">
                 <input type="hidden" id="servername" value="<%= server %>" />
                 <small id="emailHelp" class="form-text text-muted">Only alphanumeric characters allowed.</small>
             </div>

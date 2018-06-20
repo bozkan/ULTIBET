@@ -14,8 +14,14 @@ function oracle($matchid)
 	//$data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");
 	$data_new = file_get_contents("new.html");
 	
+	if (strlen($data_new) == 0)
+	{
+		$nores = array();
+		return $nores;
+	}
 
 	$id = intval(getString($data_new,'https://www.sportinglife.com/football/live/','/commentary'));
+	$score = getString($data_new,'class="ft-score-box">','</div>');
 
 	// make this dynamic
 	$matchminute = getString($data_new,'<div class="timer"','&#x27;');
@@ -24,7 +30,7 @@ function oracle($matchid)
 
 	if (strpos($matchminute, "<") !== false)
 	{
-		$matchminute = 0;
+		$matchminute = "N/A";
 	}
 
 	// assign home and away team
@@ -62,7 +68,10 @@ function oracle($matchid)
 	$new = str_replace($commentary_old, "", $commentary_new);
 
 	// save new to file as old
-	// file_put_contents("old_".$id.".html", $data_new);
+	// if (strlen($data_new) != 0)
+	// {
+	// 	file_put_contents("old_".$id.".html", $data_new);
+	// }
 
 	// get all events
 	preg_match_all('/<li class=\"event\"(.*?)<\/li>/s', $new, $events);
@@ -214,7 +223,7 @@ function oracle($matchid)
 		}
 	}
 
-	array_push($res, ["category" => "timer", "matchminute" => $matchminute, "matchid" => $matchid]);
+	array_push($res, ["category" => "timer", "matchminute" => $matchminute, "matchid" => $matchid, "score" => $score, "home" => $teams[0], "away" => $teams[1]]);
 	$res = json_encode($res);
 	return $res;
 }

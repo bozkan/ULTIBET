@@ -1,8 +1,5 @@
 // retrieve private key
 
-var helpers = require('./functions.js')
-var config = require('./config.js')
-
 var bitcoin = require('bitcoinjs-lib')
 var bitcoinMessage = require('bitcoinjs-message')
 var CoinKey = require('coinkey')

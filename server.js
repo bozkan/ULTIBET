@@ -1,9 +1,51 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var broadcast = require('../broadcast.js')
-var register = require('../register.js')
-var sign = require('../sign.js')
+var broadcast = require('./broadcast.js')
+var register = require('./register.js')
+var sign = require('./sign.js')
+var oracle = require('./oracle.js')
+var config = require('./config.js')
+
+var balances = []
+
+function getMatches(dict)
+{
+	var flags = []
+	var output = []
+
+	for (var key in dict) 
+	{
+		if (typeof flags[dict[key]] !== "undefined")
+			continue
+		flags[dict[key]] = true
+		output.push(dict[key])
+	}
+
+	return output
+}
+
+/* 
+This runs the oracle
+Results are broadcasted to blockchain
+Run it every x seconds
+Run it for each server
+Include player balances
+-->Move this into the sockets<--
+*/
+
+setInterval(function(){
+
+		var matches = getMatches(serverToGame)
+		console.log(matches)
+
+		// !for each of this matches, run oracle -> only one per game
+		// send servers and balances
+		// send out new balances after
+		matches.forEach(function(match){
+			oracle.oracle(match, addressToUsername)
+		})
+}, 15000)
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -15,20 +57,23 @@ var usernameToAddress = {}
 var usernameToPrivate = {}
 var bets = []
 var serverToPlayers = {}
+var usernameToBalance = {}
+var serverToCoinbase = {}
+var playerToServer = {}
 
 app.get("/", function(req, res){
-	res.render(__dirname + '/masterserver.html', { servers: servers })
+	res.render(__dirname + '/server/masterserver.html', { servers: servers })
 })
 
 app.get("/create", function(req, res){
-	res.sendFile(__dirname + '/create.html')
+	res.sendFile(__dirname + '/server/create.html')
 })
 
 app.get("/play", function(req, res) {
 	if (serverToGame[req.query.server].length == 0)
-		res.render(__dirname + '/start.html', { server: req.query.server })
+		res.render(__dirname + '/server/start.html', { server: req.query.server })
 	else
-		res.render(__dirname + '/play.html', { server: req.query.server, matchid: serverToGame[req.query.server] })
+		res.render(__dirname + '/server/play.html', { server: req.query.server, matchid: serverToGame[req.query.server], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server] })
 })
 
 io.on('connection', function (socket) {
@@ -80,13 +125,26 @@ io.on('connection', function (socket) {
 	socket.on('create server', function (servername) {
 		servers.push(servername)
 		serverToGame[servername] = ""
+		serverToPlayers[servername] = []
+		serverToCoinbase[servername] = 0
 	})
 
-	socket.on('create game', function (servername, gameid) {
+	socket.on('create game', function (servername, gameid, coinbase) {
 		serverToGame[servername] = gameid
+		serverToCoinbase[servername] = coinbase
 	})
 
 	socket.on('place pending bet', function (eventid, wager, username, server, matchid, amount) {
+		// broadcast that the bet is pending
+		io.sockets.to(server).emit('receive pending bet', eventid, amount)
+		// update balances
+		usernameToBalance[username] -= amount
+		var balances = []
+		for (var i = 0, n = serverToPlayers[server].length; i < n; i++)
+		{
+			balances.push({"player": serverToPlayers[server][i], "amount": usernameToBalance[serverToPlayers[server][i]]})
+		}
+		io.sockets.to(server).emit('receive balances', usernameToBalance[username], username)
 		// sign the bet
 		var signature = sign.sign(usernameToAddress[username], usernameToPrivate[username], amount)
 		bets.push(
@@ -118,7 +176,9 @@ io.on('connection', function (socket) {
 					signatures.push(bets[i].signature)
 				}
 			}
-			broadcast.transaction("escrow", eventid, from, [], amount, wagers, server, matchid, signatures, timestamp, "../mempool.txt")
+			broadcast.transaction("escrow", eventid, from, [], amount, wagers, server, matchid, signatures, timestamp, config.mempoolFile)
+			// remove bets that have been broadcasted
+			bets = bets.filter(function(bet){ return !(bet.server == server && bet.matchid == matchid && bet.eventid == eventid) })	
 		}
 	})
 
@@ -133,6 +193,24 @@ io.on('connection', function (socket) {
 	socket.on('login user', function (username, server) {
 		// add unique player to server
 		serverToPlayers[server] ? serverToPlayers[server].indexOf(username) == -1 ? serverToPlayers[server].push(username) : 1 : serverToPlayers[server] = [username]
+		socket.join(server)
+		playerToServer[username] = server
+		usernameToBalance[username] = serverToCoinbase[server]
+		io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
+		io.sockets.to(server).emit('receive login user', username)
+	})
+
+	socket.on('transfer balances', function (balances) {
+		for (var i = 0, n = balances.length; i < n; i++)
+		{
+			usernameToBalance[balances[i].player] += balances[i].amount
+			io.sockets.to(playerToServer[balances[i].player]).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
+		}
+		console.log(balances)
+	})
+
+	socket.on('send timer', function (minute, score, home, away) {
+		socket.emit('receive timer', minute, score, home, away)
 	})
 
 });

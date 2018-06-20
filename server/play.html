@@ -20,7 +20,8 @@
     <![endif]-->
   </head>
 
-  <body style="padding-top:0">
+  <body style="padding-top:0;background-color:#1a1c1a">
+    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:35pt;" align="center"><p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spain 3 - 0 Portugal</p><p style="font-size:12pt;margin:0;padding:0;">54'</p></div>
       
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -31,9 +32,38 @@
         var server = "<%= server %>"
         var matchid = "<%= matchid %>"
         var socket = io();
-        socket.on('receive pending bet', function(bet) {
-          $('#pendingbets').append("");
+        socket.on('receive pending bet', function(eventid, amount) {
+          $('#pendingbets').append("Bet is pending for event "+eventid+" amount "+amount+"");
         });
+
+        socket.on('receive address', function(address){
+          $("#your_address").html("Your address: "+address);
+        })
+
+        socket.on('receive login user', function(username){
+          $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+username+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;">'+username+'<right><span class="badge badge-success badge-pill" id="balance'+username+'" style="margin:0;font-size:7pt;padding-top:3px;"><%= coinbase %></span></right></li>')
+        })
+
+        socket.on('receive balances', function(balance, player) {
+
+            if ($("#" + player).length == 0)
+            {
+              $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+player+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;">'+player+'<right><span class="badge badge-success badge-pill" id="balance'+player+'" style="margin:0;font-size:7pt;padding-top:3px;">'+balance+'</span></right></li>');
+            }
+            else
+            {
+              $("#balance"+player).html(balance);
+            }
+          
+        })
+
+        socket.on('receive timer', function(minute, score, home, away) {
+          $('#matchminute').html(minute+"'")
+          $('#matchscore').html(score)
+          $('#awayteam').html(home)
+          $('#hometeam').html(away)
+        })
+
         $('#login_form').submit(function(){
           username = $("#login").val();
           $("#login").value = username;
@@ -41,37 +71,45 @@
           socket.emit('login user', username, server)
           return false;
         });
+
         $('#placebet').submit(function(){
           socket.emit('place pending bet', $('#eventid').val(), $('#wager').val(), username, server, matchid, $('#amount').val());
-          $('#pendingbets').append("Bet is pending...")
+          $('#pendingbets').append("Bet is pending for event "+$('#eventid').val()+" amount "+$('#amount').val())
           return false;
         });
+
+        // handle players on load
+        if ("<%= players %>".length == 0)
+        {
+          var p_players = [];
+        }
+        else
+        {
+          var p_players = "<%= players %>".split(",");
+        }
+        for (var i = 0, n = p_players.length; i < n; i++)
+        {
+          $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+p_players[i]+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;">'+p_players[i]+'<right><span class="badge badge-success badge-pill" id="balance'+p_players[i]+'" style="margin:0;font-size:7pt;padding-top:3px;"><%= coinbase %></span></right></li>')
+        }
       });
     </script>
 
     <div class="container">
 
-      <center><img src="http://envision.vojtadrmota.com/soccerball.png" width="40px" height="40px" /></center>
       <center>Log in: <form id="login_form"><input type="text" id="login" /><input type="submit" /></form></center>
-      <center><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Spain 2 - 3 Portugal]</b></center>
-      <center><p style="font-size:8pt">&nbsp;[86']</p></center>
+      <center><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam">Spain</span> <span id="matchscore">2 - 3</span> <span id="awayteam">Portugal</span></b></center>
+      <center><p style="font-size:8pt" id="matchminute">0'</p></center>
 
-      <center><p style="font-size:7pt;">Your address: 1Nk4Hu5XiNy3mSBxryckEEr1JWkFDSS7AH</p></center>
+      <center><p style="font-size:7pt;" id="your_address">Your address: </p></center>
+
+      <script>
+        // iterate through existing players
+        // add new players when they login 
+      </script>
 
       <center>
-        <ul class="list-group" style="width:175px;font-size:9pt;">
-          <li class="list-group-item d-flex justify-content-between align-items-center" style="padding-top:2px;padding-bottom:2px;padding-right:5px;">
-            Player 1
-            <right>
-            <span class="badge badge-success badge-pill" style="margin:0;font-size:7pt;padding-top:3px;">240</span>
-          </right>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center" style="padding-top:2px;padding-bottom:2px;padding-right:5px;">
-            Player 2
-            <right>
-            <span class="badge badge-success badge-pill" style="margin:0;font-size:7pt;padding-top:3px;">100</span>
-          </right>
-          </li>
+        <ul class="list-group" style="width:175px;font-size:9pt;" id="balances_list">
+          
         </ul>
       </center>
 
@@ -94,8 +132,8 @@
         </select>
         <br>
         <select id="wager">
-          <option value="Sweden">Sweden</option>
-          <option value="South Korea">South Korea</option>
+          <option value="Poland">Poland</option>
+          <option value="Lithuania">Lithuania</option>
         </select>
         <br>
         <input type="number" id="amount" />
@@ -115,8 +153,8 @@
 
     </div><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
 

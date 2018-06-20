@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Jura');
+
 body {
   padding-top: 50px;
+  font-family: 'Jura', sans-serif;
 }
 .starter-template {
   padding: 0px 15px;

@@ -208,7 +208,7 @@ module.exports = {
 			if (block.payload.type == "escrow" && block.payload.event == eventid && block.payload.match == matchid)
 			{
 				// only push if escrow for this event and server doesn't yet exist
-				if (alreadyEscrow.indexOf(block.payload.server + block.payload.event.toString()) == -1)
+				if (alreadyEscrow.indexOf(block.hash) == -1)
 				{
 					escrows.push(
 						{
@@ -219,7 +219,7 @@ module.exports = {
 							"event": block.payload.event
 						}
 					)
-					alreadyEscrow.push(block.payload.server + block.payload.event.toString())
+					alreadyEscrow.push(block.hash)
 				}
 			}
 
