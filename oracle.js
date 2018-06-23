@@ -32,6 +32,10 @@ module.exports = {
         {
             php.oracle(matchid, function(err, result, output, printed)
             {
+                if (typeof result === "undefined")
+                {
+                    return 1
+                }
                 result = JSON.parse(result)
                 result.reverse()
                 console.log(result)
@@ -40,12 +44,15 @@ module.exports = {
                 {
                     if (result[i].category == "timer")
                     {
-                        socket.emit('send timer', result[i].matchminute, result[i].score, result[i].home, result[i].away)
+                        socket.emit('send timer', result[i].matchminute, result[i].score, result[i].home, result[i].away, result[i].matchid)
                     }
 
                     // only do events
                     if (result[i].category != "event")
                         continue
+                    
+                    // emit event to live commentary
+                    socket.emit('send live commentary', result[i].time, result[i].eventid, result[i].team, result[i].matchid)
 
                     // check if there are any escrows that should be paid out
                     var payouts = blockchain.findPayouts(result[i].eventid, result[i].team, result[i].matchid)
@@ -53,6 +60,10 @@ module.exports = {
                     // send payouts to mempool
                     if (payouts.length != 0)
                     {
+                        // remove active bets
+                        socket.emit('do delete active bet', payouts.server, payouts.event)
+
+                        // broadcast transaction to blockchain
                         var timestamp = Date.now()
                         broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, payouts.match, [], timestamp, mempoolFile)
 

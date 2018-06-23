@@ -1,33 +1,5 @@
 <?php
 
-function findDiff($old, $new_array, $type)
-{
-    if ($type == "event")
-    {
-        // iterate through new array
-        foreach ($new_array as $key => $new_event)
-        {
-            if ($new_event["category"] == "event" && $new_event["type"] == $old["type"] && $new_event["time"] == $old["time"])
-            {
-                unset($new_array[$key]);
-                return $new_array;
-            }
-        }
-    }
-    else
-    {
-        // iterate through new array
-        foreach ($new_array as $key => $new_event)
-        {
-            if ($new_event["category"] == "half" && $new_event["type"] == $old["type"])
-            {
-                unset($new_array[$key]);
-                return $new_array;
-            }
-        }
-    }
-}
-
 function oracle($matchid)
 {
 	$res = array();
@@ -39,8 +11,8 @@ function oracle($matchid)
 	}
 
 	// open new file
-	$data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");
-	//$data_new = file_get_contents("new.html");
+	//$data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");
+	$data_new = file_get_contents("new.html");
 	
 	if (strlen($data_new) == 0)
 	{
@@ -49,7 +21,8 @@ function oracle($matchid)
 	}
 
 	$id = intval(getString($data_new,'https://www.sportinglife.com/football/live/','/commentary'));
-	$score = getString($data_new,'<div class="live-score-box">','</div>');
+	//$score = getString($data_new,'<div class="live-score-box">','</div>');
+	$score = "1 - 0";
 
 	// make this dynamic
 	$matchminute = getString($data_new,'<div class="timer"','&#x27;');
@@ -76,7 +49,24 @@ function oracle($matchid)
 	}
 
 	// replace from old what exists in this file with nothing
-	$new = str_replace("</ul>", "", $commentary);
+	$commentary_new = str_replace("</ul>", "", $commentary);
+
+	// open old file
+	if (file_exists("old_".$id.".html"))
+	{
+		$data = file_get_contents("old_".$id.".html");
+	}
+	else
+	{
+		$data = "";
+	}
+
+	$commentary2 = getString($data, '<ul class="commentary">','</ul>');
+
+	$commentary_old = str_replace("</ul>", "", $commentary2);
+
+	// this stores the new events
+	$new = str_replace($commentary_old, "", $commentary_new);
 
 	// save new to file as old
 	// if (strlen($data_new) != 0)
@@ -232,43 +222,10 @@ function oracle($matchid)
 				
 			}
 		}
-    }
-
-    if (file_exists("old_".$id.".json"))
-    {
-        $old_events = file_get_contents("old_".$id.".json");
-    }
-    else
-    {
-        $old_events = "";
-    }
-
-    $old_events = json_decode($old_events, true);
-
-    if (sizeof($res) > 1)
-    {
-        file_put_contents("old_".$id.".json", json_encode(array_values($res)));
-    }
-
-    if (sizeof($old_events) > 1)
-    {
-        foreach ($old_events as $old_event)
-        {
-            // remove timers
-            if ($old_event["category"] == "event")
-            {
-                $res = findDiff($old_event, $res, "event");
-            }
-            if ($old_event["category"] == "half")
-            {
-                $res = findDiff($old_event, $res, "half");
-            }
-        }
-    } 
+	}
 
 	array_push($res, ["category" => "timer", "matchminute" => $matchminute, "matchid" => $matchid, "score" => $score, "home" => $teams[0], "away" => $teams[1]]);
-    $res = json_encode(array_values($res));
+	$res = json_encode($res);
 	return $res;
 }
-
 ?>

@@ -1,18 +1,15 @@
 // var blockchain = require('./blockchain')
 
 // console.log(blockchain.findPayouts(6, "Poland", 47439))
+var execPhp = require('exec-php')
 
-var array = {"x": "z", "y": "z"}
-
-var flags = []
-var output = []
-
-for (var key in array) 
+execPhp('oracle.php', function(error, php, outprint)
 {
-    if (typeof flags[array[key]] !== "undefined")
-        continue
-    flags[array[key]] = true
-    output.push(array[key])
-}
-
-console.log(output)
+    php.oracle(2, function(err, result, output, printed)
+    {
+        if (typeof result === "undefined")
+        {
+            console.log("ues")
+        }
+    })
+})
