@@ -195,6 +195,13 @@
           $('#betevent'+eventid).prop('disabled', false);
         })
 
+        socket.on('delete pending bet timer', function(eventid, username, amount){
+          var new_amount = parseFloat(amount) + parseFloat($('#balance'+username).html().replace(/\$/g, ""))
+          $('#balance'+username).html('$'+new_amount)
+          $("#pending"+eventid).remove();
+          $('#betevent'+eventid).prop('disabled', false);
+        })
+
         socket.on('receive live commentary', function(minute, eventid, team){
           $("#livecommentaryheader").remove();
           $("#livecommentarytable").prepend('<tr><td style="width:15%;">'+minute+'\'</td><td style="width:85%;">'+map_events[eventid]+' '+prepositions[eventid]+' '+team+'</td></tr>');          

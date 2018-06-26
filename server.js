@@ -77,12 +77,12 @@ setInterval(function(){
 			if (serverToEvents[key][i].timeRemaining == 0)
 			{
 				// if countdown is up, delete the event
-				io.sockets.to(key).emit('delete pending bet', serverToEvents[key][i].eventid)
 				serverToEvents[key].splice(i, 1)
 				for (var j = 0, k = bets.length; j < k; j++)
 				{
 					if (bets[j].eventid == serverToEvents[key][i].eventid && bets[j].server == key)
 					{
+						io.sockets.to(key).emit('delete pending bet timer', serverToEvents[key][i].eventid, bets[j].username, bets[j].amount)
 						bets.splice(j, 1)
 					}
 				}
