@@ -37,12 +37,63 @@
       color:    black;
       }
 
+      .hoverable:hover {
+        background-color: #fcffc1;
+      }
+
       option {
         font-family: 'Jura';
       }
 
       h6 {
         font-size:19pt;
+      }
+
+      /* The Modal (background) */
+      .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 2; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content */
+      .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 48%;
+      }
+
+      /* The Close Button */
+      .close {
+          color: #aaaaaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+      }
+
+      .no-underline {
+        text-decoration: none;
+      }
+
+      .no-underline:hover {
+        text-decoration: none;
       }
     </style>
 
@@ -53,18 +104,15 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
-    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:35pt;font-weight:bold;" align="center"><p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam"></span> <span id="matchscore"></span> <span id="awayteam"></span></p><p style="font-size:12pt;margin:0;padding:0;" id="matchminute">Loading match...</p></div>
+    <div style="width:100%;font-size:30pt;padding-left:100px;"> <a href="/" class="no-underline"><font color="#5bba5c">BET</font><font color="white">CAFÉ</font></div></a>
+    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center"><a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a><p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam"></span> <span id="vs" style="display:none;">vs.</span> <span id="awayteam"></span></p><p style="margin:0;padding:0;"><span id="matchscore" style="font-size:16pt;"></span></p><p style="font-size:10pt;margin:0;padding:0;" id="matchminute">Waiting for login...</p></div>
       
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
     <script>
-      $(function () {
-        function updateScroll(){
-          var d = $('#chatfield');
-          d.scrollTop(d.prop("scrollHeight"));
-        }
-        var map_events = [
+      var latestAmount = 0 
+      var map_events = [
         "Nothing",
         "Attempt missed",
         "Goal",
@@ -90,6 +138,35 @@
           "for",
           "by"
         ];
+        function modalf(eventid,amount) {
+            modal.style.display = "block";
+            $("#beteventaccept").val(eventid)
+            $("#eventid2").val(eventid)
+            $("#acceptamount").val(parseInt(amount))
+            latestAmount = amount
+            $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
+        }
+
+      $(function () {
+        var modal = document.getElementById('modal');
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function updateScroll(){
+          var d = $('#chatfield');
+          d.scrollTop(d.prop("scrollHeight"));
+        }
         var username = ""
         var p_balances = {}
         var server = "<%= server %>"
@@ -99,20 +176,23 @@
         socket.on('receive pending bet', function(eventid, amount, i_username) {
           if (i_username != username)
           {
-            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
+            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="modalf('+eventid+','+amount+')" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span id="pendingtime'+eventid+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
+            $('#betevent'+eventid).prop('disabled', true);
           }
         });
 
         socket.on('receive address', function(address){
-          $("#your_address").html(username+'<br>'+address);
+          $("#your_address").html('<font style="font-size:9pt;">'+username+'</font><br>'+address);
         })
 
         socket.on('receive active bet', function(eventid, amount){
+          $('#betevent'+eventid).prop('disabled', true);
           $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
-        })
+       })
 
         socket.on('delete pending bet', function(eventid){
           $("#pending"+eventid).remove();
+          $('#betevent'+eventid).prop('disabled', false);
         })
 
         socket.on('receive live commentary', function(minute, eventid, team){
@@ -123,7 +203,7 @@
 
         socket.on('delete active bet', function(eventid){
           $("#active"+eventid).remove();
-          //$('#betevent'+eventid).prop('disabled', false);
+          $('#betevent'+eventid).prop('disabled', false);
         })
 
         socket.on('receive new chat', function(username, message){
@@ -149,15 +229,24 @@
           
         })
 
-        socket.on('receive timer', function(minute, score, home, away) {
+        socket.on('receive timer', function(minute, score, home, away, homeflag, awayflag) {
           $('#matchminute').html(minute+"'")
           $('#matchscore').html(score)
-          $('#awayteam').html(away)
-          $('#hometeam').html(home)
+          homeflag ? $('#hometeam').html('<img src="'+homeflag+'" width="55" height="55" />&nbsp;&nbsp;&nbsp;'+home) : $('#hometeam').html(home)
+          awayflag ? $('#awayteam').html(away+'&nbsp;&nbsp;&nbsp;<img src="'+awayflag+'" width="55" height="55" />') : $('#awayteam').html(away)
+          $("#vs").show()
           $('#hometeamoption').val(home)
           $('#hometeamoption').html(home)
           $('#awayteamoption').val(away)
           $('#awayteamoption').html(away)
+          $('#hometeamoption2').val(home)
+          $('#hometeamoption2').html(home)
+          $('#awayteamoption2').val(away)
+          $('#awayteamoption2').html(away)
+        })
+
+        socket.on('tick', function(eventid, timeRemaining) {
+          $("#pendingtime"+eventid).html(timeRemaining)
         })
 
         $('#login_form').submit(function(){
@@ -170,11 +259,16 @@
           $("#login_form").html(server)
           $("#login_form").css("font-size", "30pt")
           $("#playingarea").show()
+          $("#matchminute").html("Loading...")
           socket.emit('login user', username, server)
         })
 
-        socket.on('error message', function(message) {
+        socket.on('error message', function(message, type) {
           alert(message)
+          if (type == "login")
+          {
+            location.reload()
+          }
         })
 
         $('#chatform').submit(function(){
@@ -184,6 +278,12 @@
         });
 
         $('#placebet').submit(function(){
+          try {
+          if ($('#betevent'+$('#eventid').val()).is('[disabled]'))
+          {
+            alert("This bet is already pending. You can accept it by clicking on it.")
+            return false
+          }
           if ($('#amount').val() < 1)
           {
             alert("You can't place that bet.")
@@ -202,7 +302,7 @@
           if ($("#pending" + $('#eventid').val()).length == 0)
           {
             socket.emit('place pending bet', $('#eventid').val(), $('#wager').val(), username, server, matchid, $('#amount').val(), false);
-            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center" id="pending'+$('#eventid').val()+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">Next '+map_events[$('#eventid').val()].toLowerCase()+'<right><span id="pendingamount'+$('#eventid').val()+'" class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+$('#amount').val()+'</span></right></li>');
+            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center" id="pending'+$('#eventid').val()+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">Next '+map_events[$('#eventid').val()].toLowerCase()+'<right><span id="pendingtime'+$('#eventid').val()+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span id="pendingamount'+$('#eventid').val()+'" class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+$('#amount').val()+'</span></right></li>');
           }
           else
           {
@@ -210,7 +310,38 @@
             $("#pendingamount"+$('#eventid').val()).removeClass("badge-danger").addClass("badge-primary");
           }
           // remove from local options
-          //$('#betevent'+$('#eventid').val()).prop('disabled', true);
+          $('#betevent'+$('#eventid').val()).prop('disabled', true);
+          return false;
+          } catch (err) {
+            alert('This bet has already been placed. You can accept it by clicking on it.')
+            return false
+          }
+        });
+
+        $('#placebet2').submit(function(){
+          if (latestAmount < 1)
+          {
+            alert("You can't place that bet.")
+            return false
+          }
+          if ($('#wager2').val() == "Loading...")
+          {
+            alert("You can't place a bet yet.")
+            return false
+          }
+          if (latestAmount > myBalance)
+          {
+            alert("You don't have enough money to place this bet.")
+            return false
+          }
+          socket.emit('place pending bet', $('#beteventaccept').val(), $('#wager2').val(), username, server, matchid, latestAmount, true);
+          $("#pendingamount"+$('#beteventaccept').val()).removeClass("badge-danger").addClass("badge-primary");
+          $("#pending"+$('#beteventaccept').val()).prop('onclick',null).off('click');
+          $("#pending"+$('#beteventaccept').val()).css('cursor', 'default');
+
+          // remove from local options
+          //$('#betevent'+$('#eventid2').val()).prop('disabled', true);
+          modal.style.display = "none";
           return false;
         });
 
@@ -257,7 +388,7 @@
         <br>
         <center>
           <h6>Players online</h6>
-          <ul class="list-group" style="width:250px;font-size:13pt;border-radius:0;" id="balances_list">
+          <ul class="list-group" style="width:300px;font-size:13pt;border-radius:0;" id="balances_list">
 
           </ul>
         </center>
@@ -279,7 +410,7 @@
     <td style="width:30%;vertical-align:top;">
       <center>
         <h6>Active bets</h6>
-        <ul class="list-group" style="width:250px;font-size:13pt;border-radius:0;" id="activebets">
+        <ul class="list-group" style="width:300px;font-size:13pt;border-radius:0;" id="activebets">
 
         </ul>
       </center>
@@ -288,7 +419,7 @@
 
       <center>
           <h6>Pending bets</h6>
-            <ul class="list-group" style="width:250px;font-size:13pt;border-radius:0;" id="pendingbets">
+            <ul class="list-group" style="width:300px;font-size:13pt;border-radius:0;" id="pendingbets">
 
             </ul>
       </center>
@@ -316,7 +447,7 @@
           <br>
           $ <input type="number" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="0" id="amount" />
           <br>
-          <button type="submit" form="placebet" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:13pt;color:black;" />Place!</button>
+          <button type="submit" form="placebet" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
         </form>
       </center>
     </td>
@@ -325,10 +456,10 @@
             <h6>Live chat</h6>
             <form id="chatform" style="margin-top:10px;">
               <div id="chatfield" style="width:250px;background-color:#1a1c1a;font-family:sans-serif;padding:5px;height:200px;overflow:auto;margin:0;color:white;" align="left">
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafe:</font> Welcome to live betting!</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafe:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafe:</font> When a pending bet is accepted by everyone, it becomes active.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafe:</font> Active bets are paid out as soon as the event occurs in the match!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> Welcome to live betting!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> When a pending bet is accepted by everyone, it becomes active.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> Active bets are paid out as soon as the event occurs in the match!</p>
               </div>
               <input type="text" id="chatinput" style="border-radius:0;background-color:white;width:250px;height:25px;margin:0;font-size:10pt;font-family:sans-serif;" placeholder="Send a message..." autocomplete="off" />
               <input type="submit" style="display:none;" />
@@ -339,6 +470,32 @@
 </table>
 </center>
 </div>
+
+<!-- The Modal -->
+<div id="modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="color:black;">
+      <span class="close">&times;</span>
+      <center>
+      <form id="placebet2">
+          <h6>Accept bet</h6>
+          <select id="eventid2">
+            <option id="beteventaccept" value="2" disabled>Next goal by</option>
+          </select>
+          <select id="wager2">
+            <option id="hometeamoption2" value="Loading...">Loading...</option>
+            <option id="awayteamoption2" value="Loading...">Loading...</option>
+          </select>
+          <br>
+          $ <input type="number" id="acceptamount" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="0" id="amount" disabled/>
+          <br>
+          <button type="submit" form="placebet2" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
+        </form>
+      </center>
+    </div>
+  
+  </div>  
 
     </div><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

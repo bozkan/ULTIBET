@@ -14,6 +14,7 @@ var config = require('./config.js')
 var io = require('socket.io-client')
 var config = require('./config.js')
 var socket = io.connect("http://localhost:1338", {reconnect: true});
+var helpers = require('./functions.js')
 
 var mempoolFile = config.mempoolFile
 
@@ -44,7 +45,9 @@ module.exports = {
                 {
                     if (result[i].category == "timer")
                     {
-                        socket.emit('send timer', result[i].matchminute, result[i].score, result[i].home, result[i].away, result[i].matchid)
+                        result[i].away = "Germany"
+                        result[i].home = "Spain"
+                        socket.emit('send timer', result[i].matchminute, result[i].score, result[i].home, result[i].away, result[i].matchid, helpers.findFlag(result[i].home), helpers.findFlag(result[i].away))
                     }
 
                     // only do events

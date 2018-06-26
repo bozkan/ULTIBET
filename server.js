@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express')
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var broadcast = require('./broadcast.js')
@@ -50,6 +51,7 @@ setInterval(function(){
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+app.use(express.static(__dirname + '/public'));
 
 var servers = []
 var serverToGame = {}
@@ -63,20 +65,47 @@ var serverToCoinbase = {}
 var playerToServer = {}
 var users = []
 var gameToCommentary = {}
+var serverToEvents = {} // dictionary -> array -> dictionary
+
+setInterval(function(){
+
+	for (var key in serverToEvents)
+	{
+		for (var i = 0, n = serverToEvents[key].length; i < n; i++)
+		{
+			try {
+			if (serverToEvents[key][i].timeRemaining == 0)
+			{
+				// if countdown is up, delete the event
+				io.sockets.to(key).emit('delete pending bet', serverToEvents[key][i].eventid)
+				serverToEvents[key].splice(i, 1)
+				for (var j = 0, k = bets.length; j < k; j++)
+				{
+					if (bets[j].eventid == serverToEvents[key][i].eventid && bets[j].server == key)
+					{
+						bets.splice(j, 1)
+					}
+				}
+				console.log(serverToEvents)
+			}
+			else
+			{
+				io.sockets.to(key).emit('tick', serverToEvents[key][i].eventid, serverToEvents[key][i].timeRemaining)
+				serverToEvents[key][i].timeRemaining -= 1
+			}
+			} catch (err) {}
+		}
+	}
+
+}, 1000)
 
 app.get("/", function(req, res){
+	console.log(servers)
 	res.render(__dirname + '/server/masterserver.html', { servers: servers })
 })
 
-app.get("/create", function(req, res){
-	res.sendFile(__dirname + '/server/create.html')
-})
-
 app.get("/play", function(req, res) {
-	if (serverToGame[req.query.server].length == 0)
-		res.render(__dirname + '/server/start.html', { server: req.query.server })
-	else
-		res.render(__dirname + '/server/play.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
+	res.render(__dirname + '/server/play.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
 })
 
 io.on('connection', function (socket) {
@@ -125,15 +154,10 @@ io.on('connection', function (socket) {
 
 	/* Begin handling UI events */
 
-	socket.on('create server', function (servername) {
-		servers.push(servername)
-		serverToGame[servername] = ""
-		serverToPlayers[servername] = []
-		serverToCoinbase[servername] = 0
-	})
-
 	socket.on('create game', function (servername, gameid, coinbase) {
+		servers.push(servername)
 		serverToGame[servername] = gameid
+		serverToPlayers[servername] = []
 		serverToCoinbase[servername] = coinbase
 		gameToCommentary[gameid] ? 1 : gameToCommentary[gameid] = []
 	})
@@ -148,7 +172,11 @@ io.on('connection', function (socket) {
 	socket.on('place pending bet', function (eventid, wager, username, server, matchid, amount, already) {
 		// broadcast that the bet is pending
 		if (already === false)
+		{
 			io.sockets.to(server).emit('receive pending bet', eventid, amount, username)
+			serverToEvents[server] ? 1 : serverToEvents[server] = []
+			serverToEvents[server].push({"eventid": eventid, "timeRemaining": 30 })
+		}
 		// update balances
 		usernameToBalance[username] -= amount
 		var balances = []
@@ -172,8 +200,17 @@ io.on('connection', function (socket) {
 		// everyone has placed a bet -> broadcast the bet
 		if (betCount == serverToPlayers[server].length) 
 		{
-			io.sockets.to(server).emit('receive active bet', eventid, amount)
 			io.sockets.to(server).emit('delete pending bet', eventid)
+			io.sockets.to(server).emit('receive active bet', eventid, amount)
+			// delete event from countdown
+			for (var i = 0, n = serverToEvents[server].length; i < n; i++) 
+			{
+				if (serverToEvents[server][i].eventid == eventid)
+				{
+					serverToEvents[server].splice(i, 1)
+					break
+				}
+			}
 			var from = []
 			var amount = []
 			var wagers = []
@@ -198,10 +235,15 @@ io.on('connection', function (socket) {
 
 	socket.on('user register', function (username) {
 		// register user with new public key (address)
-		var address = register.register(username)
-		addressToUsername[address[0]] = username
-		usernameToAddress[username] = address[0]
-		usernameToPrivate[username] = address[1]
+		if (usernameToAddress[username])
+			io.sockets.to(socket.id).emit('error message', 'This username is already taken. Please choose another username.')
+		else
+		{
+			var address = register.register(username)
+			addressToUsername[address[0]] = username
+			usernameToAddress[username] = address[0]
+			usernameToPrivate[username] = address[1]
+		}
 	})
 
 	socket.on('login user', function (username, server) {
@@ -211,8 +253,15 @@ io.on('connection', function (socket) {
 		playerToServer[username] = server
 		users.push(username)
 		usernameToBalance[username] = serverToCoinbase[server]
-		io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
-		io.sockets.to(server).emit('receive login user', username)
+		if (usernameToAddress[username])
+		{
+			io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
+			io.sockets.to(server).emit('receive login user', username)
+		}
+		else
+		{
+			io.sockets.to(socket.id).emit('error message', 'This user does not exist.', 'login')
+		}
 	})
 
 	socket.on('transfer balances', function (balances) {
@@ -224,11 +273,11 @@ io.on('connection', function (socket) {
 		console.log(balances)
 	})
 
-	socket.on('send timer', function (minute, score, home, away, matchid) {
+	socket.on('send timer', function (minute, score, home, away, matchid, homeflag, awayflag) {
 		for (var key in serverToGame)
 		{
 			if (serverToGame[key] == matchid)
-				io.sockets.to(key).emit('receive timer', minute, score, home, away)
+				io.sockets.to(key).emit('receive timer', minute, score, home, away, homeflag, awayflag)
 		}
 	})
 
@@ -247,6 +296,10 @@ io.on('connection', function (socket) {
 
 	socket.on('new chat', function (username, server, message) {
 		io.sockets.to(server).emit('receive new chat', username, message)
+	})
+
+	socket.on('get player counts', function () {
+		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
 	})
 
 });

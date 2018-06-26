@@ -8,7 +8,6 @@ var config = require('./config.js')
 const SHA512 = config.SHA512
 var bitcoinMessage = require('bitcoinjs-message');
 const credentialsFile = config.credentialsFile
-
 // converts string into hexadecimal
 
 function toHex(str) 
@@ -204,6 +203,28 @@ module.exports = {
       }
 
       return mode
+  },
+
+  findFlag: function (country)
+  {
+        var data = fs.readFileSync("countries.json").toString()
+        data = JSON.parse(data)
+
+        for (var i = 0, n = data.length; i < n; i++)
+        {
+            if (data[i].name == country)
+                return data[i].flag
+        }
+        return false
+  },
+
+  ipToFlag: function (ip)
+  {
+    var data = request('http://www.ipgp.net/api/json/'+ip+'/k87j6h678').data.toString("utf-8")
+    data = data.replace(/callback\({\"Details\":/g, ""); 
+    data = data.replace(/}\);/g, ""); 
+    return JSON.parse(data)
+
   }
 
 };

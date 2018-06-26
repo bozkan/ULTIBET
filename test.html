@@ -1,0 +1,12 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+          $.ajax({
+              url: 'https://ipinfo.io',
+              success: function (result) {
+                //socket.emit('login user', username, server, result.ip)
+                alert(result)
+              },
+              async: false
+          })
+        </script>

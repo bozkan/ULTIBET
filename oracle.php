@@ -28,8 +28,7 @@ function findDiff($old, $new_array, $type)
     }
 }
 
-function oracle($matchid)
-{
+function oracle($matchid) {
 	$res = array();
 
 	function getString($str,$from,$to)
@@ -49,7 +48,8 @@ function oracle($matchid)
 	}
 
 	$id = intval(getString($data_new,'https://www.sportinglife.com/football/live/','/commentary'));
-	$score = getString($data_new,'<div class="live-score-box">','</div>');
+	//$score = getString($data_new,'<div class="live-score-box">','</div>');
+	$score = "1 - 0";
 
 	// make this dynamic
 	$matchminute = getString($data_new,'<div class="timer"','&#x27;');
@@ -234,9 +234,9 @@ function oracle($matchid)
 		}
     }
 
-    if (file_exists("old_".$id.".json"))
+    if (file_exists("old/old_".$id.".json"))
     {
-        $old_events = file_get_contents("old_".$id.".json");
+        $old_events = file_get_contents("old/old_".$id.".json");
     }
     else
     {
@@ -245,10 +245,7 @@ function oracle($matchid)
 
     $old_events = json_decode($old_events, true);
 
-    if (sizeof($res) > 1)
-    {
-        file_put_contents("old_".$id.".json", json_encode(array_values($res)));
-    }
+    file_put_contents(__DIR__ . "/old/old_".$id.".json", json_encode(array_values($res))) or die("oops");
 
     if (sizeof($old_events) > 1)
     {

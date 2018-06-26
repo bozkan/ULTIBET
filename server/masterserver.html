@@ -13,6 +13,85 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     
     <link href="styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+    <style type="text/css">
+      ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color:    black;
+      }
+      :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color:    black;
+      opacity:  1;
+      }
+      ::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color:    black;
+      opacity:  1;
+      }
+      :-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color:    black;
+      }
+      ::-ms-input-placeholder { /* Microsoft Edge */
+      color:    black;
+      }
+
+      ::placeholder { /* Most modern browsers support this now. */
+      color:    black;
+      }
+
+      .hoverable:hover {
+        background-color: #fcffc1;
+      }
+
+      option {
+        font-family: 'Jura';
+      }
+
+      h6 {
+        font-size:19pt;
+      }
+
+      /* The Modal (background) */
+      .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 2; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      /* Modal Content */
+      .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 48%;
+      }
+
+      /* The Close Button */
+      .close {
+          color: #aaaaaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+      }
+
+      .player-amount:hover {
+        text-decoration: none;
+      }
+    </style>
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -20,41 +99,134 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
+      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo.png" width="300" height="300" /></a> <br>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5bba5c" style="font-size:70pt;">BET</font><font color="white" style="font-size:70pt;">CAFÉ</font><br>&nbsp;&nbsp;&nbsp;&nbsp;<font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
     <script>
+      var $_GET = {};
+      if(document.location.toString().indexOf('?') !== -1) {
+          var query = document.location
+                        .toString()
+                        // get the query string
+                        .replace(/^.*?\?/, '')
+                        // and remove any existing hash string (thanks, @vrijdenker)
+                        .replace(/#.*$/, '')
+                        .split('&');
+
+          for(var i=0, l=query.length; i<l; i++) {
+            var aux = decodeURIComponent(query[i]).split('=');
+            $_GET[aux[0]] = aux[1];
+          }
+      }
+
+      function playnow()
+      {
+        $("#playarea").show()
+        $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+      }
+
+      function modalf(eventid,amount) {
+            modal.style.display = "block";
+            $("#beteventaccept").val(eventid)
+            $("#eventid2").val(eventid)
+            $("#acceptamount").val(parseInt(amount))
+            latestAmount = amount
+            $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
+        }
+
         $(function () {
           var socket = io();
           var address = Math.floor(Math.random() * 1000)
-          socket.emit('new user', address);
 
-          $('#login_form').submit(function(){
-            socket.emit('user login', $('#login').val());
-          });
+          var span = document.getElementsByClassName("close")[0];
+
+          // When the user clicks on <span> (x), close the modal
+          span.onclick = function() {
+             document.getElementById('modal').style.display = "none";
+          }
+
+          // When the user clicks anywhere outside of the modal, close it
+          window.onclick = function(event) {
+              if (event.target == modal) {
+                document.getElementById('modal').style.display = "none";
+              }
+          }
+
           $('#register_form').submit(function(){
             socket.emit('user register', $('#register').val());
           });
+
+          if ($_GET['r'])
+          {
+            $("#playarea").show()
+            $("#register_form").hide()
+            $("html, body").animate({ scrollTop: $(document).height() }, 1);
+          }
+
+          $('#create').submit(function(){
+            if (/^[a-z0-9]+$/i.test($('#servername').val()) && /^[a-z0-9]+$/i.test($('#gameid').val()) && /^[a-z0-9]+$/i.test($('#coinbase').val()))
+              socket.emit('create game', $('#servername').val(), parseInt($('#gameid').val()), parseInt($('#coinbase').val()));
+            else
+              alert("Please fill in all the fields properly.")
+          });
+
+          socket.on('receive player counts', function(serverToPlayers){
+            for (var key in serverToPlayers)
+            {
+                $("#count"+key).html(serverToPlayers[key].length)
+            }
+          })
+
+          socket.on('error message', function(message) {
+            alert(message)
+          })
+
+          socket.emit('get player counts')
+
         });
       </script>
-
-    <div class="container">
-      <center><form id="register_form">Register <input type="text" id="register" /><input type="submit" /></form></center>
-      <div class="starter-template">
-        <img src="http://envision.vojtadrmota.com/soccerball.png" width="60px" height="60px" />
-        <h1>Betpeers</h1>
-        <p class="lead">A truly peer-to-peer betting platform. </p>
-        <h2>Server List</h2>
+  <br><br>
+  <div align="center"><button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:20pt;padding:10px;cursor:pointer;margin:0;" onclick="playnow()" />Play now!</button></div>
+    
+  <br><br>
+  <div class="container" id="playarea" style="position:relative;display:none;" align="center">
+      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button></form></center>
+        <br><br>
+        <button type="button" class="btn btn-primary" style="border-radius: 0;cursor:pointer;" onclick="modalf();">Create New Room</button>
+        <br><br><br>
+        <h2>Online Rooms</h2>
         <br>
-        <ul class="list-group" id="serverlist">
-          </ul>
-            <br>
-        <a href="/create"><button type="button" class="btn btn-primary">Create Room</button></a>
-    </div>
-
+        <ul class="list-group" id="serverlist" style="width:50%;margin-bottom:100px;">
+        </ul>
     </div><!-- /.container -->
+
+
+    <!-- The Modal -->
+    <div id="modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content" style="color:black;">
+          <span class="close">&times;</span>
+          <center>
+              <h2>Create Room</h2>
+              <br>
+              <form id="create" method="GET" action="/">
+                  <div class="form-group">
+                      <input type="text" class="form-control" id="servername" name="servername" placeholder="Room name">
+                      <input type="text" class="form-control" id="gameid" name="gameid" placeholder="Enter game ID">
+                      <input type="text" class="form-control" id="coinbase" name="coinbase" placeholder="Enter starting balance">
+                      <small id="emailHelp" class="form-text text-muted">Only alphanumeric characters allowed.</small>
+                      <input type="hidden" name="r" value="y" />
+                  </div>
+                  <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Create!</button>
+              </form>
+          </center>
+        </div>
+      
+      </div>  
 
   <script>
       if ("<%= servers %>".length == 0)
@@ -68,13 +240,13 @@
 
       if (p_servers.length < 1)
       {
-        $("#serverlist").append('No servers currently running.')
+        $("#serverlist").append('No rooms currently online.')
       }
       else
       {
         for (var i = 0, n = p_servers.length; i < n; i++)
         {
-          $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center">'+p_servers[i]+'<span class="badge badge-primary badge-pill">14</span></li></a>');
+          $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">14</span></li></a>');
         }
       }
     </script>
