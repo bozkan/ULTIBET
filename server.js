@@ -77,15 +77,17 @@ setInterval(function(){
 			if (serverToEvents[key][i].timeRemaining == 0)
 			{
 				// if countdown is up, delete the event
-				serverToEvents[key].splice(i, 1)
 				for (var j = 0, k = bets.length; j < k; j++)
 				{
 					if (bets[j].eventid == serverToEvents[key][i].eventid && bets[j].server == key)
 					{
+						console.log("KEY "+key)
 						io.sockets.to(key).emit('delete pending bet timer', serverToEvents[key][i].eventid, bets[j].username, bets[j].amount)
+						usernameToBalance[bets[j].username] = parseFloat(usernameToBalance[bets[j].username]) + parseFloat(bets[j].amount)
 						bets.splice(j, 1)
 					}
 				}
+				serverToEvents[key].splice(i, 1)
 				console.log(serverToEvents)
 			}
 			else
@@ -93,7 +95,7 @@ setInterval(function(){
 				io.sockets.to(key).emit('tick', serverToEvents[key][i].eventid, serverToEvents[key][i].timeRemaining)
 				serverToEvents[key][i].timeRemaining -= 1
 			}
-			} catch (err) {}
+			} catch (err) { console.log("ERR: "+ err)}
 		}
 	}
 

@@ -100,7 +100,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
-      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo.png" width="300" height="300" /></a> <br>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#5bba5c" style="font-size:70pt;">BET</font><font color="white" style="font-size:70pt;">CAFÉ</font><br>&nbsp;&nbsp;&nbsp;&nbsp;<font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
+      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="300" height="300" /></a> <br><font color="#5bba5c" style="font-size:70pt;">BET</font><font color="white" style="font-size:70pt;">CAFÉ</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -186,6 +186,27 @@
 
           socket.emit('get player counts')
 
+          if ("<%= servers %>".length == 0)
+          {
+            var p_servers = [];
+          }
+          else
+          {
+            var p_servers = "<%= servers %>".split(",");
+          }
+
+          if (p_servers.length < 1)
+          {
+            $("#serverlist").append('No rooms currently online.')
+          }
+          else
+          {
+            for (var i = 0, n = p_servers.length; i < n; i++)
+            {
+              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">14</span></li></a>');
+            }
+          }
+
         });
       </script>
   <br><br>
@@ -228,28 +249,6 @@
       
       </div>  
 
-  <script>
-      if ("<%= servers %>".length == 0)
-      {
-        var p_servers = [];
-      }
-      else
-      {
-        var p_servers = "<%= servers %>".split(",");
-      }
-
-      if (p_servers.length < 1)
-      {
-        $("#serverlist").append('No rooms currently online.')
-      }
-      else
-      {
-        for (var i = 0, n = p_servers.length; i < n; i++)
-        {
-          $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">14</span></li></a>');
-        }
-      }
-    </script>
   </body>
 </html>
 
