@@ -48,8 +48,8 @@ function oracle($matchid) {
 	}
 
 	$id = intval(getString($data_new,'https://www.sportinglife.com/football/live/','/commentary'));
-	//$score = getString($data_new,'<div class="live-score-box">','</div>');
-	$score = "1 - 0";
+	$score = getString($data_new,'<div class="live-score-box">','</div>');
+	//$score = "1 - 0";
 
 	// make this dynamic
 	$matchminute = getString($data_new,'<div class="timer"','&#x27;');

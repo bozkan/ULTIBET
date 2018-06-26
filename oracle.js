@@ -45,8 +45,6 @@ module.exports = {
                 {
                     if (result[i].category == "timer")
                     {
-                        result[i].away = "Germany"
-                        result[i].home = "Spain"
                         socket.emit('send timer', result[i].matchminute, result[i].score, result[i].home, result[i].away, result[i].matchid, helpers.findFlag(result[i].home), helpers.findFlag(result[i].away))
                     }
 
