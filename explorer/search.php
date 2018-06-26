@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 // can be accessed through: txid, blockheight
 
 // summary information
-$chain = json_decode(file_get_contents("blockchain.txt"), TRUE)["chain"];
+$chain = json_decode(file_get_contents("../blockchain.txt"), TRUE)["chain"];
 $txid = $_GET['txid'];
 
 function findHeight($txid, $chain)

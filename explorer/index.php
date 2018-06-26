@@ -24,7 +24,7 @@ function countAddresses($chain)
 }
 
 // summary information
-$chain = json_decode(file_get_contents("blockchain.txt"), TRUE)["chain"];
+$chain = json_decode(file_get_contents("../blockchain.txt"), TRUE)["chain"];
 $blocks = sizeof($chain);
 $addresses = countAddresses($chain);
 $age = intval((strtotime("now") - strtotime("9th June 2018")) / 86400);
