@@ -105,7 +105,12 @@
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
     <div style="width:100%;font-size:30pt;padding-left:100px;"> <a href="/" class="no-underline"><font color="#5bba5c">BET</font><font color="white">CAFÉ</font></div></a>
-    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center"><a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a><p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam"></span> <span id="vs" style="display:none;">vs.</span> <span id="awayteam"></span></p><p style="margin:0;padding:0;"><span id="matchscore" style="font-size:16pt;"></span></p><p style="font-size:10pt;margin:0;padding:0;" id="matchminute">Waiting for login...</p></div>
+    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">
+      <script>
+        if (!isPhone())
+          document.write('<a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a>');
+      </script>
+      <p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam"></span> <span id="vs" style="display:none;">vs.</span> <span id="awayteam"></span></p><p style="margin:0;padding:0;"><span id="matchscore" style="font-size:16pt;"></span></p><p style="font-size:10pt;margin:0;padding:0;" id="matchminute">Waiting for login...</p></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -138,6 +143,7 @@
           "for",
           "by"
         ];
+
         function modalf(eventid,amount) {
             modal.style.display = "block";
             $("#beteventaccept").val(eventid)
@@ -145,6 +151,10 @@
             $("#acceptamount").val(parseInt(amount))
             latestAmount = amount
             $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
+        }
+
+        function isPhone() {
+          return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         }
 
       $(function () {
