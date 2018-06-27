@@ -109,7 +109,7 @@
       function isPhone() {
           return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       }
-      
+
       if (!isPhone())
       {
         document.write('<div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">');
@@ -283,7 +283,10 @@
         });
 
         socket.on('login approved', function() {
-          $("#login_form").html(server)
+          if (!isPhone())
+          {
+            $("#login_form").html(server)
+          }
           $("#login_form").css("font-size", "30pt")
           $("#playingarea").show()
           $("#matchminute").html("Loading...")
