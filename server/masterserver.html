@@ -156,7 +156,10 @@
           }
 
           $('#register_form').submit(function(){
-            socket.emit('user register', $('#register').val());
+            if (/^[a-z0-9]+$/i.test($('#register').val()))
+              socket.emit('user register', $('#register').val());
+            else
+              alert('Only letters and numbers allowed in username');
           });
 
           if ($_GET['r'])
@@ -203,7 +206,7 @@
           {
             for (var i = 0, n = p_servers.length; i < n; i++)
             {
-              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">14</span></li></a>');
+              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
             }
           }
 
