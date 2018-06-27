@@ -296,8 +296,7 @@
           $("#matchminute").html("Loading...")
           if (isPhone())
           {
-            var w = $("#playingarea").width();
-            $('#navbar').css('width', w);
+            $('#navbar').hide();
           }
           socket.emit('login user', username, server)
         })
