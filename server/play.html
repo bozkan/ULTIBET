@@ -105,8 +105,12 @@
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
     <div style="width:100%;font-size:30pt;padding-left:100px;"> <a href="/" class="no-underline"><font color="#5bba5c">BET</font><font color="white">CAFÉ</font></div></a>
-    <div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">
-      <script>
+    <script>
+      if (!isPhone())
+        document.write('<div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">');
+      else
+        document.write('<div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;z-index:1;min-height:140px;" align="center">');
+          
         if (!isPhone())
           document.write('<a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a>');
       </script>
