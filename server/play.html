@@ -168,6 +168,11 @@
         }
 
       $(function () {
+
+        if(isPhone())
+        {
+          $('#maintable').attr("cellspacing", 20);
+        }
         var modal = document.getElementById('modal');
         var span = document.getElementsByClassName("close")[0];
 
@@ -418,7 +423,7 @@
 
 <div id="playingarea" style="display:none;">
 <center>
-<table style="width:100%;">
+<table id="maintable" style="width:100%;">
 <tr>
   <td style="width:30%;vertical-align:top;"></td>
   <td style="width:30%;vertical-align:top;">
