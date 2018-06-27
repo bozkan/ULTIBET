@@ -112,11 +112,11 @@
 
       if (!isPhone())
       {
-        document.write('<div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">');
+        document.write('<div id="navbar" style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">');
       }
       else
       {
-        document.write('<div style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;z-index:1;min-height:140px;" align="center">');
+        document.write('<div id="navbar" style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;z-index:1;min-height:140px;" align="center">');
       }
         
       if (!isPhone())
@@ -294,6 +294,11 @@
           $("#login_form").css("font-size", "30pt")
           $("#playingarea").show()
           $("#matchminute").html("Loading...")
+          if (isPhone())
+          {
+            var w = $(window).width();
+            $('#navbar').css('width', w);
+          }
           socket.emit('login user', username, server)
         })
 
