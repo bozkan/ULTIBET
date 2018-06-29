@@ -158,7 +158,23 @@
           "by"
         ];
 
-        function modalf(eventid,amount) {
+        var socket = io();
+        var username = ""
+        var p_balances = {}
+        var server = "<%= server %>"
+        var matchid = "<%= matchid %>"
+        var myBalance = parseInt("<%= coinbase %>")
+
+      function showbetoverview (eventid) {
+          $("#betoverviewname").empty()
+          $("#betoverviewplayers").empty()
+          socket.emit('ask bet overview', eventid, server, matchid)
+          document.getElementById("betoverview").style.display = "block"
+          $("#betoverviewname").html("Next "+map_events[eventid])
+
+      }
+
+        function modalf(eventid, amount) {
             modal.style.display = "block";
             $("#beteventaccept").val(eventid)
             $("#eventid2").val(eventid)
@@ -173,18 +189,26 @@
         {
           $('#maintable').attr("cellspacing", 20);
         }
+
         var modal = document.getElementById('modal');
         var span = document.getElementsByClassName("close")[0];
+        var span2 = document.getElementsByClassName("close")[1];
+
 
         // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
             modal.style.display = "none";
         }
 
+        span2.onclick = function() {
+            document.getElementById("betoverview").style.display = "none";
+        }
+
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
-            if (event.target == modal) {
+            if (event.target == modal || event.target == document.getElementById("betoverview")) {
                 modal.style.display = "none";
+                document.getElementById("betoverview").style.display = "none";
             }
         }
 
@@ -192,12 +216,7 @@
           var d = $('#chatfield');
           d.scrollTop(d.prop("scrollHeight"));
         }
-        var username = ""
-        var p_balances = {}
-        var server = "<%= server %>"
-        var matchid = "<%= matchid %>"
-        var myBalance = parseInt("<%= coinbase %>")
-        var socket = io();
+
         socket.on('receive pending bet', function(eventid, amount, i_username) {
           if (i_username != username)
           {
@@ -206,13 +225,19 @@
           }
         });
 
+        socket.on('receive bet overview', function(bets){
+          bets.forEach(function (bet) {
+            $("#betoverviewplayers").append('<b>'+bet.username+'</b>: '+bet.wager+'<br>');
+          })
+        })
+
         socket.on('receive address', function(address){
           $("#your_address").html('<font style="font-size:9pt;">'+username+'</font><br>'+address);
         })
 
         socket.on('receive active bet', function(eventid, amount){
           $('#betevent'+eventid).prop('disabled', true);
-          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
+          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+eventid+')" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
        })
 
         socket.on('delete pending bet', function(eventid){
@@ -283,11 +308,11 @@
 
         $('#login_form').submit(function(){
           username = $("#login").val();
-          socket.emit('ask login', username)
+          socket.emit('ask login', username, server)
           return false;
         });
 
-        socket.on('login approved', function() {
+        socket.on('login approved', function(alreadyLoggedIn) {
           if (!isPhone())
           {
             $("#login_form").html(server)
@@ -303,7 +328,7 @@
           {
             $('#navbar').hide();
           }
-          socket.emit('login user', username, server)
+          socket.emit('login user', username, server, alreadyLoggedIn)
         })
 
         socket.on('error message', function(message, type) {
@@ -419,7 +444,7 @@
 
     <div class="container" style="font-family:'Jura';color:white;padding:20px;">
 
-        <center><form id="login_form">Log in: &nbsp;<input type="text" id="login" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;" />Play!</button></form></center>
+        <center><form id="login_form">Log in: &nbsp;<input type="text" id="login" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Play!</button></form></center>
 
 <div id="playingarea" style="display:none;">
 <center>
@@ -539,6 +564,22 @@
     </div>
   
   </div>  
+
+  <div id="betoverview" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="color:black;">
+      <span class="close">&times;</span>
+      <center>
+        <h6 id="betoverviewname"></h6>
+        <br><br>
+        <span id="betoverviewplayers">
+
+        </span>
+      </center>
+    </div>
+  
+  </div> 
 
     </div><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

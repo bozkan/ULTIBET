@@ -59,6 +59,7 @@ var addressToUsername = {}
 var usernameToAddress = {}
 var usernameToPrivate = {}
 var bets = []
+var _bets = []
 var serverToPlayers = {}
 var usernameToBalance = {}
 var serverToCoinbase = {}
@@ -162,13 +163,29 @@ io.on('connection', function (socket) {
 		serverToPlayers[servername] = []
 		serverToCoinbase[servername] = coinbase
 		gameToCommentary[gameid] ? 1 : gameToCommentary[gameid] = []
+		console.log(serverToPlayers)
 	})
 
-	socket.on('ask login', function (username) {
-		if (users.indexOf(username) != -1)
-			io.sockets.to(socket.id).emit('error message', 'This username is already being used. Please choose another one.')
+	socket.on('ask login', function (username, server) {
+		if (users.indexOf(username) == -1)
+		{
+			io.sockets.to(socket.id).emit('error message', 'This username is not registered.')
+		}
 		else
-			io.sockets.to(socket.id).emit('login approved')
+		{
+			if (serverToPlayers[server].indexOf(username) != -1)
+				io.sockets.to(socket.id).emit('login approved', true)
+			else
+				io.sockets.to(socket.id).emit('login approved', false)
+		}
+			
+	})
+
+	socket.on('ask bet overview', function (eventid, server, matchid) {
+
+		__bets = _bets.filter(function(bet){ return bet.server == server && bet.matchid == matchid && bet.eventid == eventid })
+		console.log("BETS; "+_bets)
+		io.sockets.to(socket.id).emit('receive bet overview', __bets)
 	})
 
 	socket.on('place pending bet', function (eventid, wager, username, server, matchid, amount, already) {
@@ -190,6 +207,9 @@ io.on('connection', function (socket) {
 		// sign the bet
 		var signature = sign.sign(usernameToAddress[username], usernameToPrivate[username], amount)
 		bets.push(
+			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature }
+		)
+		_bets.push(
 			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature }
 		)
 		// check if bet is complete
@@ -245,20 +265,25 @@ io.on('connection', function (socket) {
 			addressToUsername[address[0]] = username
 			usernameToAddress[username] = address[0]
 			usernameToPrivate[username] = address[1]
+			users.push(username)
 		}
+		console.log(usernameToAddress)
 	})
 
-	socket.on('login user', function (username, server) {
+	socket.on('login user', function (username, server, alreadyLoggedIn) {
 		// add unique player to server
 		serverToPlayers[server] ? serverToPlayers[server].indexOf(username) == -1 ? serverToPlayers[server].push(username) : 1 : serverToPlayers[server] = [username]
 		socket.join(server)
 		playerToServer[username] = server
-		users.push(username)
 		usernameToBalance[username] = serverToCoinbase[server]
 		if (usernameToAddress[username])
 		{
 			io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
-			io.sockets.to(server).emit('receive login user', username)
+			
+			if (!alreadyLoggedIn)
+			{
+				io.sockets.to(server).emit('receive login user', username)
+			}
 		}
 		else
 		{
