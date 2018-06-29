@@ -306,6 +306,17 @@
           $("#pendingtime"+eventid).html(timeRemaining)
         })
 
+        socket.on('receive payout history', function(payoutHistory) {
+          $("#payouthistory").empty()
+          payoutHistory.forEach(function(el) {
+            for (var i = 0, n = el.amount.length; i < n, i++)
+            {
+              $("#payouthistory").append("From: "+el.from[i]+", To: "+el.to[i]+", Amount: "+el.amount[i]+"<br>")
+            }
+            $("#payouthistory").append("Hash: "+el.hash+"<br><br>")
+          })
+        })
+
         $('#login_form').submit(function(){
           username = $("#login").val();
           socket.emit('ask login', username, server)
@@ -532,6 +543,13 @@
               <input type="text" id="chatinput" style="border-radius:0;background-color:white;width:250px;height:25px;margin:0;font-size:10pt;font-family:sans-serif;" placeholder="Send a message..." autocomplete="off" />
               <input type="submit" style="display:none;" />
             </form>
+
+            <br>
+
+            <h6>Payout history</h6>
+            <span id="payouthistory">
+
+            </span>
           </center>
     </td>
   </tr>

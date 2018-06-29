@@ -279,7 +279,7 @@ io.on('connection', function (socket) {
 		if (usernameToAddress[username])
 		{
 			io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
-			
+
 			if (!alreadyLoggedIn)
 			{
 				io.sockets.to(server).emit('receive login user', username)
@@ -292,11 +292,20 @@ io.on('connection', function (socket) {
 	})
 
 	socket.on('transfer balances', function (balances) {
+		var server_updates = []
 		for (var i = 0, n = balances.length; i < n; i++)
 		{
 			usernameToBalance[balances[i].player] += balances[i].amount
 			io.sockets.to(playerToServer[balances[i].player]).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
+			server_updates.indexOf(playerToServer[balances[i].player]) == -1 ? server_updates.push(playerToServer[balances[i].player]) : 1
 		}
+
+		for (var i = 0, n = server_updates.length; i < n; i++)
+		{
+			var payoutHistory = blockchain.getPayoutHistory(server_updates[i])
+			io.sockets.to(server_updates[i]).emit('receive payout history', payoutHistory)
+		}
+	
 		console.log(balances)
 	})
 
