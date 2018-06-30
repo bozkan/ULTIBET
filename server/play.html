@@ -309,7 +309,7 @@
         socket.on('receive payout history', function(payoutHistory) {
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
-            for (var i = 0, n = el.amount.length; i < n, i++)
+            for (var i = 0, n = el.amount.length; i < n; i++)
             {
               $("#payouthistory").append("From: "+el.from[i]+", To: "+el.to[i]+", Amount: "+el.amount[i]+"<br>")
             }
