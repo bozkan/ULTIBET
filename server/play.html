@@ -311,9 +311,9 @@
           payoutHistory.forEach(function(el) {
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
-              $("#payouthistory").append("From: "+el.from[i]+", To: "+el.to[i]+", Amount: "+el.amount[i]+"<br>")
+              $("#payouthistory").append("From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>")
             }
-            $("#payouthistory").append("Hash: "+el.hash+"<br><br>")
+            $("#payouthistory").append("Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>")
           })
         })
 
@@ -547,9 +547,10 @@
             <br>
 
             <h6>Payout history</h6>
-            <span id="payouthistory">
+            <br>
+            <div id="payouthistory" align="left" style="max-width:200px;font-size:13px;">
 
-            </span>
+            </div>
           </center>
     </td>
   </tr>
@@ -591,9 +592,9 @@
       <center>
         <h6 id="betoverviewname"></h6>
         <br><br>
-        <span id="betoverviewplayers">
+        <div id="betoverviewplayers">
 
-        </span>
+        </div>
       </center>
     </div>
   

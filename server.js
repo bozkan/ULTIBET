@@ -7,6 +7,7 @@ var register = require('./register.js')
 var sign = require('./sign.js')
 var oracle = require('./oracle.js')
 var config = require('./config.js')
+var blockchain = require('./blockchain.js')
 
 var balances = []
 
@@ -299,14 +300,16 @@ io.on('connection', function (socket) {
 			io.sockets.to(playerToServer[balances[i].player]).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
 			server_updates.indexOf(playerToServer[balances[i].player]) == -1 ? server_updates.push(playerToServer[balances[i].player]) : 1
 		}
-
-		for (var i = 0, n = server_updates.length; i < n; i++)
-		{
-			var payoutHistory = blockchain.getPayoutHistory(server_updates[i])
-			io.sockets.to(server_updates[i]).emit('receive payout history', payoutHistory)
-		}
 	
 		console.log(balances)
+	})
+
+	socket.on('lookup payout history', function () {
+		for (var i = 0, n = servers.length; i < n; i++)
+		{
+			var payoutHistory = blockchain.getPayoutHistory(servers[i], addressToUsername)
+			io.sockets.to(servers[i]).emit('receive payout history', payoutHistory)
+		}
 	})
 
 	socket.on('send timer', function (minute, score, home, away, matchid, homeflag, awayflag) {

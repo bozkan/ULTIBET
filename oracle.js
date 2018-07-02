@@ -80,6 +80,7 @@ module.exports = {
                     }
                 }
                 socket.emit('transfer balances', balances)
+                socket.emit('lookup payout history')
             })
 
         })

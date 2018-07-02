@@ -312,6 +312,27 @@ module.exports = {
 		}
 	}
 	return false // if there is not yet a coinbase
+  },
+
+  getPayoutHistory: function (server, addressToUsername)
+  {
+	var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+	var payoutHistory = []
+	for (var i = 0, n = chain.length; i < n; i++)
+	{
+		block = chain[i]
+		if (block.payload.server == server && block.payload.type == "transfer")
+		{
+			_from = []
+			_to = []
+			block.payload.from.forEach(function(el) { _from.push(addressToUsername[el]) })
+			block.payload.to.forEach(function(el) { _to.push(addressToUsername[el]) })
+
+			payoutHistory.push({ "from": _from, "to": _to, "amount": block.payload.amount, "hash": block.hash })
+		}
+	}
+
+	return payoutHistory
   }
 
 }
