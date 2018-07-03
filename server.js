@@ -205,7 +205,6 @@ io.on('connection', function (socket) {
 	socket.on('ask bet overview', function (eventid, server, matchid) {
 
 		__bets = _bets.filter(function(bet){ return bet.server == server && bet.matchid == matchid && bet.eventid == eventid })
-		console.log("BETS; "+_bets)
 		io.sockets.to(socket.id).emit('receive bet overview', __bets)
 	})
 
@@ -241,7 +240,7 @@ io.on('connection', function (socket) {
 				betCount++
 		}
 		// everyone has placed a bet -> broadcast the bet
-		if (betCount == serverToPlayers[server].length) 
+		if (betCount == serverToPlayers[server].length) // this defines the threshold for a pending bet to become active
 		{
 			io.sockets.to(server).emit('delete pending bet', eventid)
 			io.sockets.to(server).emit('receive active bet', eventid, amount)

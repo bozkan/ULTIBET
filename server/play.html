@@ -324,11 +324,13 @@
         socket.on('receive payout history', function(payoutHistory) {
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
+            var output = ""
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
-              $("#payouthistory").append("From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>")
+              output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"
             }
-            $("#payouthistory").append("Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>")
+            output += "Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>"
+            $("#payouthistory").prepend(output) // latest payout entry is first
           })
         })
 
