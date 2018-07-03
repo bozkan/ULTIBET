@@ -9,7 +9,6 @@ var oracle = require('./oracle.js')
 var config = require('./config.js')
 var blockchain = require('./blockchain.js')
 
-var balances = []
 
 function getMatches(dict)
 {
@@ -68,6 +67,7 @@ var playerToServer = {}
 var users = []
 var gameToCommentary = {}
 var serverToEvents = {} // dictionary -> array -> dictionary
+var socketToUsername = {}
 
 setInterval(function(){
 
@@ -167,6 +167,25 @@ io.on('connection', function (socket) {
 		console.log(serverToPlayers)
 	})
 
+	socket.on('disconnect', function() {
+
+		// remove player from server count
+		var identify = serverToPlayers[playerToServer[socketToUsername[socket.id]]]
+		identify.splice(identify.indexOf(socketToUsername[socket.id]), 1)
+
+		// tell other players in server about disconnect
+		io.sockets.to(playerToServer[socketToUsername[socket.id]]).emit('player disconnected', socketToUsername[socket.id])
+		
+	})
+
+	socket.on('lookup active bets', function (server) {
+
+		__bets = _bets.filter(function(bet) { return bet.server == server })
+
+		io.sockets.to(socket.id).emit('return lookup active bets', __bets)
+
+	})
+
 	socket.on('ask login', function (username, server) {
 		if (users.indexOf(username) == -1)
 		{
@@ -174,6 +193,7 @@ io.on('connection', function (socket) {
 		}
 		else
 		{
+			socketToUsername[socket.id] = username
 			if (serverToPlayers[server].indexOf(username) != -1)
 				io.sockets.to(socket.id).emit('login approved', true)
 			else
@@ -331,6 +351,7 @@ io.on('connection', function (socket) {
 
 	socket.on('do delete active bet', function (server, eventid) {
 		io.sockets.to(server).emit('delete active bet', eventid)
+		_bets = _bets.filter(function(bet) { return !(bet.server == server && bet.eventid == eventid) })
 	})
 
 	socket.on('new chat', function (username, server, message) {
