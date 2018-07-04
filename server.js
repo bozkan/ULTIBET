@@ -68,6 +68,7 @@ var users = []
 var gameToCommentary = {}
 var serverToEvents = {} // dictionary -> array -> dictionary
 var socketToUsername = {}
+var serverToDownvotes = {} // dictionary (server) -> dictionary (eventid) -> value (downvotes)
 
 setInterval(function(){
 
@@ -169,13 +170,14 @@ io.on('connection', function (socket) {
 
 	socket.on('disconnect', function() {
 
+		try {
 		// remove player from server count
 		var identify = serverToPlayers[playerToServer[socketToUsername[socket.id]]]
 		identify.splice(identify.indexOf(socketToUsername[socket.id]), 1)
 
 		// tell other players in server about disconnect
 		io.sockets.to(playerToServer[socketToUsername[socket.id]]).emit('player disconnected', socketToUsername[socket.id])
-		
+		} catch (err) {}
 	})
 
 	socket.on('lookup active bets', function (server) {
@@ -323,6 +325,19 @@ io.on('connection', function (socket) {
 		console.log(balances)
 	})
 
+	socket.on('send downvote bet', function (eventid, server, matchid) {
+		serverToDownvotes[server][eventid] ? serverToDownvotes[server][eventid] += 1 : serverToDownvotes[server][eventid] = 1
+
+		io.sockets.to(server).emit('receive downvote bet', eventid, serverToDownvotes[server][eventid])
+
+		if (serverToDownvotes[server][eventid] == serverToPlayers[server].length) // this determines the threshold for downvotes
+		{
+			// an active bet should be deleted
+			io.sockets.to(server).emit('delete active bet', eventid)
+			serverToDownvotes[server][eventid] ? serverToDownvotes[server][eventid] = 0 : 1
+		}
+	})
+
 	socket.on('lookup payout history', function () {
 		for (var i = 0, n = servers.length; i < n; i++)
 		{
@@ -350,6 +365,7 @@ io.on('connection', function (socket) {
 
 	socket.on('do delete active bet', function (server, eventid) {
 		io.sockets.to(server).emit('delete active bet', eventid)
+		serverToDownvotes[server][eventid] ? serverToDownvotes[server][eventid] = 0 : 1
 		_bets = _bets.filter(function(bet) { return !(bet.server == server && bet.eventid == eventid) })
 	})
 

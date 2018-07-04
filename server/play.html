@@ -95,6 +95,14 @@
       .no-underline:hover {
         text-decoration: none;
       }
+
+      .hover_underline {
+        text-decoration: none;
+      }
+      .hover_underline:hover {
+        text-decoration: underline;
+        color:black;
+      }
     </style>
 
     <!--[if lt IE 9]>
@@ -164,6 +172,7 @@
         var server = "<%= server %>"
         var matchid = "<%= matchid %>"
         var myBalance = parseInt("<%= coinbase %>")
+        var hasDownvoted = false
 
       function showbetoverview (eventid, amount) {
           $("#betoverviewname").empty()
@@ -185,6 +194,11 @@
             $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
         }
 
+        function downvote(eventid) {
+          socket.emit('send downvote bet', eventid, server, matchid)
+          hasDownvoted = true
+        }
+
       $(function () {
 
         if(isPhone())
@@ -202,7 +216,7 @@
         socket.on('return lookup active bets', function(bets){
           bets.forEach(function (el) {
             $('#betevent'+el.eventid).prop('disabled', true);
-            $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+el.eventid+','+el.amount+')" id="active'+el.eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[el.eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+el.amount+'</span></right></li>');
+            $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+el.eventid+','+el.amount+')" id="active'+el.eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[el.eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+el.amount+'</span>&nbsp;&nbsp;<span title="Vote to remove this bet" id="downvotes'+eventid+'" onclick="downvote('+eventid+')" style="padding-top:6px;font-size:9pt;color:red;cursor:pointer;" class="hover_underline">&#x2715;</span></right></li>');
           })
         })
 
@@ -236,6 +250,15 @@
           }
         });
 
+        socket.on('receive downvote bet', function(eventid, downvotes) {
+
+          $("#downvotes"+eventid).empty().html(downvotes)
+          if (!hasDownvoted)
+            $("#downvotes"+eventid).append(" &#x2715;")
+          else
+            $("#downvotes"+eventid).prop('onclick',null).off('click').removeClass("hover_underline").css({'cursor': 'default'});
+        })
+
         socket.on('receive bet overview', function(bets){
           bets.forEach(function (bet) {
             $("#betoverviewplayers").append('<b>'+bet.username+'</b>: '+bet.wager+'<br>');
@@ -248,7 +271,7 @@
 
         socket.on('receive active bet', function(eventid, amount){
           $('#betevent'+eventid).prop('disabled', true);
-          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+eventid+','+amount+')" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
+          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+eventid+','+amount+')" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span>&nbsp;&nbsp;<span title="Vote to remove this bet" id="downvotes'+eventid+'" style="padding-top:6px;font-size:9pt;color:red;cursor:pointer;" onclick="downvote('+eventid+')" class="hover_underline">&#x2715;</span></right></li>');
        })
 
         socket.on('delete pending bet', function(eventid){
