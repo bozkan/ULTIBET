@@ -220,6 +220,10 @@
           bets.forEach(function (el) {
             $('#betevent'+el.eventid).prop('disabled', true);
             if ($("#active"+el.eventid).length == 0) {
+              if (el.amount.indexOf("," != -1))
+              {
+                el.amount = el.amount[0]
+              }
               $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+el.eventid+','+el.amount+')" id="active'+el.eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[el.eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+el.amount+'</span>&nbsp;&nbsp;<span title="Vote to remove this bet" id="downvotes'+el.eventid+'" onclick="downvote(event,'+el.eventid+')" style="padding-top:6px;font-size:9pt;color:red;cursor:pointer;" class="hover_underline">&#x2715;</span></right></li>');
             }
           })
@@ -363,6 +367,7 @@
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
+            output += "Event: "+el.event+"<br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
               output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"

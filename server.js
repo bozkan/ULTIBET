@@ -233,7 +233,7 @@ io.on('connection', function (socket) {
 
 		// tell other players in server about disconnect
 		io.sockets.to(server).emit('player disconnected', username)
-		} catch (err) { console.log(err) }
+		} catch (err) {  }
 	})
 
 	socket.on('lookup active bets', function (server) {
@@ -449,6 +449,7 @@ io.on('connection', function (socket) {
 
 	socket.on('do delete active bet', function (server, eventid) {
 		io.sockets.to(server).emit('delete active bet', eventid)
+		serverToDownvotes[server] ? 1 : serverToDownvotes[server] = []
 		serverToDownvotes[server][eventid] ? serverToDownvotes[server][eventid] = [] : 1
 		_bets = _bets.filter(function(bet) { return !(bet.server == server && bet.eventid == eventid) })
 		all_bets = all_bets.filter(function(bet) { return !(bet.server == server && bet.eventid == eventid) })

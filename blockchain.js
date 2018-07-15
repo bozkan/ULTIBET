@@ -327,8 +327,7 @@ module.exports = {
 			_to = []
 			block.payload.from.forEach(function(el) { _from.push(addressToUsername[el]) })
 			block.payload.to.forEach(function(el) { _to.push(addressToUsername[el]) })
-
-			payoutHistory.push({ "from": _from, "to": _to, "amount": block.payload.amount, "hash": block.hash })
+			payoutHistory.push({ "from": _from, "to": _to, "amount": block.payload.amount, "hash": block.hash, "event": block.payload.event })
 		}
 	}
 
