@@ -44,7 +44,7 @@ setInterval(function(){
 		// !for each of this matches, run oracle -> only one per game
 		// send servers and balances
 		// send out new balances after
-		matches.forEach(function(match){
+		matches.forEach(function(match) {
 			oracle.oracle(match, addressToUsername)
 		})
 }, 20000)
@@ -70,8 +70,9 @@ var gameToCommentary = {}
 var serverToEvents = {} // dictionary -> array -> dictionary
 var socketToUsername = {}
 var serverToDownvotes = {} // dictionary (server) -> dictionary (eventid) -> array (usernames of players who downvoted)
+var socketToServer = {} // to know which server user disconnected from
 
-setInterval(function(){
+setInterval(function() {
 
 	for (var key in serverToEvents)
 	{
@@ -179,50 +180,47 @@ io.on('connection', function (socket) {
 
 		try {
 		// remove player from server count
-		var identify = serverToPlayers[playerToServer[socketToUsername[socket.id]]]
+		var identify = serverToPlayers[socketToServer[socket.id]] // change to find server via socket id
 		identify.splice(identify.indexOf(socketToUsername[socket.id]), 1)
 
-		var server = playerToServer[socketToUsername[socket.id]]
+		var server = socketToServer[socket.id] // change to idenfity by socket id
 		var username = socketToUsername[socket.id]
 
 		// remove this player's potential vote and remove him from total count
-		console.log(serverToDownvotes)
-		for (var server in serverToDownvotes) {
-			for (var el_eventid in serverToDownvotes[server]) {
-				if (serverToDownvotes[server][el_eventid].indexOf(username) != -1)
+		for (var el_eventid in serverToDownvotes[server]) {
+			if (serverToDownvotes[server][el_eventid].indexOf(username) != -1)
+			{
+				serverToDownvotes[server][el_eventid].splice(serverToDownvotes[server][el_eventid].indexOf(username), 1)
+			}
+			io.sockets.to(server).emit('receive downvote bet', el_eventid, serverToDownvotes[server][el_eventid].length, serverToPlayers[server].length)
+		
+			if (serverToDownvotes[server][el_eventid].length >= serverToPlayers[server].length) // this determines the threshold for downvotes
+			{
+				// an active bet should be deleted
+				io.sockets.to(server).emit('delete active bet', el_eventid)
+				serverToDownvotes[server][el_eventid] ? serverToDownvotes[server][el_eventid] = [] : 1
+
+				// generate transfer back transaction
+				// iterate through _bets and retrieve information
+				var _generate = all_bets.filter(function(bet) { return bet.server == server && bet.eventid == el_eventid })
+				var _from = []
+				var _to = []
+				var _amount = []
+				for (var i = 0, n = _generate.length; i < n; i++)
 				{
-					serverToDownvotes[server][el_eventid].splice(serverToDownvotes[server][el_eventid].indexOf(username), 1)
+					_from.push(usernameToAddress[_generate[i].username])
+					_to.push(usernameToAddress[_generate[i].username])
+					_amount.push(_generate[i].amount)
+
+					io.sockets.to(server).emit('update client balances', el_eventid, _generate[i].username, _generate[i].amount)
+					usernameToBalance[_generate[i].username] = parseFloat(usernameToBalance[_generate[i].username]) + parseFloat(_generate[i].amount)
 				}
-				io.sockets.to(server).emit('receive downvote bet', el_eventid, serverToDownvotes[server][el_eventid].length, serverToPlayers[server].length)
-			
-				if (serverToDownvotes[server][el_eventid].length >= serverToPlayers[server].length) // this determines the threshold for downvotes
-				{
-					// an active bet should be deleted
-					io.sockets.to(server).emit('delete active bet', el_eventid)
-					serverToDownvotes[server][el_eventid] ? serverToDownvotes[server][el_eventid] = [] : 1
 
-					// generate transfer back transaction
-					// iterate through _bets and retrieve information
-					var _generate = all_bets.filter(function(bet) { return bet.server == server && bet.eventid == el_eventid })
-					var _from = []
-					var _to = []
-					var _amount = []
-					for (var i = 0, n = _generate.length; i < n; i++)
-					{
-						_from.push(usernameToAddress[_generate[i].username])
-						_to.push(usernameToAddress[_generate[i].username])
-						_amount.push(_generate[i].amount)
+				broadcast.transaction("transfer", el_eventid, _from, _to, _amount, [], server, serverToGame[server], [], Date.now(), config.mempoolFile)
 
-						io.sockets.to(server).emit('update client balances', el_eventid, _generate[i].username, _generate[i].amount)
-						usernameToBalance[_generate[i].username] = parseFloat(usernameToBalance[_generate[i].username]) + parseFloat(_generate[i].amount)
-					}
-
-					broadcast.transaction("transfer", el_eventid, _from, _to, _amount, [], server, serverToGame[server], [], Date.now(), config.mempoolFile)
-
-					_bets = _bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
-					all_bets = all_bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
-					bets = bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
-				}
+				_bets = _bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
+				all_bets = all_bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
+				bets = bets.filter(function(bet) { return !(bet.server == server && bet.eventid == el_eventid) })
 			}
 		}
 
@@ -252,6 +250,7 @@ io.on('connection', function (socket) {
 		else
 		{
 			socketToUsername[socket.id] = username
+			socketToServer[socket.id] = server
 			if (serverToPlayers[server].indexOf(username) != -1)
 				io.sockets.to(socket.id).emit('login approved', true)
 			else
