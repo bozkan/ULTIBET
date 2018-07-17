@@ -111,7 +111,7 @@ app.get("/", function(req, res){
 })
 
 app.get("/play", function(req, res) {
-	res.render(__dirname + '/server/play.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
+	res.render(__dirname + '/server/openplay.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
 })
 
 io.on('connection', function (socket) {
@@ -294,7 +294,7 @@ io.on('connection', function (socket) {
 		var betCount = 0
 		for (var i = 0, n = bets.length; i < n; i++)
 		{
-			if (bets[i].server == server && bets[i].matchid == matchid && bets[i].eventid == eventid && bets[i].amount == amount)
+			if (bets[i].server == server && bets[i].matchid == matchid && bets[i].eventid == eventid)
 				betCount++
 		}
 		// everyone has placed a bet -> broadcast the bet

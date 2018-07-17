@@ -249,7 +249,7 @@ module.exports = {
 					payouts.from.push(escrows[i].players[j])
 					payouts.to.push(escrows[i].players[j])
 					payouts.amount.push(escrows[i].amounts[j])
-					winners.push(escrows[i].players[j])
+					winners.push({"player": escrows[i].players[j], "amount": escrows[i].amounts[j]})
 				}
 				// if player lost, transfer (his escrow)/winners to each winner
 				else
@@ -261,12 +261,19 @@ module.exports = {
 			// iterate through losers, adding payouts to winners
 			for (var j = 0, k = losers.length; j < k; j++)
 			{
+				var remainingAmount = losers[j].amount
 				for (var z = 0, y = winners.length; z < y; z++)
 				{
 					payouts.from.push(losers[j].player)
-					payouts.to.push(winners[z])
-					payouts.amount.push((losers[j].amount / winners.length))
+					payouts.to.push(winners[z].player)
+					var deservedWin = (losers[j].amount / winners.length) > winners[z].amount ? winners[z].amount : losers[j].amount / winners.length // winner can only win as much as he bet
+					payouts.amount.push(deservedWin)
+					remainingAmount -= deservedWin
 				}
+				// return what winners haven't deserved to loser
+				payouts.from.push(losers[j].player)
+				payouts.to.push(losers[j].player)
+				payouts.amount.push(remainingAmount)
 			}
 		}
 
