@@ -86,7 +86,7 @@ setInterval(function() {
 				{
 					if (bets[j].eventid == serverToEvents[key][i].eventid && bets[j].server == key)
 					{
-						console.log("KEY "+key)
+						console.log("KEY "+key) // key = server
 						io.sockets.to(key).emit('delete pending bet timer', serverToEvents[key][i].eventid, bets[j].username, bets[j].amount)
 						usernameToBalance[bets[j].username] = parseFloat(usernameToBalance[bets[j].username]) + parseFloat(bets[j].amount)
 						bets.splice(j, 1)
@@ -212,7 +212,10 @@ io.on('connection', function (socket) {
 					_to.push(usernameToAddress[_generate[i].username])
 					_amount.push(_generate[i].amount)
 
-					io.sockets.to(server).emit('update client balances', el_eventid, _generate[i].username, _generate[i].amount)
+					// update at every server where player is
+					playerToServer[_generate[i].username].forEach(function(_server) {
+						io.sockets.to(_server).emit('update client balances', el_eventid, _generate[i].username, _generate[i].amount)
+					})
 					usernameToBalance[_generate[i].username] = parseFloat(usernameToBalance[_generate[i].username]) + parseFloat(_generate[i].amount)
 				}
 
@@ -275,12 +278,9 @@ io.on('connection', function (socket) {
 		}
 		// update balances
 		usernameToBalance[username] -= amount
-		var balances = []
-		for (var i = 0, n = serverToPlayers[server].length; i < n; i++)
-		{
-			balances.push({"player": serverToPlayers[server][i], "amount": usernameToBalance[serverToPlayers[server][i]]})
-		}
-		io.sockets.to(server).emit('receive balances', usernameToBalance[username], username)
+		playerToServer[username].forEach(function(server) { // emit to each server that player is in
+			io.sockets.to(server).emit('receive balances', usernameToBalance[username], username)
+		})		
 		// sign the bet
 		var signature = sign.sign(usernameToAddress[username], usernameToPrivate[username], amount)
 		bets.push(
@@ -410,7 +410,11 @@ io.on('connection', function (socket) {
 				_to.push(usernameToAddress[_generate[i].username])
 				_amount.push(_generate[i].amount)
 
-				io.sockets.to(server).emit('update client balances', eventid, _generate[i].username, _generate[i].amount)
+				// update balances at every server where player is
+				playerToServer[_generate[i].username].forEach(function(_server) {
+					io.sockets.to(_server).emit('update client balances', eventid, _generate[i].username, _generate[i].amount)
+				})
+
 				usernameToBalance[_generate[i].username] = parseFloat(usernameToBalance[_generate[i].username]) + parseFloat(_generate[i].amount)
 			}
 
@@ -447,7 +451,7 @@ io.on('connection', function (socket) {
 		gameToCommentary[matchid].push(minute+"!:!"+eventid+"!:!"+team)
 	})
 
-	socket.on('do delete active bet', function (server, eventid) {
+	socket.on('do delete active bet', function (server, eventid) { // user balances have already been updated at this stage
 		io.sockets.to(server).emit('delete active bet', eventid)
 		serverToDownvotes[server] ? 1 : serverToDownvotes[server] = []
 		serverToDownvotes[server][eventid] ? serverToDownvotes[server][eventid] = [] : 1

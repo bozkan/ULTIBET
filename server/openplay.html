@@ -298,16 +298,18 @@
           $('#betevent'+eventid).prop('disabled', false);
         })
 
-        socket.on('update client balances', function(eventid, username, amount){
-          var new_amount = parseFloat(amount) + parseFloat($('#balance'+username).html().replace(/\$/g, ""))
-          myBalance = new_amount
-          $('#balance'+username).html('$'+new_amount)
+        socket.on('update client balances', function(eventid, _username, amount){
+          var new_amount = parseFloat(amount) + parseFloat($('#balance'+_username).html().replace(/\$/g, ""))
+          if (username == _username)
+            myBalance = new_amount
+          $('#balance'+_username).html('$'+new_amount)
         })
 
-        socket.on('delete pending bet timer', function(eventid, username, amount){
-          var new_amount = parseFloat(amount) + parseFloat($('#balance'+username).html().replace(/\$/g, ""))
-          myBalance = new_amount
-          $('#balance'+username).html('$'+new_amount)
+        socket.on('delete pending bet timer', function(eventid, _username, amount){
+          var new_amount = parseFloat(amount) + parseFloat($('#balance'+_username).html().replace(/\$/g, ""))
+          if (username == _username)
+            myBalance = new_amount
+          $('#balance'+_username).html('$'+new_amount)
           $("#pending"+eventid).remove();
           $('#betevent'+eventid).prop('disabled', false);
         })
