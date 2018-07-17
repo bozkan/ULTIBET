@@ -180,10 +180,10 @@ io.on('connection', function (socket) {
 
 		try {
 		// remove player from server count
-		var identify = serverToPlayers[socketToServer[socket.id]] // change to find server via socket id
+		var identify = serverToPlayers[socketToServer[socket.id]] 
 		identify.splice(identify.indexOf(socketToUsername[socket.id]), 1)
 
-		var server = socketToServer[socket.id] // change to idenfity by socket id
+		var server = socketToServer[socket.id] 
 		var username = socketToUsername[socket.id]
 
 		// remove this player's potential vote and remove him from total count
@@ -355,10 +355,11 @@ io.on('connection', function (socket) {
 		// add unique player to server
 		serverToPlayers[server] ? serverToPlayers[server].indexOf(username) == -1 ? serverToPlayers[server].push(username) : 1 : serverToPlayers[server] = [username]
 		socket.join(server)
-		playerToServer[username] = server
 		usernameToBalance[username] = serverToCoinbase[server]
 		if (usernameToAddress[username])
 		{
+			playerToServer[username] ? playerToServer[username].push(server) : playerToServer[username] = [server]
+
 			io.sockets.to(socket.id).emit('receive address', usernameToAddress[username])
 
 			if (!alreadyLoggedIn)
@@ -373,12 +374,12 @@ io.on('connection', function (socket) {
 	})
 
 	socket.on('transfer balances', function (balances) {
-		var server_updates = []
 		for (var i = 0, n = balances.length; i < n; i++)
 		{
 			usernameToBalance[balances[i].player] += balances[i].amount
-			io.sockets.to(playerToServer[balances[i].player]).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
-			server_updates.indexOf(playerToServer[balances[i].player]) == -1 ? server_updates.push(playerToServer[balances[i].player]) : 1
+			playerToServer[balances[i].player].forEach(function(server) { // emit to each server that player is in
+				io.sockets.to(server).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
+			})
 		}
 	
 		console.log(balances)
