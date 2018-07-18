@@ -55,6 +55,9 @@ module.exports = {
                     // emit event to live commentary
                     socket.emit('send live commentary', result[i].time, result[i].eventid, result[i].team, result[i].matchid)
 
+                    // broadcast event to mempool
+                    broadcast.transaction("oracle", result[i].eventid, [], [], [result[i].time], [result[i].team], "", result[i].matchid, [], Date.now(), mempoolFile)
+
                     // check if there are any escrows that should be paid out
                     var payouts = blockchain.findPayouts(result[i].eventid, result[i].team, result[i].matchid)
 
