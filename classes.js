@@ -57,33 +57,12 @@ class Block
     mineBlock(difficulty, interval) 
     {
 
-        var intervalCounter = 0
-        var condition = true
+        this.hash = this.calculateHash();
+        
+        console.log(colors.green("BLOCK #" +this.height+ " MINED: " + this.hash))
 
-        while (this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) 
-        {
-            this.nonce++;
-            this.hash = this.calculateHash();
-
-            intervalCounter++
-
-            if (intervalCounter > interval)
-            {
-                condition = false
-                break
-            }
-        }
-
-        if (condition)
-        {
-            console.log(colors.green("BLOCK #" +this.height+ " MINED: " + this.hash));
-            return true
-        }
-        else
-        {
-            console.log(colors.yellow("Updating state..."))
-            return false
-        }
+        return true
+       
     }
 }
 
