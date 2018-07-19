@@ -10,6 +10,9 @@ var oracle = require('./oracle.js')
 var config = require('./config.js')
 var blockchain = require('./blockchain.js')
 
+// db params
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
+var client = new pg.Client(connectionString)
 
 function getMatches(dict)
 {
@@ -162,7 +165,7 @@ io.on('connection', function (socket) {
 
 	/* Begin handling UI events */
 
-	socket.on('create game', function (servername, gameid, coinbase) {
+	socket.on('create game', function (servername, gameid) {
 		// if server with this name already exists, return error
 		if (servers.indexOf(servername) != -1)
 			io.sockets.to(socket.id).emit('error message', 'This room already exists.')
@@ -171,7 +174,7 @@ io.on('connection', function (socket) {
 			servers.push(servername)
 			serverToGame[servername] = gameid
 			serverToPlayers[servername] = []
-			serverToCoinbase[servername] = coinbase
+			serverToCoinbase[servername] = 0
 			gameToCommentary[gameid] ? 1 : gameToCommentary[gameid] = []
 			console.log(serverToPlayers)
 		}
@@ -337,7 +340,7 @@ io.on('connection', function (socket) {
 		}
 	})
 
-	socket.on('user register', function (username) {
+	socket.on('user register', function (username, password) {
 		// register user with new public key (address)
 		if (usernameToAddress[username])
 			io.sockets.to(socket.id).emit('error message', 'This username is already taken. Please choose another username.')
@@ -348,6 +351,10 @@ io.on('connection', function (socket) {
 			usernameToAddress[username] = address[0]
 			usernameToPrivate[username] = address[1]
 			users.push(username)
+
+			// insert user into db
+			client.query("INSERT INTO users (username, public, private, password) VALUES ($1,$2,$3,$4)",
+				[username, address[0], address[1], password])
 		}
 		console.log(usernameToAddress)
 	})
@@ -481,10 +488,8 @@ io.on('connection', function (socket) {
 });
 
 // retrieve all users from db
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
-const client = new pg.Client(connectionString)
 client.connect()
-const query = client.query("SELECT * FROM users")
+var query = client.query("SELECT * FROM users")
 query.on('row', (row) => {
 	addressToUsername[row["public"]] = row["username"]
 	usernameToAddress[row["username"]] = row["public"]
@@ -493,7 +498,6 @@ query.on('row', (row) => {
 	usernameToBalance[row["username"]] = blockchain.findStatement(usernameToAddress[row["username"]])[0] // save user balance
 	console.log(users)
 })
-query.on('end', () => { client.end() })
 
 // start node server
 var server = http.listen(1338, function () {
