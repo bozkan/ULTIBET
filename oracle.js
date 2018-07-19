@@ -57,7 +57,7 @@ module.exports = {
 
                     // broadcast oracle event to mempool
                     // amount = minute; wager = team
-                    broadcast.transaction("oracle", result[i].eventid, [], [], [result[i].time], [result[i].team], "", result[i].matchid, [], Date.now(), mempoolFile)
+                    //broadcast.transaction("oracle", result[i].eventid, [], [], [result[i].time], [result[i].team], "", result[i].matchid, [], Date.now(), mempoolFile)
 
                     // check if there are any escrows that should be paid out
                     var payouts = blockchain.findPayouts(result[i].eventid, result[i].team, result[i].matchid)
