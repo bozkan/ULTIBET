@@ -356,7 +356,6 @@ io.on('connection', function (socket) {
 		// add unique player to server
 		serverToPlayers[server] ? serverToPlayers[server].indexOf(username) == -1 ? serverToPlayers[server].push(username) : 1 : serverToPlayers[server] = [username]
 		socket.join(server)
-		usernameToBalance[username] = serverToCoinbase[server]
 		if (usernameToAddress[username])
 		{
 			playerToServer[username] ? playerToServer[username].push(server) : playerToServer[username] = [server]
@@ -365,7 +364,7 @@ io.on('connection', function (socket) {
 
 			if (!alreadyLoggedIn)
 			{
-				io.sockets.to(server).emit('receive login user', username)
+				io.sockets.to(server).emit('receive login user', username, usernameToBalance[username])
 			}
 		}
 		else
@@ -475,6 +474,10 @@ io.on('connection', function (socket) {
 		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
 	})
 
+	socket.on('ask my balance', function (_username) {
+		io.sockets.to(socket.id).emit('receive my balance', usernameToBalance[_username])
+	})
+
 });
 
 // retrieve all users from db
@@ -487,6 +490,7 @@ query.on('row', (row) => {
 	usernameToAddress[row["username"]] = row["public"]
 	usernameToPrivate[row["username"]] = row["private"]
 	users.push(row["username"])
+	usernameToBalance[row["username"]] = blockchain.findStatement(usernameToAddress[row["username"]])[0] // save user balance
 	console.log(users)
 })
 query.on('end', () => { client.end() })

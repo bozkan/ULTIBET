@@ -184,7 +184,7 @@
         var p_balances = {}
         var server = "<%= server %>"
         var matchid = "<%= matchid %>"
-        var myBalance = parseInt("<%= coinbase %>")
+        var myBalance = parseFloat("<%= coinbase %>")
         var hasDownvoted = []
 
       function showbetoverview (eventid, amount) {
@@ -226,6 +226,10 @@
         
         // retrieve existing active bets
         socket.emit('lookup active bets', server)
+
+        socket.on('receive my balance', function(_balance) {
+          myBalance = parseFloat(_balance)
+        })
 
         socket.on('return lookup active bets', function(bets){
           bets.forEach(function (el) {
@@ -335,10 +339,10 @@
           updateScroll()
         })
 
-        socket.on('receive login user', function(i_username){
+        socket.on('receive login user', function(i_username, _balance){
           if($("#"+i_username).length == 0)
           {
-            $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+i_username+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+i_username+'<right><span class="badge badge-success badge-pill" id="balance'+i_username+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$<%= coinbase %></span></right></li>')
+            $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+i_username+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+i_username+'<right><span class="badge badge-success badge-pill" id="balance'+i_username+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+_balance+'</span></right></li>')
           }
         })
 
@@ -397,6 +401,9 @@
             alert('This user is already logged in on this server.')
             return false
           }
+          // update my balance
+          socket.emit('ask my balance', username)
+          // try to log me in
           socket.emit('ask login', username, server)
           return false;
         });
