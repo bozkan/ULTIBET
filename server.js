@@ -1,4 +1,5 @@
 var express = require('express')
+const pg = require('pg');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -281,7 +282,7 @@ io.on('connection', function (socket) {
 		playerToServer[username].forEach(function(server) { // emit to each server that player is in
 			io.sockets.to(server).emit('receive balances', usernameToBalance[username], username)
 		})		
-		// sign the bet
+		// sign the bet -- signing here takes place serverside
 		var signature = sign.sign(usernameToAddress[username], usernameToPrivate[username], amount)
 		bets.push(
 			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature }
@@ -469,6 +470,21 @@ io.on('connection', function (socket) {
 
 });
 
+// retrieve all users from db
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
+const client = new pg.Client(connectionString)
+client.connect()
+const query = client.query("SELECT * FROM users")
+query.on('row', (row) => {
+	addressToUsername[row["public"]] = row["username"]
+	usernameToAddress[row["username"]] = row["public"]
+	usernameToPrivate[row["username"]] = row["private"]
+	users.push(row["username"])
+	console.log(users)
+})
+query.on('end', () => { client.end() })
+
+// start node server
 var server = http.listen(1338, function () {
   console.log('listening on *:1338');
-});
+})
