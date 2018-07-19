@@ -104,13 +104,16 @@ module.exports = {
   {
 		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
 
+		var coinbaseAmount = 0
+
 		for (var i = 0, n = chain.length; i < n; i++)
 		{
 			var block = chain[i]
-			if (block.payload.type == "coinbase" && block.payload.server == server && block.payload.to.indexOf(player) != -1)
-				return block.payload.amount[block.payload.to.indexOf(player)] // return coinbase amount
+			if (block.payload.type == "coinbase" && block.payload.to.indexOf(player) != -1)
+				coinbaseAmount += parseFloat(block.payload.amount[block.payload.to.indexOf(player)]) // return coinbase amount
 		}
-		return 0 // if nothing was found
+
+		return coinbaseAmount // return coinbase amounts
   },
 
   getWins: function(player, server)
@@ -122,12 +125,12 @@ module.exports = {
 		for (var i = 0, n = chain.length; i < n; i++)
 		{
 			var block = chain[i]
-			if (block.payload.type == "transfer" && block.payload.server == server && block.payload.to.indexOf(player) != -1)
+			if (block.payload.type == "transfer" && block.payload.to.indexOf(player) != -1)
 			{
 				for (var j = 0, k = block.payload.to.length; j < k; j++)
 				{
 					if (block.payload.to[j] == player)
-						winAmount += block.payload.amount[j]
+						winAmount += parseFloat(block.payload.amount[j])
 				}
 			}
 		}
@@ -144,12 +147,12 @@ module.exports = {
 		for (var i = 0, n = chain.length; i < n; i++)
 		{
 			var block = chain[i]
-			if (block.payload.type == "escrow" && block.payload.server == server && block.payload.from.indexOf(player) != -1)
+			if (block.payload.type == "escrow" && block.payload.from.indexOf(player) != -1)
 			{
 				for (var j = 0, k = block.payload.from.length; j < k; j++)
 				{
 					if (block.payload.from[j] == player)
-						lossAmount += block.payload.amount[j]
+						lossAmount += parseFloat(block.payload.amount[j])
 				}
 			}
 		}
@@ -339,6 +342,20 @@ module.exports = {
 	}
 
 	return payoutHistory
+  },
+
+  findStatement: function(public)
+  {
+		var balance = 0
+		var history = []
+
+		balance += module.exports.getCoinbase(public, "nothing")
+		balance += module.exports.getWins(public, "nothing")
+		balance -= module.exports.getLosses(public, "nothing")
+
+		// todo: generate account history
+
+		return [balance, history]
   }
 
 }

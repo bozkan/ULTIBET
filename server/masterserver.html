@@ -106,6 +106,8 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
     <script>
+      var socket = io();
+
       var $_GET = {};
       if(document.location.toString().indexOf('?') !== -1) {
           var query = document.location
@@ -129,29 +131,32 @@
       }
 
       function modalf(eventid,amount) {
-            modal.style.display = "block";
-            $("#beteventaccept").val(eventid)
-            $("#eventid2").val(eventid)
-            $("#acceptamount").val(parseInt(amount))
-            latestAmount = amount
-            $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
+            modal.style.display = "block"
         }
 
-        $(function () {
-          var socket = io();
-          var address = Math.floor(Math.random() * 1000)
+      function statement() {
+        document.getElementById("statement").style.display = "block"
+        socket.emit('ask account statement', $("#register").val())
+      }
 
+        $(function () {
           var span = document.getElementsByClassName("close")[0];
+          var span2 = document.getElementsByClassName("close")[1];
 
           // When the user clicks on <span> (x), close the modal
           span.onclick = function() {
              document.getElementById('modal').style.display = "none";
           }
 
+          span2.onclick = function() {
+            document.getElementById('statement').style.display = "none";
+          }
+
           // When the user clicks anywhere outside of the modal, close it
           window.onclick = function(event) {
               if (event.target == modal) {
                 document.getElementById('modal').style.display = "none";
+                document.getElementById('statement').style.display = "none";
               }
           }
 
@@ -187,6 +192,14 @@
             alert(message)
           })
 
+          socket.on('receive account statement', function(balance, history) {
+            $("#statement_balance").html("$"+balance)
+            $("#statement_history").empty()
+            history.forEach(function(el) {
+              $("#statement_history").append("Server: "+el.server+"<br>Game id: "+el.matchid+"<br>Event: "+el.event+"<br>Amount: "+el.amount+"<hr>")
+            })
+          })
+
           socket.emit('get player counts')
 
           if ("<%= servers %>".length == 0)
@@ -217,7 +230,7 @@
     
   <br><br>
   <div class="container" id="playarea" style="position:relative;display:none;" align="center">
-      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button></form></center>
+      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Account statement</button></form></center>
         <br><br>
         <button type="button" class="btn btn-primary" style="border-radius: 0;cursor:pointer;" onclick="modalf();">Create New Room</button>
         <br><br><br>
@@ -225,13 +238,9 @@
         <br>
         <ul class="list-group" id="serverlist" style="width:50%;margin-bottom:100px;">
         </ul>
-    </div><!-- /.container -->
+    </div>
 
-
-    <!-- The Modal -->
     <div id="modal" class="modal">
-
-        <!-- Modal content -->
         <div class="modal-content" style="color:black;">
           <span class="close">&times;</span>
           <center>
@@ -249,8 +258,20 @@
               </form>
           </center>
         </div>
-      
       </div>  
+
+      <div id="statement" class="modal">
+        <div class="modal-content" style="color:black;">
+          <span class="close">&times;</span>
+          <center>
+              <h6>Account statement</h6>
+              <div id="statement_balance"></div>
+              <div id="statement_history"></div>
+              <br>
+              <button type="button" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Add money</button>
+          </center>
+        </div>
+      </div> 
 
   </body>
 </html>

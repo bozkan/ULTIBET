@@ -443,6 +443,13 @@ io.on('connection', function (socket) {
 		}
 	})
 
+	socket.on('ask account statement', function(username) {
+		var statement = blockchain.findStatement(usernameToAddress[username])
+		var balance = statement[0]
+		var history = statement[1]
+		io.sockets.to(socket.id).emit('receive account statement', balance, history)
+	})
+
 	socket.on('send live commentary', function (minute, eventid, team, matchid) {
 		for (var key in serverToGame)
 		{
