@@ -2,6 +2,7 @@
 
 var helpers = require('./functions.js')
 var difficultyCheck = require('./difficulty.js')
+var config = require('./config')
 
 // import modules
 
@@ -9,6 +10,7 @@ var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
 var CoinKey = require('coinkey');
 var colors = require('colors/safe')
+const constNonce = config.nonce
 
 /*
     BLOCK CLASS
@@ -26,7 +28,7 @@ class Block
         this.payload = payload;
         this.signature = this.signBlock(privateKey);
         this.issuer = issuer;
-        this.nonce = Math.floor(Math.random() * 1000000);
+        this.nonce = constNonce // constant nonce
         this.hash = this.calculateHash();
     }
 

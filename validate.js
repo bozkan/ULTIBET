@@ -10,6 +10,7 @@ const remoteBlockchainFile = config.remoteBlockchainFile
 const updateInterval = config.updateInterval 
 const difficulty = config.difficulty
 const maxAmount = config.maxAmount
+const constNonce = config.nonce
 
 module.exports = {
 
@@ -32,10 +33,6 @@ module.exports = {
 			// check if inputs and outputs are the same
 			if (transaction.to.length != transaction.amount.length)
 				return { "res": false, "message": "Error: Unequal inputs and outputs." }
-
-			// check if a coinbase transaction for this player on this server already exists
-			if (blockchain.findCoinbase(transaction.server, transaction.to))
-				return { "res": false, "message": "Error: A coinbase transaction already exists." }
 
 			// check if amount for each player is less than max
 			for (var i = 0, n = transaction.amount.length; i < n; i++)
@@ -125,7 +122,7 @@ module.exports = {
 	    	))
 	    {
 	        return {"res": false, "message": "Block signature invalid."}
-	    }
+		}
 
 		// check if payload in block is valid
 		var payloadCheck = module.exports.transaction(block.payload, remoteBlockchainFile, false, false)
@@ -136,9 +133,9 @@ module.exports = {
 		if (!helpers.timestampCheck(block.timestamp, localChain))
 			return {"res": false, "message": "Block timestamp invalid. Possibly, local chain is outdated: download new state."}
 
-		// ensure that block difficulty is appropriate
-		if (!difficultyCheck.check(block.timestamp, block.hash))
-			return {"res": false, "message": "Block difficulty invalid."}
+		// ensure that nonce is constant
+		if (block.nonce != constNonce)
+			return {"res": false, "message": "Block nonce invalid."}
 
 		return {"res": true, "message": "Block signature invalid."} // block is valid
 

@@ -300,7 +300,7 @@ module.exports = {
 		if (timestamp == 0)
 			return false // couldn't find escrow: big problem
 
-		if ((curretTime - timestamp) > timeDifference)
+		if ((currentTime - timestamp) > timeDifference)
 			return true // more than 2 mins passed
 		else
 			return false // less than 2 mins passed
