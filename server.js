@@ -76,6 +76,10 @@ var socketToUsername = {}
 var serverToDownvotes = {} // dictionary (server) -> dictionary (eventid) -> array (usernames of players who downvoted)
 var socketToServer = {} // to know which server user disconnected from
 
+/*
+This is the bet countdown timer
+*/
+
 setInterval(function() {
 
 	for (var key in serverToEvents)
@@ -350,6 +354,7 @@ io.on('connection', function (socket) {
 			addressToUsername[address[0]] = username
 			usernameToAddress[username] = address[0]
 			usernameToPrivate[username] = address[1]
+			usernameToBalance[username] = blockchain.findStatement(usernameToAddress[row["username"]])[0] // save user balance
 			users.push(username)
 
 			// insert user into db

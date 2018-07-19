@@ -502,7 +502,7 @@
           map_amounts[$('#beteventaccept').val()] = $("#acceptamount").val()
           socket.emit('place pending bet', $('#beteventaccept').val(), $('#wager2').val(), username, server, matchid, $("#acceptamount").val(), true);
           $("#pendingamount"+$('#beteventaccept').val()).removeClass("badge-danger").addClass("badge-primary");
-          $("#pendingamount"+$('#beteventaccept').val()).html($("#acceptamount").val());
+          $("#pendingamount"+$('#beteventaccept').val()).html("$"+$("#acceptamount").val());
           $("#pending"+$('#beteventaccept').val()).prop('onclick',null).off('click');
           $("#pending"+$('#beteventaccept').val()).css('cursor', 'default');
 
