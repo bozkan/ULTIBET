@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Betpeers Live Betting</title>
+    <title>Betia Live Betting</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -37,8 +37,16 @@
       color:    black;
       }
 
-      .hoverable:hover {
-        background-color: #fcffc1;
+      button {
+        background-color:#5bba5c;
+      }
+
+      button:hover {
+        background-color:#68d869;
+      }
+
+      .playnow:hover {
+        background-color: white;
       }
 
       option {
@@ -100,7 +108,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
-      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="300" height="300" /></a> <br><font color="#5bba5c" style="font-size:70pt;">BET</font><font color="white" style="font-size:70pt;">CAFÉ</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
+      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="250" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">B</font><font color="white" style="font-size:70pt;">ETIA</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -250,12 +258,12 @@
 
         });
       </script>
-  <br><br>
-  <div align="center"><button type="submit" id="playnow_button" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:20pt;padding:10px;cursor:pointer;margin:0;" onclick="playnow()" />Play now!</button></div>
+  <br>
+  <div align="center"><button type="submit" id="playnow_button" style="border-color:#5bba5c;border:0;font-size:20pt;padding:10px;cursor:pointer;margin:0;margin-top:10px;" onclick="playnow()" />Play now</button></div>
     
   <br><br>
   <div class="container" id="playarea" style="position:relative;display:none;" align="center">
-      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Account statement</button></form></center>
+      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Account statement</button></form></center>
         <br><br>
         <button type="button" class="btn btn-primary" style="border-radius: 0;cursor:pointer;" onclick="modalf();">Create New Room</button>
         <br><br><br>
@@ -278,7 +286,7 @@
                       <small id="emailHelp" class="form-text text-muted">Only alphanumeric characters allowed.</small>
                       <input type="hidden" name="r" value="y" />
                   </div>
-                  <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Create!</button>
+                  <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Create!</button>
               </form>
           </center>
         </div>
@@ -292,7 +300,7 @@
               <div id="statement_balance"></div>
               <div id="statement_history"></div>
               <br>
-              <button type="button" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Add money</button>
+              <button type="button" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Add money</button>
           </center>
         </div>
       </div> 
@@ -307,7 +315,7 @@
               <input type="text" id="r_username" placeholder="username" class="form-control" />
               <input type="password" id="r_password" placeholder="password" class="form-control" />
               <br>
-              <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Register!</button>
+              <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Register!</button>
               </form>
           </center>
         </div>
