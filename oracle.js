@@ -67,7 +67,7 @@ module.exports = {
 
                         // broadcast transaction to blockchain
                         var timestamp = Date.now()
-                        var decision = [result[i].time, result[i].eventid, result[i].team, result[i].matchid] // add oracle decision to block
+                        var decision = [result[i].time, result[i].eventid, result[i].team, result[i].matchid, Date.now()] // add oracle decision to block
                         var decisionSig = admin.oracleSign(JSON.stringify(decision))
                         decision.push(decisionSig)
                         broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, payouts.match, [], timestamp, mempoolFile, decision)

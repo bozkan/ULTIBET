@@ -6,7 +6,7 @@ var CoinKey = require('coinkey')
 
 module.exports = {
 
-sign: function (publicKey, privateKey, amount)
+sign: function (publicKey, privateKey, message)
 {
     var privateKey = privateKey
     var publicKey = publicKey
@@ -16,7 +16,7 @@ sign: function (publicKey, privateKey, amount)
     var keyPair = bitcoin.ECPair.fromWIF(key.privateWif)
     var privateKey = keyPair.d.toBuffer(32)
     
-    var signature = bitcoinMessage.sign(JSON.stringify(amount), privateKey, keyPair.compressed).toString('base64')
+    var signature = bitcoinMessage.sign(JSON.stringify(message), privateKey, keyPair.compressed).toString('base64')
     
     return signature
 }

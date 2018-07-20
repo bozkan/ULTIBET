@@ -290,12 +290,18 @@ io.on('connection', function (socket) {
 			io.sockets.to(server).emit('receive balances', usernameToBalance[username], username)
 		})		
 		// sign the bet -- signing here takes place serverside
-		var signature = sign.sign(usernameToAddress[username], usernameToPrivate[username], amount)
+		var sig_timestamp = Date.now()
+		var signature = sign.sign(
+			usernameToAddress[username], 
+			usernameToPrivate[username], 
+			amount + server + matchid + wager + eventid + sig_timestamp
+		)
+
 		bets.push(
-			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature }
+			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature, "timestamp": sig_timestamp }
 		)
 		all_bets.push(
-			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature }
+			{ "eventid": eventid, "amount": amount, "wager": wager, "username": username, "server": server, "matchid": matchid, "signature": signature, "timestamp": sig_timestamp }
 		)
 		// check if bet is complete
 		var betCount = 0
@@ -322,6 +328,7 @@ io.on('connection', function (socket) {
 			var amount = []
 			var wagers = []
 			var signatures = []
+			var sig_timestamps = []
 			var timestamp = Date.now()
 
 			for (var i = 0, n = bets.length; i < n; i++)
@@ -332,9 +339,10 @@ io.on('connection', function (socket) {
 					amount.push(parseInt(bets[i].amount))
 					wagers.push(bets[i].wager)
 					signatures.push(bets[i].signature)
+					sig_timestamps.push(bets[i].timestamp)
 				}
 			}
-			broadcast.transaction("escrow", eventid, from, [], amount, wagers, server, matchid, signatures, timestamp, config.mempoolFile)
+			broadcast.transaction("escrow", eventid, from, [], amount, wagers, server, matchid, signatures, timestamp, config.mempoolFile, [], sig_timestamps)
 			// remove bets that have been broadcasted
 			bets = bets.filter(function(bet){ return !(bet.server == server && bet.matchid == matchid && bet.eventid == eventid) })	
 			// push into active bets

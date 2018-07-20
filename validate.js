@@ -59,11 +59,15 @@ module.exports = {
 			// check that oracle signed transfer source
 			var decision = JSON.stringify(
 				transaction.oracle.filter(
-					a => transaction.oracle.indexOf(a) < 4 // decision contains everything but signature
+					a => transaction.oracle.indexOf(a) < 5 // decision contains everything but signature
 				)
 			)
-			if (!helpers.verifySignature(decision, oraclePublicKey, transaction.oracle[4]))
+			if (!helpers.verifySignature(decision, oraclePublicKey, transaction.oracle[5]))
 				return { "res": false, "message": "Oracle did not sign source of this transfer." }
+
+			// check that oracle timestamp is less than 10 seconds ago
+			if ((Date.now() - transaction.oracle[4]) > 10000)
+				return { "res": false, "message": "Oracle decision happened more than 10s ago. Might be a fraud." }
 		}
 
 		// validation for escrow transactions
@@ -106,6 +110,10 @@ module.exports = {
 				{
 					return {"res": false, "message": "Error: Transaction signature #"+(i+1)+" invalid."}
 				}
+
+				// check if signature timestamps are less than 40s (30s max for decision + 10s max for broadcast)
+				if (Date.now() - transaction.sig_timestamps[i] > 40000)
+					return {"res": false, "message": "Error: Transaction signature #"+(i+1)+" happened more than 40s ago. Might be a fraud."}
 			}
 
 			// check if an escrow for this event already exists

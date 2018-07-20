@@ -30,11 +30,11 @@ module.exports = {
 
 	// broadcasts the transaction to the relay server
 
-	transaction: function(type, event, from, to, amount, wagers, server, match, signatures, timestamp, mempoolFile, oracle = [])
+	transaction: function(type, event, from, to, amount, wagers, server, match, signatures, timestamp, mempoolFile, oracle = [], sig_timestamps = [])
 	{
 		//signatures = signatures.replace(/\+/g, "%2B")
 
-		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle))
+		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle, sig_timestamps))
 		var current = fs.readFileSync(mempoolFile)
 		if (current != "")
 		{
@@ -48,7 +48,7 @@ module.exports = {
 		fs.writeFileSync(mempoolFile, JSON.stringify(current).replace(/\\/g, '').replace('[""', '[').replace('""]', ']').replace('"{', '{').replace('}"', '}'))
 
 		// right now this broadcasts to local mempool, but it should broadcast to actual mempool in the future
-		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle))
+		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle, sig_timestamps))
 		var res = request('POST', transactionServer, {
 			headers: {       
     			'content-type': 'application/x-www-form-urlencoded'
