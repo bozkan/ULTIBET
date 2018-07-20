@@ -354,7 +354,7 @@ io.on('connection', function (socket) {
 			addressToUsername[address[0]] = username
 			usernameToAddress[username] = address[0]
 			usernameToPrivate[username] = address[1]
-			usernameToBalance[username] = blockchain.findStatement(usernameToAddress[row["username"]])[0] // save user balance
+			usernameToBalance[username] = blockchain.findStatement(usernameToAddress[username])[0] // save user balance
 			users.push(username)
 
 			// insert user into db

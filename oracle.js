@@ -15,6 +15,7 @@ var io = require('socket.io-client')
 var config = require('./config.js')
 var socket = io.connect("http://localhost:1338", {reconnect: true});
 var helpers = require('./functions.js')
+var admin = require('./admin')
 
 var mempoolFile = config.mempoolFile
 
@@ -55,10 +56,6 @@ module.exports = {
                     // emit event to live commentary
                     socket.emit('send live commentary', result[i].time, result[i].eventid, result[i].team, result[i].matchid)
 
-                    // broadcast oracle event to mempool
-                    // amount = minute; wager = team
-                    //broadcast.transaction("oracle", result[i].eventid, [], [], [result[i].time], [result[i].team], "", result[i].matchid, [], Date.now(), mempoolFile)
-
                     // check if there are any escrows that should be paid out
                     var payouts = blockchain.findPayouts(result[i].eventid, result[i].team, result[i].matchid)
 
@@ -70,7 +67,10 @@ module.exports = {
 
                         // broadcast transaction to blockchain
                         var timestamp = Date.now()
-                        broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, payouts.match, [], timestamp, mempoolFile)
+                        var decision = [result[i].time, result[i].eventid, result[i].team, result[i].matchid] // add oracle decision to block
+                        var decisionSig = admin.oracleSign(JSON.stringify(decision))
+                        decision.push(decisionSig)
+                        broadcast.transaction("transfer", payouts.event, payouts.from, payouts.to, payouts.amount, [], payouts.server, payouts.match, [], timestamp, mempoolFile, decision)
 
                         // update player balances
                         for (var j = 0, k = payouts.to.length; j < k; j++)
