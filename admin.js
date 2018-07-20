@@ -30,4 +30,3 @@ module.exports = {
 
 // private key of oracle for signing
 exports.oraclePrivateKey = oraclePrivateKey
-exports.oraclePublicKey = oraclePublicKey
