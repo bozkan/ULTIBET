@@ -11,6 +11,7 @@ const updateInterval = config.updateInterval
 const difficulty = config.difficulty
 const maxAmount = config.maxAmount
 const constNonce = config.nonce
+const oraclePublicKey = config.oraclePublicKey
 
 module.exports = {
 
@@ -54,7 +55,15 @@ module.exports = {
 			var currentTime = Date.now()
 			if (!blockchain.timeDiff(transaction.server, transaction.event, currentTime))
 				return { "res": false, "message": "2 minutes haven't passed yet (OK)." } 
-
+			
+			// check that oracle signed transfer source
+			var decision = JSON.stringify(
+				transaction.oracle.filter(
+					a => transaction.oracle.indexOf(a) < 4 // decision contains everything but signature
+				)
+			)
+			if (!helpers.verifySignature(decision, oraclePublicKey, transaction.oracle[4]))
+				return { "res": false, "message": "Oracle did not sign source of this transfer." }
 		}
 
 		// validation for escrow transactions

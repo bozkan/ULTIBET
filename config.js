@@ -12,6 +12,7 @@ const transactionServer = "http://bitpeers.vojtadrmota.com:80/transaction.php" /
 const maxAmount = 1000 // maximum amount of money players can start with
 const timeDifference = 120000 // amount of time that needs to pass between escrow and transfer in ms.
 const nonce = 19970318 // constant nonce that needs to exist in all blocks
+var oraclePublicKey = "1Hr3FvfAyEVBcRtrW9cfhCJbFqWG7nRGUq" // the public key of the oracle
 
 // export
 
@@ -29,3 +30,4 @@ exports.transactionServer = transactionServer
 exports.maxAmount = maxAmount
 exports.timeDifference = timeDifference
 exports.nonce = nonce
+exports.oraclePublicKey = oraclePublicKey

@@ -7,7 +7,6 @@ var CoinKey = require('coinkey');
 var mempoolFile = config.mempoolFile
 
 var oraclePrivateKey = "643746514138627453444f617977645832735a63443077734b335a7668575669"
-var oraclePublicKey = "1Hr3FvfAyEVBcRtrW9cfhCJbFqWG7nRGUq"
 
 module.exports = {
     createCoinbase: function(address, amount)
