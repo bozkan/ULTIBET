@@ -384,7 +384,10 @@
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
-            output += "Event: "+el.event+"<br>"
+            output += "Event: "+map_events[el.event]+"<br>"
+            output += "Minute: "+el.minute+"'<br>"
+            output += "By: "+el.team+"<br>"
+            output += "<b><u>Transfers</u></b><br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
               output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"
