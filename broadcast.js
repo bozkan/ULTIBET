@@ -46,7 +46,7 @@ module.exports = {
 			current = [JSON.stringify(transaction)]
 		}
 		fs.writeFileSync(mempoolFile, JSON.stringify(current).replace(/\\/g, '').replace('[""', '[').replace('""]', ']').replace('"{', '{').replace('}"', '}'))
-
+		/*
 		// right now this broadcasts to local mempool, but it should broadcast to actual mempool in the future
 		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle, sig_timestamps))
 		var res = request('POST', transactionServer, {
@@ -55,6 +55,7 @@ module.exports = {
   			},
 			body: "transaction="+encodeURIComponent(transaction)
 		})
+		*/
 		console.log("Broadcasting transaction...")
 	}
 }
