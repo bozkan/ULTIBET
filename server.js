@@ -97,6 +97,7 @@ setInterval(function() {
 						console.log("KEY "+key) // key = server
 						io.sockets.to(key).emit('delete pending bet timer', serverToEvents[key][i].eventid, bets[j].username, bets[j].amount)
 						usernameToBalance[bets[j].username] = parseFloat(usernameToBalance[bets[j].username]) + parseFloat(bets[j].amount)
+						all_bets = all_bets.filter(function(bet) { return !(bet.server == key && bet.eventid == bets[j].eventid) })
 						bets.splice(j, 1)
 					}
 				}
