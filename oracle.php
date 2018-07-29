@@ -1,6 +1,12 @@
 <?php
 
-function findDiff($old, $new_array, $type)
+function getString($str,$from,$to)
+{
+	$sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
+	return substr($sub,0,strpos($sub,$to));
+}
+
+function findDiff ($old, $new_array, $type)
 {
     if ($type == "event")
     {
@@ -28,14 +34,34 @@ function findDiff($old, $new_array, $type)
     }
 }
 
-function oracle($matchid) {
-	$res = array();
+function livematches ()
+{
+	$livematches = array();
 
-	function getString($str,$from,$to)
+	$data = file_get_contents("https://www.sportinglife.com/football/live/filter/ongoing");
+
+	preg_match_all('/<div class=\"footballMatchListItem\">(.*?)<\/a>/s', $data, $matches);
+
+	foreach ($matches[1] as $match)
 	{
-		$sub = substr($str, strpos($str,$from)+strlen($from),strlen($str));
-		return substr($sub,0,strpos($sub,$to));
+
+		$matchid = getString($match, '<a href="/football/live/', '/');
+
+		preg_match_all('/data-compact-text=\"(.*?)\"/s', $match, $teams);
+
+		$hometeam = $teams[1][0];
+		$awayteam = $teams[1][1];
+
+		array_push($livematches, ["matchid" => $matchid, "hometeam" => $hometeam, "awayteam" => $awayteam]);
 	}
+
+	$livematches = json_encode(array_values($livematches));
+	return $livematches;
+}
+
+function oracle ($matchid) 
+{
+	$res = array();
 
 	// open new file
 	$data_new = file_get_contents("https://www.sportinglife.com/football/live/".$matchid."/commentary");

@@ -108,7 +108,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
-      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="250" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">B</font><font color="white" style="font-size:70pt;">ETIA</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
+      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="275" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">B</font><font color="white" style="font-size:70pt;">ETIA</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -251,7 +251,12 @@
             })
           })
 
+          socket.on('receive live match', function (match) {
+              $('#gameid').append($("<option></option>").attr("value",match.matchid).text(match.hometeam+" vs. "+match.awayteam))
+          })
+
           socket.emit('get player counts')
+          socket.emit('get live matches')
 
           if ("<%= servers %>".length == 0)
           {
@@ -300,8 +305,10 @@
               <form id="create" method="GET" action="/">
                   <div class="form-group">
                       <input type="text" class="form-control" id="servername" name="servername" placeholder="Room name">
-                      <input type="text" class="form-control" id="gameid" name="gameid" placeholder="Enter game ID">
-                      <small id="emailHelp" class="form-text text-muted">Only alphanumeric characters allowed.</small>
+                      <select id="gameid" style="margin-top:5px;width:100%;font-family:'Jura';">
+                          <option value="def;;ault">Select Match</option>
+                          <option value="52419">Testing vs. Test</option>
+                      </select>
                       <input type="hidden" name="r" value="y" />
                   </div>
                   <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Create!</button>

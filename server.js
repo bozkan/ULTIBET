@@ -561,6 +561,15 @@ io.on('connection', function (socket) {
 		io.sockets.to(socket.id).emit('receive account statement', balance, history)
 	})
 
+	socket.on('get live matches', function() {
+		oracle.livematches()
+	})
+
+	socket.on('forward live match', function(_match) {
+		var _match = _match[0]
+		io.sockets.emit('receive live match', _match) // doesn't matter that it goes to everyone
+	})
+
 	socket.on('send live commentary', function (minute, eventid, team, matchid) {
 		for (var key in serverToGame)
 		{

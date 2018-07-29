@@ -88,5 +88,15 @@ module.exports = {
             })
 
         })
+    },
+
+    livematches: function()
+    {
+        var res = []
+        execPhp('./oracle.php', function(error, php, output){
+            php.livematches(function(error, result, output, printed){
+                socket.emit('forward live match', JSON.parse(result))
+            })
+        })
     }
 }
