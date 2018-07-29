@@ -9,6 +9,10 @@ var sign = require('./sign.js')
 var oracle = require('./oracle.js')
 var config = require('./config.js')
 var blockchain = require('./blockchain.js')
+var admin = require('./admin.js')
+var bitcoin = require('bitcoinjs-lib');
+var bitcoinMessage = require('bitcoinjs-message');
+var CoinKey = require('coinkey');
 
 // db params
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
@@ -254,19 +258,98 @@ io.on('connection', function (socket) {
 
 	})
 
-	socket.on('ask login', function (username, server) {
+	socket.on('ask upload keys', function (raw, password, server) {
+		try {
+			var _string = admin.decrypt(raw, password)
+		} catch (error) {
+			io.sockets.to(socket.id).emit('error message', 'The uploaded file is incorrect. (0)')
+			return false
+		}
+
+		_string = _string.split(";")
+
+		// test if format is correct
+		if (_string.length != 3)
+		{
+			io.sockets.to(socket.id).emit('error message', 'The uploaded file and/or password is incorrect. (1)')
+			return false
+		}
+
+		// test if signature works
+		var _username = _string[0].replace('"','')
+		var _public = _string[1]
+		var _private = _string[2].replace('"','')
+		try {
+
+			var key = new CoinKey(new Buffer(_private, "hex"))
+			key.compressed = false
+
+			var keyPair = bitcoin.ECPair.fromWIF(key.privateWif)
+			var privateKey = keyPair.d.toBuffer(32)
+
+			var signature = bitcoinMessage.sign("vojtadrmota", privateKey, keyPair.compressed) // vojtadrmota = test string
+			_sig = signature.toString('base64')
+
+		} catch (err) {
+			console.log(err)
+			io.sockets.to(socket.id).emit('error message', 'The uploaded file and/or password is incorrect. (2)')
+			return false
+		}
+
+		try {
+			if (!sign.verify(_public, _sig, "vojtadrmota"))
+			{
+				io.sockets.to(socket.id).emit('error message', 'Incorrect keys in file. (4)')
+				return false
+			}
+		} catch (err) {
+			io.sockets.to(socket.id).emit('error message', 'The uploaded file and/or password is incorrect. (3)')
+			return false
+		}
+
+		// if everything is correct, store it
+		if (users.indexOf(_username) == -1)
+		{
+			io.sockets.to(socket.id).emit('error message', 'This user does not exist. (5)', 'login')
+		}
+		else
+		{
+			usernameToPrivate[_username] = _private // overwrite dummy private key
+			socketToUsername[socket.id] = _username
+			socketToServer[socket.id] = server
+			if (serverToPlayers[server].indexOf(_username) != -1)
+				io.sockets.to(socket.id).emit('login approved', true, _username)
+			else
+				io.sockets.to(socket.id).emit('login approved', false, _username)
+		}
+
+	})
+
+	socket.on('ask login', function (username, server, password) {
 		if (users.indexOf(username) == -1)
 		{
 			io.sockets.to(socket.id).emit('error message', 'This username is not registered.')
 		}
 		else
 		{
-			socketToUsername[socket.id] = username
-			socketToServer[socket.id] = server
-			if (serverToPlayers[server].indexOf(username) != -1)
-				io.sockets.to(socket.id).emit('login approved', true)
-			else
-				io.sockets.to(socket.id).emit('login approved', false)
+			// check if password is correct
+			var query = client.query("SELECT * FROM users WHERE username = $1 LIMIT 1", [username])
+			query.on('row', (row) => {
+				console.log(row["password"])
+				if (row["password"] != password) 
+				{
+					io.sockets.to(socket.id).emit('error message', 'Incorrect password.')
+					return false
+				}
+
+				// store user data
+				socketToUsername[socket.id] = username
+				socketToServer[socket.id] = server
+				if (serverToPlayers[server].indexOf(username) != -1)
+					io.sockets.to(socket.id).emit('login approved', true)
+				else
+					io.sockets.to(socket.id).emit('login approved', false)
+			})
 		}
 			
 	})
@@ -353,7 +436,7 @@ io.on('connection', function (socket) {
 		}
 	})
 
-	socket.on('user register', function (username, password) {
+	socket.on('user register', function (username, password, copykeys) {
 		// register user with new public key (address)
 		if (usernameToAddress[username])
 			io.sockets.to(socket.id).emit('error message', 'This username is already taken. Please choose another username.')
@@ -366,11 +449,19 @@ io.on('connection', function (socket) {
 			usernameToBalance[username] = blockchain.findStatement(usernameToAddress[username])[0] // save user balance
 			users.push(username)
 
-			// insert user into db
-			client.query("INSERT INTO users (username, public, private, password) VALUES ($1,$2,$3,$4)",
-				[username, address[0], address[1], password])
+			if (copykeys)
+				client.query("INSERT INTO users (username, public, private, password, date) VALUES ($1,$2,$3,$4,$5)",
+					[username, address[0], address[1], password, parseInt(Date.now())])
+			else
+				client.query("INSERT INTO users (username, public, private, password, date) VALUES ($1,$2,$3,$4,$5)",
+					[username, address[0], "-", password, parseInt(Date.now())])
+
+			var ciphertext = JSON.stringify(username + ";" + address[0] + ";" + address[1])
+			var cipher = admin.encrypt(ciphertext, password)
+			
+			// download container with keys
+			io.sockets.to(socket.id).emit('receive key container', cipher)
 		}
-		console.log(usernameToAddress)
 	})
 
 	socket.on('login user', function (username, server, alreadyLoggedIn) {

@@ -19,6 +19,11 @@ sign: function (publicKey, privateKey, message)
     var signature = bitcoinMessage.sign(JSON.stringify(message), privateKey, keyPair.compressed).toString('base64')
     
     return signature
+},
+
+verify: function (publicKey, signature, message)
+{
+    return bitcoinMessage.verify(message, publicKey, signature)
 }
 
 }

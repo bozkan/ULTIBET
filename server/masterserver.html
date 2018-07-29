@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Betia Live Betting</title>
+    <title>BETIA Live Betting</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -197,7 +197,12 @@
               alert('Password must be at least 8 characters long')
               return false
             }
-            socket.emit('user register', $('#r_username').val(), $('#r_password').val());
+            if ($('#r_copykeys').is(':checked'))
+              var copykeys = true
+            else
+              var copykeys = false
+            socket.emit('user register', $('#r_username').val(), $('#r_password').val(), copykeys)
+            return false
           });
 
           if ($_GET['r'])
@@ -221,8 +226,21 @@
             }
           })
 
-          socket.on('error message', function(message) {
+          socket.on('error message', function (message) {
             alert(message)
+          })
+
+          socket.on('receive key container', function (cipher) {
+            var uri = 'data:text;charset=utf-8,' + encodeURI(cipher)
+
+            var downloadLink = document.createElement("a")
+            downloadLink.href = uri
+            downloadLink.download = "BETIA_encrypted_keys.txt"
+
+            document.body.appendChild(downloadLink)
+            downloadLink.click()
+            document.body.removeChild(downloadLink)
+            location.reload()
           })
 
           socket.on('receive account statement', function(balance, history) {
@@ -263,7 +281,7 @@
     
   <br><br>
   <div class="container" id="playarea" style="position:relative;display:none;" align="center">
-      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Account statement</button></form></center>
+      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Wallet</button></form></center>
         <br><br>
         <button type="button" class="btn btn-primary" style="border-radius: 0;cursor:pointer;" onclick="modalf();">Create New Room</button>
         <br><br><br>
@@ -296,7 +314,7 @@
         <div class="modal-content" style="color:black;">
           <span class="close">&times;</span>
           <center>
-              <h6>Account statement</h6>
+              <h6>Wallet</h6>
               <div id="statement_balance"></div>
               <div id="statement_history"></div>
               <br>
@@ -312,8 +330,12 @@
               <h6>Register account</h6>
               <br>
               <form method="GET" action="/" id="send_register">
-              <input type="text" id="r_username" placeholder="username" class="form-control" />
-              <input type="password" id="r_password" placeholder="password" class="form-control" />
+              <input type="text" id="r_username" placeholder="username" class="form-control" disabled/>
+              <input type="password" id="r_password" placeholder="password" class="form-control" /><br>
+              <input type="checkbox" id="r_copykeys" /><label for="r_copykeys">Check this if you want us to store a copy of your private keys. This will let us sign your bets when you don't have access to your keys or send them to you if you lose them. 
+                In either case, you will receive a container with your keys upon registration. 
+                The keys will be encrypted with your password.
+              </label>
               <br>
               <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Register!</button>
               </form>

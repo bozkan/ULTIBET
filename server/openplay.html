@@ -404,22 +404,40 @@
             $("#payouthistory").prepend(output) // latest payout entry is first
           })
         })
-
         $('#login_form').submit(function(){
-          username = $("#login").val();
+          username = $("#login").val()
           if ($("#"+username).length != 0)
           {
             alert('This user is already logged in on this server.')
             return false
           }
+          // try to log me in
+          socket.emit('ask login', username, server, $("#p_login").val())
+          return false;
+        })
+
+        $('#upload_keys').submit(function(){
+
+          var keysFile = document.getElementById("private_keys").files[0];
+
+          var fileReader = new FileReader();
+          fileReader.onload = function(fileLoadedEvent){
+              var loadedKeys = fileLoadedEvent.target.result
+              socket.emit('ask upload keys', loadedKeys, $("#p_login2").val(), server)
+          };
+
+          fileReader.readAsText(keysFile, "UTF-8")
+
+          return false;
+        })
+
+        socket.on('login approved', function(alreadyLoggedIn, _username = false) {
+          if (_username)
+            username = _username
+
           // update my balance
           socket.emit('ask my balance', username)
-          // try to log me in
-          socket.emit('ask login', username, server)
-          return false;
-        });
 
-        socket.on('login approved', function(alreadyLoggedIn) {
           if (!isPhone())
           {
             $("#login_form").html(server)
@@ -428,6 +446,7 @@
           {
             $("#login_form").empty()
           }
+          $('#upload_keys').hide()
           $("#login_form").css("font-size", "30pt")
           $("#playingarea").show()
           $("#matchminute").html("Loading...")
@@ -554,7 +573,18 @@
 
     <div class="container" style="font-family:'Jura';color:white;padding:20px;">
 
-        <center><form id="login_form">Log in: &nbsp;<input type="text" id="login" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <button type="submit" style="border:0;height:35px;cursor:pointer;" />Play!</button></form></center>
+        <center><form id="login_form"><font style="font-size:20pt;">Log in</font><br><br>
+          <input type="text" id="login" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /><br>
+          <input type="password" id="p_login" placeholder="password" style="padding:2px;padding-left:5px;height:35px;" /><br><br>
+          <button type="submit" style="border:0;height:35px;cursor:pointer;" />Play!</button></form>
+          <form id="upload_keys"><br><br>
+            <font style="font-size:16pt;">or</font><br><br>
+          <font style="font-size:20pt;">Upload private keys</font>
+          <br><br>
+          <input type="file" id="private_keys" accept="txt" style="margin-left:110px;" /><br>
+          <input type="password" id="p_login2" placeholder="password" style="padding:2px;padding-left:5px;height:35px;margin-top:5px;" /><br><br>
+          <button type="submit" style="border:0;height:35px;cursor:pointer;" />Play!</button></form>
+        </center>
 
 <div id="playingarea" style="display:none;">
 <center>
