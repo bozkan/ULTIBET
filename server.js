@@ -175,10 +175,13 @@ io.on('connection', function (socket) {
 
 	/* Begin handling UI events */
 
-	socket.on('create game', function (servername, gameid, password) {
+	socket.on('create game', function (servername, gameid, password, auto = false) {
 		// if server with this name already exists, return error
 		if (servers.indexOf(servername) != -1)
-			io.sockets.to(socket.id).emit('error message', 'This room already exists.')
+		{
+			if (!auto) // if room wasn't generated automatically
+				io.sockets.to(socket.id).emit('error message', 'This room already exists.')
+		}
 		else
 		{
 			servers.push(servername)
