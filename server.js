@@ -126,7 +126,10 @@ app.get("/", function(req, res){
 })
 
 app.get("/play", function(req, res) {
-	res.render(__dirname + '/server/openplay.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
+	if (servers.indexOf(req.query.server) != -1 )
+		res.render(__dirname + '/server/openplay.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
+	else
+		res.render(__dirname + '/server/error.html')
 })
 
 io.on('connection', function (socket) {
@@ -573,7 +576,6 @@ io.on('connection', function (socket) {
 	})
 
 	socket.on('forward live match', function(_match) {
-		var _match = _match[0]
 		io.sockets.emit('receive live match', _match) // doesn't matter that it goes to everyone
 	})
 

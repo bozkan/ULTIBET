@@ -34,12 +34,12 @@ function findDiff ($old, $new_array, $type)
     }
 }
 
-function livematches ()
+function livematches () 
 {
 	$livematches = array();
 
 	$data = file_get_contents("https://www.sportinglife.com/football/live/filter/ongoing");
-
+	
 	preg_match_all('/<div class=\"footballMatchListItem\">(.*?)<\/a>/s', $data, $matches);
 
 	foreach ($matches[1] as $match)
@@ -47,7 +47,7 @@ function livematches ()
 
 		$matchid = getString($match, '<a href="/football/live/', '/');
 
-		preg_match_all('/data-compact-text=\"(.*?)\"/s', $match, $teams);
+		preg_match_all('/<span>(.*?)<\/span>/s', $match, $teams);
 
 		$hometeam = $teams[1][0];
 		$awayteam = $teams[1][1];

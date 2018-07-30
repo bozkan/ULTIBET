@@ -258,16 +258,22 @@
             })
           })
 
-          socket.on('receive live match', function (match) {
-              // add option to the creation of new games
-              $('#gameid').append($("<option></option>").attr("value",match.matchid).text(match.hometeam+" vs. "+match.awayteam))
+          socket.on('receive live match', function (_match) {
+              _match.forEach(function(match) {
+                if ($('#option'+match.matchid).length == 0)
+                  $('#gameid').append($("<option></option>").attr("value",match.matchid).attr("id","option"+match.matchid).text(match.hometeam+" vs. "+match.awayteam))
               
-              // create public server for the match
-              var matchname = match.hometeam + " vs. " + match.awayteam
-              socket.emit('create game', matchname, parseInt(match.matchid), "")
-              if ($("#count"+matchname).length == 0) // only add server if just generated it
-                $("#serverlist").append('<a href="/play?server='+matchname+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+matchname+'<span class="badge badge-primary badge-pill player-amount" id="count'+matchname+'">0</span></li></a>')
-          })
+                // create public server for the match
+                var matchname = match.hometeam + " vs. " + match.awayteam
+                socket.emit('create game', matchname, parseInt(match.matchid), "", true)
+                
+                if ($('#_count').length == 0) // only add server if just generated it
+                {
+                  $("#serverlist").append('<a href="/play?server='+matchname+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+matchname+'<span class="badge badge-primary badge-pill player-amount" id="___count">0</span></li></a>')
+                  $("#no_rooms_online").remove()
+                }
+              })                           
+         })
 
           setTimeout(function() {
             socket.emit('get player counts')
@@ -286,13 +292,16 @@
 
           if (p_servers.length < 1)
           {
-            $("#serverlist").append('No rooms currently online.')
+            $("#serverlist").append('<span id="no_rooms_online">No rooms currently online.</span>')
           }
           else
           {
             for (var i = 0, n = p_servers.length; i < n; i++)
             {
-              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
+              if (p_servers[i].indexOf(" vs. ") == -1)
+                $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
+              else
+                $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="_count">0</span></li></a>');
             }
           }
 
