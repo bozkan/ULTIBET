@@ -45,6 +45,15 @@
         background-color:#68d869;
       }
 
+      .no-hover {
+        color:#00c7ff;
+      }
+
+      .no-hover:hover {
+        color:#0087ff;
+        text-decoration: none;
+      }
+
       .playnow:hover {
         background-color: white;
       }
@@ -62,7 +71,7 @@
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
           z-index: 2; /* Sit on top */
-          padding-top: 100px; /* Location of the box */
+          padding-top: 200px; /* Location of the box */
           left: 0;
           top: 0;
           width: 100%; /* Full width */
@@ -73,7 +82,7 @@
       }
 
       /* Modal Content */
-      .modal-content {
+      .modal-content2 {
           background-color: #fefefe;
           margin: auto;
           padding: 20px;
@@ -120,9 +129,7 @@
       if(document.location.toString().indexOf('?') !== -1) {
           var query = document.location
                         .toString()
-                        // get the query string
                         .replace(/^.*?\?/, '')
-                        // and remove any existing hash string (thanks, @vrijdenker)
                         .replace(/#.*$/, '')
                         .split('&');
 
@@ -140,7 +147,7 @@
       }
 
       function modalf(eventid,amount) {
-            modal.style.display = "block"
+          $("#modal").fadeIn()
         }
 
       function statement() {
@@ -214,9 +221,9 @@
 
           $('#create').submit(function(){
             if (/^[a-z0-9]+$/i.test($('#servername').val()) && /^[a-z0-9]+$/i.test($('#gameid').val()) && /^[a-z0-9]+$/i.test($('#coinbase').val()))
-              socket.emit('create game', $('#servername').val(), parseInt($('#gameid').val()), parseInt($('#coinbase').val()));
+              socket.emit('create game', $('#servername').val(), parseInt($('#gameid').val()), $('#roompassword').val());
             else
-              alert("Please fill in all the fields properly.")
+              alert("Please fill in all the fields properly. Only alphanumeric characters allowed.")
           });
 
           socket.on('receive player counts', function(serverToPlayers){
@@ -275,7 +282,7 @@
           {
             for (var i = 0, n = p_servers.length; i < n; i++)
             {
-              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'"><li class="list-group-item d-flex justify-content-between align-items-center" style="border-radius:0;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
+              $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
             }
           }
 
@@ -296,19 +303,21 @@
         </ul>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content" style="color:black;">
+    <div id="modal" class="modal" style="border-radius: 0;">
+        <div class="modal-content2" style="color:black;">
           <span class="close">&times;</span>
           <center>
               <h2>Create Room</h2>
               <br>
               <form id="create" method="GET" action="/">
                   <div class="form-group">
-                      <input type="text" class="form-control" id="servername" name="servername" placeholder="Room name">
+                      <input type="text" class="form-control" id="servername" name="servername" placeholder="room name">
                       <select id="gameid" style="margin-top:5px;width:100%;font-family:'Jura';">
                           <option value="def;;ault">Select Match</option>
                           <option value="52419">Testing vs. Test</option>
                       </select>
+                      <input type="password" placeholder="password" class="form-control" id="roompassword" style="margin-top:5px;" />
+                      <small id="emailHelp" class="form-text text-muted">Leave password field empty to create a public room.</small>
                       <input type="hidden" name="r" value="y" />
                   </div>
                   <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Create!</button>
@@ -318,7 +327,7 @@
       </div>  
 
       <div id="statement" class="modal">
-        <div class="modal-content" style="color:black;">
+        <div class="modal-content2" style="color:black;">
           <span class="close">&times;</span>
           <center>
               <h6>Wallet</h6>
@@ -331,7 +340,7 @@
       </div> 
 
       <div id="register_overlay" class="modal">
-        <div class="modal-content" style="color:black;">
+        <div class="modal-content2" style="color:black;">
           <span class="close">&times;</span>
           <center>
               <h6>Register account</h6>

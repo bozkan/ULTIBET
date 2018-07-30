@@ -62,7 +62,7 @@
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
           z-index: 2; /* Sit on top */
-          padding-top: 100px; /* Location of the box */
+          padding-top: 200px; /* Location of the box */
           left: 0;
           top: 0;
           width: 100%; /* Full width */
@@ -73,7 +73,7 @@
       }
 
       /* Modal Content */
-      .modal-content {
+      .modal-content2 {
           background-color: #fefefe;
           margin: auto;
           padding: 20px;
@@ -388,6 +388,10 @@
           $("#pendingtime"+eventid).html(timeRemaining)
         })
 
+        socket.on('success room password', function() {
+          $("#passwordprompt").hide()
+        })
+
         socket.on('receive payout history', function(payoutHistory) {
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
@@ -416,6 +420,11 @@
           return false;
         })
 
+        $('#passwordprompt_form').submit(function(){
+          socket.emit('ask room password', $("#room_password").val(), server)
+          return false
+        })
+
         $('#upload_keys').submit(function(){
 
           var keysFile = document.getElementById("private_keys").files[0];
@@ -435,8 +444,8 @@
           if (_username)
             username = _username
 
-          // update my balance
-          socket.emit('ask my balance', username)
+          // update my balance + check server pw
+          socket.emit('ask my balance', username, server)
 
           if (!isPhone())
           {
@@ -463,6 +472,10 @@
           {
             location.reload()
           }
+        })
+
+        socket.on('server password prompt', function () {
+          $("#passwordprompt").show()
         })
 
         $('#chatform').submit(function(){
@@ -653,7 +666,7 @@
             <option id="awayteamoption" value="Loading...">Loading...</option>
           </select>
           <br>
-          $ <input type="number" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="10" id="amount" />
+          $ <input type="number" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="10" value="10" id="amount" />
           <br>
           <button type="submit" form="placebet" style="border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
         </form>
@@ -691,7 +704,7 @@
 <div id="modal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content" style="color:black;">
+    <div class="modal-content2" style="color:black;">
       <span class="close">&times;</span>
       <center>
       <form id="placebet2">
@@ -716,7 +729,7 @@
   <div id="betoverview" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content" style="color:black;">
+    <div class="modal-content2" style="color:black;">
       <span class="close">&times;</span>
       <center>
         <h6 id="betoverviewname"></h6>
@@ -728,7 +741,22 @@
       </center>
     </div>
   
-  </div> 
+  </div>
+  
+  <div id="passwordprompt" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content2" style="color:black;">
+        <center>
+          <h6>Private room connection</h6>
+          <form id="passwordprompt_form">
+            <input type="password" placeholder="password" id="room_password" /><br><br>
+            <button type="submit" style="border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Enter</button>
+          </form>
+        </center>
+      </div>
+    
+    </div>
 
     </div><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

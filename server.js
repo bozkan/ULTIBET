@@ -72,6 +72,7 @@ var all_bets = []
 var serverToPlayers = {}
 var usernameToBalance = {}
 var serverToCoinbase = {}
+var serverToPassword = {}
 var playerToServer = {}
 var users = []
 var gameToCommentary = {}
@@ -174,7 +175,7 @@ io.on('connection', function (socket) {
 
 	/* Begin handling UI events */
 
-	socket.on('create game', function (servername, gameid) {
+	socket.on('create game', function (servername, gameid, password) {
 		// if server with this name already exists, return error
 		if (servers.indexOf(servername) != -1)
 			io.sockets.to(socket.id).emit('error message', 'This room already exists.')
@@ -182,6 +183,7 @@ io.on('connection', function (socket) {
 		{
 			servers.push(servername)
 			serverToGame[servername] = gameid
+			serverToPassword[servername] = password
 			serverToPlayers[servername] = []
 			serverToCoinbase[servername] = 0
 			gameToCommentary[gameid] ? 1 : gameToCommentary[gameid] = []
@@ -256,6 +258,8 @@ io.on('connection', function (socket) {
 
 		io.sockets.to(socket.id).emit('return lookup active bets', __bets)
 
+		if (serverToPassword[server] != "")
+			io.sockets.to(socket.id).emit('server password prompt')
 	})
 
 	socket.on('ask upload keys', function (raw, password, server) {
@@ -595,8 +599,15 @@ io.on('connection', function (socket) {
 		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
 	})
 
-	socket.on('ask my balance', function (_username) {
+	socket.on('ask my balance', function (_username, _server) {
 		io.sockets.to(socket.id).emit('receive my balance', usernameToBalance[_username])
+	})
+
+	socket.on('ask room password', function(_password, _server) {
+		if (serverToPassword[_server] == _password)
+			io.sockets.to(socket.id).emit('success room password')
+		else
+			io.sockets.to(socket.id).emit('error message', 'Incorrect password.')
 	})
 
 });
