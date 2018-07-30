@@ -1,1 +1,0 @@
-{"type":"coinbase","from":"16jaJPvSYUYV8ki3iWupT1WPF3WAPK5YvF","to":"","stamp":8,"signature":"HJd2T4QhYpM9f9fCbId0Qb+SEFcip06zDok9XUFeVXQSXFeJwko/Q6yrS+jrqcFSh6YoXOli5v+AHJh8haTWpuY=","origin":"00000ccf19e7a36cab65c949f232c6517bebbeb402700e27cf64132be93d41bac3d45f9b5420289bb183416b07d4555af02bbb839b31b1256966623894c3b32b","timestamp":1528561058025}
