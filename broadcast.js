@@ -34,7 +34,7 @@ module.exports = {
 	{
 		//signatures = signatures.replace(/\+/g, "%2B")
 
-		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle, sig_timestamps))
+		var transaction = JSON.stringify(new Transaction(type, event, from, to, amount, wagers, server, match, signatures, oracle, sig_timestamps))
 		var current = fs.readFileSync(mempoolFile)
 		if (current != "")
 		{

@@ -36,7 +36,7 @@ class Block
 
     calculateHash() 
     {
-        return helpers.generateHash(this.height + this.previousHash + this.timestamp + JSON.stringify(this.payload) + this.nonce + this.issuer);
+        return helpers.generateHash(this.height + this.previousHash + JSON.stringify(this.payload) + this.nonce + this.issuer);
     }
 
     // encrypt block with miner's private key
@@ -91,7 +91,7 @@ class User
 
 class Transaction
 {
-    constructor(type, event, from, to, amount, wagers, server, match, signatures, timestamp, oracle, sig_timestamps)
+    constructor(type, event, from, to, amount, wagers, server, match, signatures, oracle, sig_timestamps)
     {
         this.type = type
         this.from = from
@@ -99,7 +99,6 @@ class Transaction
         this.amount = amount
         this.server = server
         this.signatures = signatures
-        this.timestamp = timestamp
         this.event = event
         this.wagers = wagers
         this.match = match
@@ -130,7 +129,7 @@ class LoadBlock
     // calculates hash
 
     calculateHash() {
-        return helpers.generateHash(this.height + this.previousHash + this.timestamp + JSON.stringify(this.payload) + this.nonce + this.issuer);
+        return helpers.generateHash(this.height + this.previousHash + JSON.stringify(this.payload) + this.nonce + this.issuer);
     }
 
 }
