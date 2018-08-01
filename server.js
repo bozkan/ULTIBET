@@ -80,6 +80,7 @@ var serverToEvents = {} // dictionary -> array -> dictionary
 var socketToUsername = {}
 var serverToDownvotes = {} // dictionary (server) -> dictionary (eventid) -> array (usernames of players who downvoted)
 var socketToServer = {} // to know which server user disconnected from
+var displayNames = {} // stores display names of automatically created servers
 
 /*
 This is the bet countdown timer
@@ -122,7 +123,7 @@ setInterval(function() {
 
 app.get("/", function(req, res){
 	console.log(servers)
-	res.render(__dirname + '/server/masterserver.html', { servers: servers })
+	res.render(__dirname + '/server/masterserver.html', { })
 })
 
 app.get("/play", function(req, res) {
@@ -178,7 +179,7 @@ io.on('connection', function (socket) {
 
 	/* Begin handling UI events */
 
-	socket.on('create game', function (servername, gameid, password, auto = false) {
+	socket.on('create game', function (servername, gameid, password, auto = false, displayname = "") {
 		// if server with this name already exists, return error
 		if (servers.indexOf(servername) != -1)
 		{
@@ -194,6 +195,10 @@ io.on('connection', function (socket) {
 			serverToCoinbase[servername] = 0
 			gameToCommentary[gameid] ? 1 : gameToCommentary[gameid] = []
 			console.log(serverToPlayers)
+
+			// if automatically created server, store it's id to name
+			if (auto)
+				displayNames[servername] = displayname
 		}
 	})
 
@@ -568,7 +573,7 @@ io.on('connection', function (socket) {
 		var statement = blockchain.findStatement(usernameToAddress[username])
 		var balance = statement[0]
 		var history = statement[1]
-		io.sockets.to(socket.id).emit('receive account statement', balance, history)
+		io.sockets.to(socket.id).emit('receive account statement', balance, history, username)
 	})
 
 	socket.on('get live matches', function() {
@@ -604,8 +609,16 @@ io.on('connection', function (socket) {
 		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
 	})
 
+	socket.on('ask server displayname', function (_servername) {
+		io.sockets.to(socket.id).emit('receive server displayname', displayNames[_servername])
+	})
+
 	socket.on('ask my balance', function (_username, _server) {
 		io.sockets.to(socket.id).emit('receive my balance', usernameToBalance[_username])
+	})
+
+	socket.on('get servers', function() {
+		io.sockets.to(socket.id).emit('receive servers', servers, displayNames)
 	})
 
 	socket.on('ask room password', function(_password, _server) {

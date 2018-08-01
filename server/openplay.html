@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Betia Live Betting</title>
+    <title>ULTIBET Live Betting</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -111,6 +111,10 @@
         text-decoration: underline;
         color:black;
       }
+
+      .no_hover:hover {
+        text-decoration: none;
+      }
     </style>
 
     <!--[if lt IE 9]>
@@ -120,7 +124,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
-    <div style="width:100%;font-size:30pt;padding-left:100px;"> <a href="/" class="no-underline"><font color="#5bba5c">B</font><font color="white">ETIA</font></div></a>
+    <div style="width:100%;font-size:20pt;padding-left:100px;padding-bottom:20px;padding-top:30px;"> <a href="/" class="no-underline"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a> <span style="float:right;margin-right:80px;color:white;font-size:17pt;margin-top:4px;"><span style="padding-right:35px;">Add Money</span><span style="padding-right:35px;">How to Play</span><font color="#5bba5c">Register</font></span></div>
     <script>
       function isPhone() {
           return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
@@ -440,6 +444,10 @@
           return false;
         })
 
+        socket.on('receive server displayname', function(displayname) {
+          $("#login_form").html(displayname)
+        })
+
         socket.on('login approved', function(alreadyLoggedIn, _username = false) {
           if (_username)
             username = _username
@@ -449,7 +457,10 @@
 
           if (!isPhone())
           {
-            $("#login_form").html(server)
+            if (server.indexOf("__") == -1)
+              $("#login_form").html(server)
+            else
+              socket.emit('ask server displayname', server)
           }
           else
           {
@@ -677,10 +688,10 @@
             <h6>Live chat</h6>
             <form id="chatform" style="margin-top:10px;">
               <div id="chatfield" style="width:250px;background-color:#1a1c1a;font-family:sans-serif;padding:5px;height:200px;overflow:auto;margin:0;color:white;" align="left">
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betia:</font> Welcome to live betting!</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betia:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betia:</font> When a pending bet is accepted by everyone, it becomes active.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betia:</font> Active bets are paid out as soon as the event occurs in the match!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> Welcome to live betting!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> When a pending bet is accepted by enough players, it becomes active.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> Active bets are paid out as soon as the event occurs in the match!</p>
               </div>
               <input type="text" id="chatinput" style="border-radius:0;background-color:white;width:250px;height:25px;margin:0;font-size:10pt;font-family:sans-serif;" placeholder="Send a message..." autocomplete="off" />
               <input type="submit" style="display:none;" />
@@ -758,7 +769,12 @@
     
     </div>
 
-    </div><!-- /.container -->
+    </div>
+    
+    <footer style="margin:15px;padding-left:50px;color:white;">
+        Copyright &copy; 2018 ULTI.BET &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="mailto:vojta@vojtadrmota.com" class="no_hover" style="color:white;">Contact Us</a>
+      </footer>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

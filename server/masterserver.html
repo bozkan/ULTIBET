@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>BETIA Live Betting</title>
+    <title>ULTIBET Live Betting</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -66,6 +66,10 @@
         font-size:19pt;
       }
 
+      .no_hover:hover {
+        text-decoration: none;
+      }
+
       /* The Modal (background) */
       .modal {
           display: none; /* Hidden by default */
@@ -117,7 +121,10 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
-      <div style="width:100%;font-size:15pt;padding-top:50px;" align="center"> <a href="/"><img src="/logo4.png" width="275" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">B</font><font color="white" style="font-size:70pt;">ETIA</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
+
+    <div id="navbar" style="margin:30px;font-size:20pt;margin-left:100px;"><a href="/" class="no-hover"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a><span style="float:right;color:white;font-size:17pt;margin-right:50px;margin-top:4px;"><a href="#walletinfo" class="no_hover" onclick="getwalletinfo()"><span style="margin-right:30px;color:white;">My Wallet</span></a> <span style="margin-right:30px;">How to Play</span> <a href="#register" onclick="register();" class="no_hover"><font color="#5bba5c">Register</font></a></span></div>
+    
+    <div style="width:100%;font-size:15pt;padding-top:20px;" align="center"> <a href="/"><img src="/logo4.png" width="275" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">ULTI</font><font color="white" style="font-size:70pt;">BET</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -141,29 +148,38 @@
 
       function playnow()
       {
-        $("#playarea").show()
+        $("#playarea").fadeIn()
         $("#playnow_button").hide()
-        $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+        $("html, body").animate({ scrollTop: $(document).height() }, 1000) 
       }
 
       function modalf(eventid,amount) {
           $("#modal").fadeIn()
         }
 
-      function statement() {
-        document.getElementById("statement").style.display = "block"
-        socket.emit('ask account statement', $("#register").val())
+      function statement(_username) {
+        $("#statement").fadeIn()
+        socket.emit('ask account statement', _username)
       }
 
-      function register(username) {
-        document.getElementById("register_overlay").style.display = "block"
-        $("#r_username").val(username)
+      function getwalletinfo()
+      {
+        $("#_statement").fadeIn()
+      }
+
+      function register() {
+        $("#register_overlay").fadeIn()
       }
 
         $(function () {
           var span = document.getElementsByClassName("close")[0];
           var span2 = document.getElementsByClassName("close")[1];
           var span3 = document.getElementsByClassName("close")[2];
+          var span4 = document.getElementsByClassName("close")[3];
+
+          if ($_GET['new_user']) { // if user just signed up, tell him
+            alert("You have successfully registered! IMPORTANT! You've also downloaded a file containing your public/private keys. This file is encrypted with your password. MAKE SURE YOU DON'T LOSE IT if you haven't stored your keys with us. Your keys are used to cryptographically sign any bets you make on the blockchain, so you can be sure that nobody can steal your money.");
+          }
 
           // When the user clicks on <span> (x), close the modal
           span.onclick = function() {
@@ -175,6 +191,10 @@
           }
 
           span3.onclick = function() {
+            document.getElementById('_statement').style.display = "none";
+          }
+
+          span4.onclick = function() {
             document.getElementById('register_overlay').style.display = "none";
           }
 
@@ -182,26 +202,25 @@
           window.onclick = function(event) {
               if (event.target == modal || 
               event.target == document.getElementById("statement") ||
+              event.target == document.getElementById("_statement") ||
               event.target == document.getElementById('register_overlay')
                ) {
                 document.getElementById('modal').style.display = "none";
                 document.getElementById('statement').style.display = "none";
                 document.getElementById('register_overlay').style.display = "none";
+                document.getElementById('_statement').style.display = "none";
               }
           }
-
-          $('#register_form').submit(function(){
-            if (/^[a-z0-9]+$/i.test($('#register').val()))
-              register($('#register').val())
-            else
-              alert('Only letters and numbers allowed in username');
-            return false
-          });
 
           $('#send_register').submit(function(){
             if ($('#r_password').val().length < 8)
             {
               alert('Password must be at least 8 characters long')
+              return false
+            }
+            if (!(/^[a-z0-9]+$/i.test($('#r_username').val())))
+            {
+              alert('Only letters and numbers allowed in username')
               return false
             }
             if ($('#r_copykeys').is(':checked'))
@@ -214,8 +233,9 @@
 
           if ($_GET['r'])
           {
-            $("#playarea").show()
-            $("#register_form").hide()
+            $("#playarea").fadeIn()
+            //$("#register_form").remove()
+            $("#playnow_button").remove()
             $("html, body").animate({ scrollTop: $(document).height() }, 1);
           }
 
@@ -225,6 +245,12 @@
             else
               alert("Please fill in all the fields properly. Only alphanumeric characters allowed.")
           });
+
+          $("#wallet_ask").submit(function(){
+            $("#_statement").hide()
+            statement($("#w_username").val())
+            return false
+          })
 
           socket.on('receive player counts', function(serverToPlayers){
             for (var key in serverToPlayers)
@@ -242,16 +268,23 @@
 
             var downloadLink = document.createElement("a")
             downloadLink.href = uri
-            downloadLink.download = "BETIA_encrypted_keys.txt"
+            downloadLink.download = "ULTIBET_encrypted_keys.txt"
 
             document.body.appendChild(downloadLink)
             downloadLink.click()
             document.body.removeChild(downloadLink)
+
+            if (window.location.href.indexOf('?') > -1)
+              window.location.href += "&new_user=y";
+            else
+              window.location.href += "?new_user=y";
+
             location.reload()
           })
 
-          socket.on('receive account statement', function(balance, history) {
-            $("#statement_balance").html("$"+balance)
+          socket.on('receive account statement', function(balance, history, username) {
+            $("#statement_balance").html("Balance: $"+balance)
+            $("#wallet_owner").html(username)
             $("#statement_history").empty()
             history.forEach(function(el) {
               $("#statement_history").append("Server: "+el.server+"<br>Game id: "+el.matchid+"<br>Event: "+el.event+"<br>Amount: "+el.amount+"<hr>")
@@ -265,11 +298,11 @@
               
                 // create public server for the match
                 var matchname = match.hometeam + " vs. " + match.awayteam
-                socket.emit('create game', matchname, parseInt(match.matchid), "", true)
+                socket.emit('create game', "__"+match.matchid, parseInt(match.matchid), "", true, matchname)
                 
-                if ($('#_count').length == 0) // only add server if just generated it
+                if ($('#count__'+match.matchid).length == 0) // only add server if just generated it
                 {
-                  $("#serverlist").append('<a href="/play?server='+matchname+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+matchname+'<span class="badge badge-primary badge-pill player-amount" id="___count">0</span></li></a>')
+                  $("#serverlist").append('<a href="/play?server=__'+match.matchid+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+matchname+'<span class="badge badge-primary badge-pill player-amount" id="count__'+match.matchid+'">0</span></li></a>')
                   $("#no_rooms_online").remove()
                 }
               })                           
@@ -280,30 +313,23 @@
           }, 1000) // wait 1 second to receive all games
 
           socket.emit('get live matches')
+          socket.emit('get servers')
 
-          if ("<%= servers %>".length == 0)
-          {
-            var p_servers = [];
-          }
-          else
-          {
-            var p_servers = "<%= servers %>".split(",");
-          }
-
-          if (p_servers.length < 1)
-          {
-            $("#serverlist").append('<span id="no_rooms_online">No rooms currently online.</span>')
-          }
-          else
-          {
-            for (var i = 0, n = p_servers.length; i < n; i++)
-            {
-              if (p_servers[i].indexOf(" vs. ") == -1)
-                $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="count'+p_servers[i]+'">0</span></li></a>');
-              else
-                $("#serverlist").append('<a href="/play?server='+p_servers[i]+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+p_servers[i]+'<span class="badge badge-primary badge-pill player-amount" id="_count">0</span></li></a>');
+          socket.on('receive servers', function(servers, displaynames) {
+            if (servers.length != 0) {
+              servers.forEach(function(_server) {
+                if (_server.indexOf("__") != -1)
+                  // if server was automatically created, show displayname
+                  $("#serverlist").append('<a href="/play?server='+_server+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+displaynames[_server]+'<span class="badge badge-primary badge-pill player-amount" id="count'+_server+'">0</span></li></a>');
+                else
+                  $("#serverlist").append('<a href="/play?server='+_server+'" class="no-hover"><li class="list-group-item d-flex justify-content-between align-items-center light-hover" style="border-radius:0;background-color:#2b3038;">'+_server+'<span class="badge badge-primary badge-pill player-amount" id="count'+_server+'">0</span></li></a>');
+              })
             }
-          }
+            else
+            {
+              $("#serverlist").append('<span id="no_rooms_online">No rooms currently online.</span>')
+            }
+          })
 
         });
       </script>
@@ -312,13 +338,11 @@
     
   <br><br>
   <div class="container" id="playarea" style="position:relative;display:none;" align="center">
-      <center><form id="register_form" method="GET" action="/"><input type="text" id="register" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <input type="hidden" value="y" name="r" /><button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Register!</button> <button type="button" onclick="statement()" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Wallet</button></form></center>
-        <br><br>
         <button type="button" class="btn btn-primary" style="border-radius: 0;cursor:pointer;" onclick="modalf();">Create New Room</button>
         <br><br><br>
         <h2>Online Rooms</h2>
         <br>
-        <ul class="list-group" id="serverlist" style="width:50%;margin-bottom:100px;">
+        <ul class="list-group" id="serverlist" style="width:50%;margin-bottom:60px;">
         </ul>
     </div>
 
@@ -349,7 +373,7 @@
         <div class="modal-content2" style="color:black;">
           <span class="close">&times;</span>
           <center>
-              <h6>Wallet</h6>
+              <h6>Wallet of <span id="wallet_owner"></span></h6>
               <div id="statement_balance"></div>
               <div id="statement_history"></div>
               <br>
@@ -358,15 +382,33 @@
         </div>
       </div> 
 
+      <div id="_statement" class="modal">
+          <div class="modal-content2" style="color:black;">
+            <span class="close">&times;</span>
+            <center>
+                <h6>Get Wallet Details</h6>
+                <br>
+                <form method="GET" id="wallet_ask" action="/">
+                <input type="text" id="w_username" class="form-control" placeholder="username" />
+                <input type="password" id="w_password" class="form-control" placeholder="password" />
+                <br>
+                <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Get Wallet Info</button>
+              </form>
+            </center>
+          </div>
+        </div> 
+
       <div id="register_overlay" class="modal">
         <div class="modal-content2" style="color:black;">
           <span class="close">&times;</span>
           <center>
-              <h6>Register account</h6>
-              <br>
+              <h6>Register New Account</h6>
+              Welcome to ULTIBET!
+              <br><br>
               <form method="GET" action="/" id="send_register">
-              <input type="text" id="r_username" placeholder="username" class="form-control" disabled/>
-              <input type="password" id="r_password" placeholder="password" class="form-control" /><br>
+              <input type="text" id="r_username" placeholder="username" class="form-control"/><br>
+              <input type="password" id="r_password" placeholder="password" class="form-control" />
+              <input type="password" id="c_password" placeholder="confirm password" class="form-control" /><br>
               <input type="checkbox" id="r_copykeys" /><label for="r_copykeys">Check this if you want us to store a copy of your private keys. This will let us sign your bets when you don't have access to your keys or send them to you if you lose them. 
                 In either case, you will receive a container with your keys upon registration. 
                 The keys will be encrypted with your password.
@@ -377,6 +419,10 @@
           </center>
         </div>
       </div> 
+
+      <footer style="margin:15px;padding-left:50px;">
+        Copyright &copy; 2018 ULTI.BET &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="mailto:vojta@vojtadrmota.com" class="no_hover" style="color:white;">Contact Us</a>
+      </footer>
 
   </body>
 </html>
