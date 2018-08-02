@@ -133,6 +133,10 @@ app.get("/play", function(req, res) {
 		res.render(__dirname + '/server/error.html')
 })
 
+app.get("/add-money", function(req, res) {
+	res.render(__dirname + '/server/addmoney.html')
+})
+
 io.on('connection', function (socket) {
 
 	console.log('New connection.');
@@ -340,7 +344,7 @@ io.on('connection', function (socket) {
 
 	})
 
-	socket.on('ask login', function (username, server, password) {
+	socket.on('ask login', function (username, server, password, justVerify = false) {
 		if (users.indexOf(username) == -1)
 		{
 			io.sockets.to(socket.id).emit('error message', 'This username is not registered.')
@@ -357,13 +361,19 @@ io.on('connection', function (socket) {
 					return false
 				}
 
-				// store user data
-				socketToUsername[socket.id] = username
-				socketToServer[socket.id] = server
-				if (serverToPlayers[server].indexOf(username) != -1)
-					io.sockets.to(socket.id).emit('login approved', true)
+				// store user data unless we're just verify user credentials
+				if (!justVerify)
+				{
+					socketToUsername[socket.id] = username
+					socketToServer[socket.id] = server
+
+					if (serverToPlayers[server].indexOf(username) != -1)
+						io.sockets.to(socket.id).emit('login approved', true)
+					else
+						io.sockets.to(socket.id).emit('login approved', false)
+				}
 				else
-					io.sockets.to(socket.id).emit('login approved', false)
+					io.sockets.to(socket.id).emit('login approved')
 			})
 		}
 			
@@ -607,6 +617,12 @@ io.on('connection', function (socket) {
 
 	socket.on('get player counts', function () {
 		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
+	})
+
+	socket.on('submit payment form', function (username, address, amount) {
+		client.query("INSERT INTO payment_forms (username, address, amount, date) VALUES ($1,$2,$3,$4)",
+					[username, address, amount, parseInt(Date.now())])
+		io.sockets.to(socket.id).emit('success')
 	})
 
 	socket.on('ask server displayname', function (_servername) {

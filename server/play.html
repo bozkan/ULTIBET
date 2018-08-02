@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ULTIBET Live Betting</title>
+    <title>BETIA</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -41,14 +41,6 @@
         background-color: #fcffc1;
       }
 
-      button {
-        background-color:#5bba5c;
-      }
-
-      button:hover {
-        background-color:#68d869;
-      }
-
       option {
         font-family: 'Jura';
       }
@@ -62,7 +54,7 @@
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
           z-index: 2; /* Sit on top */
-          padding-top: 200px; /* Location of the box */
+          padding-top: 100px; /* Location of the box */
           left: 0;
           top: 0;
           width: 100%; /* Full width */
@@ -73,7 +65,7 @@
       }
 
       /* Modal Content */
-      .modal-content2 {
+      .modal-content {
           background-color: #fefefe;
           margin: auto;
           padding: 20px;
@@ -111,10 +103,6 @@
         text-decoration: underline;
         color:black;
       }
-
-      .no_hover:hover {
-        text-decoration: none;
-      }
     </style>
 
     <!--[if lt IE 9]>
@@ -124,7 +112,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
-    <div id="navbar2" style="width:100%;font-size:20pt;padding-left:100px;padding-bottom:20px;padding-top:30px;"> <a href="/" class="no-underline"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a> <span id="navbar_right" style="float:right;margin-right:80px;color:white;font-size:17pt;margin-top:4px;"><a href="/add-money" class="no_hover" style="color:white;"><span style="padding-right:35px;">Add Money</span></a><span style="padding-right:35px;">How to Play</span><font color="#5bba5c">Register</font></span></div>
+    <div style="width:100%;font-size:30pt;padding-left:100px;"> <a href="/" class="no-underline"><font color="#5bba5c">BET</font><font color="white">CAFÉ</font></div></a>
     <script>
       function isPhone() {
           return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
@@ -133,11 +121,15 @@
       if (!isPhone())
       {
         document.write('<div id="navbar" style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;position:sticky;position: -webkit-sticky;top: 0;z-index:1;min-height:140px;" align="center">');
-        document.write('<a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a>');
       }
       else
       {
         document.write('<div id="navbar" style="width:100%;padding-bottom:25px;padding-top:25px;background-color: #5bba5c;font-size:23pt;font-weight:bold;z-index:1;min-height:140px;" align="center">');
+      }
+        
+      if (!isPhone())
+      {
+        document.write('<a href="/"><img src="/logo3.png" width="100" height="100" style="left:120px;position:absolute;" /></a>');
       }
       </script>
       <p style="margin:0;padding:0;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="hometeam"></span> <span id="vs" style="display:none;">vs.</span> <span id="awayteam"></span></p><p style="margin:0;padding:0;"><span id="matchscore" style="font-size:16pt;"></span></p><p style="font-size:10pt;margin:0;padding:0;" id="matchminute">Waiting for login...</p></div>
@@ -147,19 +139,6 @@
 
     <script>
       var latestAmount = 0 
-      var map_amounts = [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
       var map_events = [
         "Nothing",
         "Attempt missed",
@@ -202,6 +181,7 @@
           socket.emit('ask bet overview', eventid, server, matchid)
           document.getElementById("betoverview").style.display = "block"
           $("#betoverviewname").html("Next "+map_events[eventid])
+          $("#betoverviewamount").html("$"+amount)
 
       }
 
@@ -209,7 +189,8 @@
             modal.style.display = "block";
             $("#beteventaccept").val(eventid)
             $("#eventid2").val(eventid)
-            $("#acceptamount").val(0)
+            $("#acceptamount").val(parseFloat(amount))
+            latestAmount = amount
             $("#beteventaccept").html("Next "+map_events[eventid].toLowerCase()+" "+prepositions[eventid])
         }
 
@@ -225,9 +206,7 @@
 
         if(isPhone())
         {
-          $('#maintable').attr("cellspacing", 20)
-          $("#navbar2").css("padding-left", "20px")
-          $("#navbar_right").css("margin-right", "10px")
+          $('#maintable').attr("cellspacing", 20);
         }
 
         var modal = document.getElementById('modal');
@@ -279,7 +258,7 @@
         socket.on('receive pending bet', function(eventid, amount, i_username) {
           if (i_username != username)
           {
-            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="modalf('+eventid+','+amount+')" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span id="pendingtime'+eventid+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">&nbsp;&nbsp;&nbsp;</span></right></li>');
+            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="modalf('+eventid+','+amount+')" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span id="pendingtime'+eventid+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span></right></li>');
             $('#betevent'+eventid).prop('disabled', true);
           }
         });
@@ -294,7 +273,7 @@
 
         socket.on('receive bet overview', function(bets){
           bets.forEach(function (bet) {
-            $("#betoverviewplayers").append('<b>'+bet.username+'</b>: '+bet.wager+' for $'+bet.amount+'<br>');
+            $("#betoverviewplayers").append('<b>'+bet.username+'</b>: '+bet.wager+'<br>');
           })
         })
 
@@ -304,7 +283,7 @@
 
         socket.on('receive active bet', function(eventid, amount){
           $('#betevent'+eventid).prop('disabled', true);
-          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+eventid+','+map_amounts[eventid]+')" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+map_amounts[eventid]+'</span>&nbsp;&nbsp;<span title="Vote to remove this bet" id="downvotes'+eventid+'" style="padding-top:6px;font-size:9pt;color:red;cursor:pointer;" onclick="downvote(event,'+eventid+')" class="hover_underline">&#x2715;</span></right></li>');
+          $("#activebets").append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="showbetoverview('+eventid+','+amount+')" id="active'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span class="badge badge-primary badge-pill" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+amount+'</span>&nbsp;&nbsp;<span title="Vote to remove this bet" id="downvotes'+eventid+'" style="padding-top:6px;font-size:9pt;color:red;cursor:pointer;" onclick="downvote(event,'+eventid+')" class="hover_underline">&#x2715;</span></right></li>');
        })
 
         socket.on('delete pending bet', function(eventid){
@@ -315,7 +294,7 @@
         socket.on('update client balances', function(eventid, _username, amount){
           var new_amount = parseFloat(amount) + parseFloat($('#balance'+_username).html().replace(/\$/g, ""))
           if (username == _username)
-            myBalance = new_amount
+           myBalance = new_amount
           $('#balance'+_username).html('$'+new_amount)
         })
 
@@ -390,18 +369,11 @@
           $("#pendingtime"+eventid).html(timeRemaining)
         })
 
-        socket.on('success room password', function() {
-          $("#passwordprompt").hide()
-        })
-
         socket.on('receive payout history', function(payoutHistory) {
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
-            output += "Event: "+map_events[el.event]+"<br>"
-            output += "Minute: "+el.minute+"'<br>"
-            output += "By: "+el.team+"<br>"
-            output += "<b><u>Transfers</u></b><br>"
+            output += "Event: "+el.event+"<br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
               output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"
@@ -410,61 +382,30 @@
             $("#payouthistory").prepend(output) // latest payout entry is first
           })
         })
+
         $('#login_form').submit(function(){
-          username = $("#login").val()
+          username = $("#login").val();
           if ($("#"+username).length != 0)
           {
             alert('This user is already logged in on this server.')
             return false
           }
-          // try to log me in
-          socket.emit('ask login', username, server, $("#p_login").val())
+          // update my balance
+          socket.emit('ask my balance', username)
+          // log me in
+          socket.emit('ask login', username, server)
           return false;
-        })
+        });
 
-        $('#passwordprompt_form').submit(function(){
-          socket.emit('ask room password', $("#room_password").val(), server)
-          return false
-        })
-
-        $('#upload_keys').submit(function(){
-
-          var keysFile = document.getElementById("private_keys").files[0];
-
-          var fileReader = new FileReader();
-          fileReader.onload = function(fileLoadedEvent){
-              var loadedKeys = fileLoadedEvent.target.result
-              socket.emit('ask upload keys', loadedKeys, $("#p_login2").val(), server)
-          };
-
-          fileReader.readAsText(keysFile, "UTF-8")
-
-          return false;
-        })
-
-        socket.on('receive server displayname', function(displayname) {
-          $("#login_form").html(displayname)
-        })
-
-        socket.on('login approved', function(alreadyLoggedIn, _username = false) {
-          if (_username)
-            username = _username
-
-          // update my balance + check server pw
-          socket.emit('ask my balance', username, server)
-
+        socket.on('login approved', function(alreadyLoggedIn) {
           if (!isPhone())
           {
-            if (server.indexOf("__") == -1)
-              $("#login_form").html(server)
-            else
-              socket.emit('ask server displayname', server)
+            $("#login_form").html(server)
           }
           else
           {
             $("#login_form").empty()
           }
-          $('#upload_keys').hide()
           $("#login_form").css("font-size", "30pt")
           $("#playingarea").show()
           $("#matchminute").html("Loading...")
@@ -481,10 +422,6 @@
           {
             location.reload()
           }
-        })
-
-        socket.on('server password prompt', function () {
-          $("#passwordprompt").show()
         })
 
         $('#chatform').submit(function(){
@@ -526,7 +463,6 @@
             $("#pendingamount"+$('#eventid').val()).removeClass("badge-danger").addClass("badge-primary");
           }
           // remove from local options
-          map_amounts[$('#eventid').val()] = $('#amount').val()
           $('#betevent'+$('#eventid').val()).prop('disabled', true);
           return false;
           } catch (err) {
@@ -536,7 +472,7 @@
         });
 
         $('#placebet2').submit(function(){
-          if ($("#acceptamount").val() < 1)
+          if (latestAmount < 1)
           {
             alert("You can't place that bet.")
             return false
@@ -546,15 +482,13 @@
             alert("You can't place a bet yet.")
             return false
           }
-          if ($("#acceptamount").val() > myBalance)
+          if (latestAmount > myBalance)
           {
             alert("You don't have enough money to place this bet.")
             return false
           }
-          map_amounts[$('#beteventaccept').val()] = $("#acceptamount").val()
-          socket.emit('place pending bet', $('#beteventaccept').val(), $('#wager2').val(), username, server, matchid, $("#acceptamount").val(), true);
+          socket.emit('place pending bet', $('#beteventaccept').val(), $('#wager2').val(), username, server, matchid, latestAmount, true);
           $("#pendingamount"+$('#beteventaccept').val()).removeClass("badge-danger").addClass("badge-primary");
-          $("#pendingamount"+$('#beteventaccept').val()).html("$"+$("#acceptamount").val());
           $("#pending"+$('#beteventaccept').val()).prop('onclick',null).off('click');
           $("#pending"+$('#beteventaccept').val()).css('cursor', 'default');
 
@@ -595,18 +529,7 @@
 
     <div class="container" style="font-family:'Jura';color:white;padding:20px;">
 
-        <center><form id="login_form"><font style="font-size:20pt;">Log in</font><br><br>
-          <input type="text" id="login" placeholder="username" class="form-control" style="width:225px;" />
-          <input type="password" id="p_login" placeholder="password" class="form-control" style="width:225px;margin-top:5px;" /><br>
-          <button type="submit" style="border:0;height:35px;cursor:pointer;" />Play!</button></form>
-          <form id="upload_keys"><br><br>
-            <font style="font-size:16pt;">or</font><br><br>
-          <font style="font-size:20pt;">Upload private keys</font>
-          <br><br>
-          <input type="file" id="private_keys" accept="txt" style="margin-left:110px;" /><br>
-          <input type="password" id="p_login2" class="form-control" placeholder="password" style="width:225px;margin-top:5px;" /><br>
-          <button type="submit" style="border:0;height:35px;cursor:pointer;" />Play!</button></form>
-        </center>
+        <center><form id="login_form">Log in: &nbsp;<input type="text" id="login" placeholder="username" style="padding:2px;padding-left:5px;height:35px;" /> <button type="submit" style="background-color:#5bba5c;border-color:#5bba5c;border:0;height:35px;cursor:pointer;" />Play!</button></form></center>
 
 <div id="playingarea" style="display:none;">
 <center>
@@ -675,9 +598,9 @@
             <option id="awayteamoption" value="Loading...">Loading...</option>
           </select>
           <br>
-          $ <input type="number" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="10" value="10" id="amount" />
+          $ <input type="number" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="0" id="amount" />
           <br>
-          <button type="submit" form="placebet" style="border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
+          <button type="submit" form="placebet" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
         </form>
       </center>
     </td>
@@ -686,10 +609,10 @@
             <h6>Live chat</h6>
             <form id="chatform" style="margin-top:10px;">
               <div id="chatfield" style="width:250px;background-color:#1a1c1a;font-family:sans-serif;padding:5px;height:200px;overflow:auto;margin:0;color:white;" align="left">
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> Welcome to live betting!</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> When a pending bet is accepted by enough players, it becomes active.</p>
-                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">ULTIBET:</font> Active bets are paid out as soon as the event occurs in the match!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> Welcome to live betting!</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> To start betting, simply place a new bet. You can also accept pending bets from other players.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> When a pending bet is accepted by everyone, it becomes active.</p>
+                  <p style="color:white;font-size:10pt;margin:0;padding:0;"><font color="#5bba5c">Betcafé:</font> Active bets are paid out as soon as the event occurs in the match!</p>
               </div>
               <input type="text" id="chatinput" style="border-radius:0;background-color:white;width:250px;height:25px;margin:0;font-size:10pt;font-family:sans-serif;" placeholder="Send a message..." autocomplete="off" />
               <input type="submit" style="display:none;" />
@@ -713,7 +636,7 @@
 <div id="modal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content2" style="color:black;">
+    <div class="modal-content" style="color:black;">
       <span class="close">&times;</span>
       <center>
       <form id="placebet2">
@@ -726,9 +649,9 @@
             <option id="awayteamoption2" value="Loading...">Loading...</option>
           </select>
           <br>
-          $ <input type="number" id="acceptamount" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="" />
+          $ <input type="number" id="acceptamount" style="margin-top:10px;margin-bottom:10px;font-size:10pt;width:35px;font-family: sans-serif;" placeholder="0" id="amount" disabled/>
           <br>
-          <button type="submit" form="placebet2" style="border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
+          <button type="submit" form="placebet2" style="background-color:#5bba5c;border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Place!</button>
         </form>
       </center>
     </div>
@@ -738,10 +661,11 @@
   <div id="betoverview" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content2" style="color:black;">
+    <div class="modal-content" style="color:black;">
       <span class="close">&times;</span>
       <center>
         <h6 id="betoverviewname"></h6>
+        <br>
         <span id="betoverviewamount"></span>
         <br>
         <div id="betoverviewplayers">
@@ -750,31 +674,12 @@
       </center>
     </div>
   
-  </div>
-  
-  <div id="passwordprompt" class="modal">
+  </div> 
 
-      <!-- Modal content -->
-      <div class="modal-content2" style="color:black;">
-        <center>
-          <h6>Private room connection</h6>
-          <form id="passwordprompt_form">
-            <input type="password" placeholder="password" id="room_password" /><br><br>
-            <button type="submit" style="border-color:#5bba5c;border:0;font-size:13pt;color:black;cursor: pointer;" />Enter</button>
-          </form>
-        </center>
-      </div>
-    
-    </div>
-
-    </div>
-    
-    <footer style="margin:15px;padding-left:50px;color:white;">
-        Copyright &copy; 2018 ULTI.BET &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="mailto:vojta@vojtadrmota.com" class="no_hover" style="color:white;">Contact Us</a>
-      </footer>
-
+    </div><!-- /.container -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
+

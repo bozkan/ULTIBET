@@ -112,6 +112,10 @@
       .player-amount:hover {
         text-decoration: none;
       }
+
+      .form-control {
+        width: 50%;
+      }
     </style>
 
     <!--[if lt IE 9]>
@@ -122,7 +126,7 @@
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';color:white;">
 
-    <div id="navbar" style="margin:30px;font-size:20pt;margin-left:100px;"><a href="/" class="no-hover"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a><span style="float:right;color:white;font-size:17pt;margin-right:50px;margin-top:4px;"><a href="#walletinfo" class="no_hover" onclick="getwalletinfo()"><span style="margin-right:30px;color:white;">My Wallet</span></a> <span style="margin-right:30px;">How to Play</span> <a href="#register" onclick="register();" class="no_hover"><font color="#5bba5c">Register</font></a></span></div>
+    <div id="navbar" style="margin:30px;font-size:20pt;margin-left:100px;"><a href="/" class="no-hover"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a><span id="navbar_right" style="float:right;color:white;font-size:17pt;margin-right:50px;margin-top:4px;"><a href="#walletinfo" class="no_hover" onclick="getwalletinfo()"><span style="margin-right:30px;color:white;">My Wallet</span></a> <span style="margin-right:30px;">How to Play</span> <a href="#register" onclick="register();" class="no_hover"><font color="#5bba5c">Register</font></a></span></div>
     
     <div style="width:100%;font-size:15pt;padding-top:20px;" align="center"> <a href="/"><img src="/logo4.png" width="275" height="275" /></a> <br><font color="#5bba5c" style="font-size:70pt;">ULTI</font><font color="white" style="font-size:70pt;">BET</font><br><font style="font-size:15pt;">A truly peer-to-peer betting platform</font></div>
       
@@ -131,6 +135,10 @@
 
     <script>
       var socket = io();
+
+      function isPhone() {
+          return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      }
 
       var $_GET = {};
       if(document.location.toString().indexOf('?') !== -1) {
@@ -150,6 +158,7 @@
       {
         $("#playarea").fadeIn()
         $("#playnow_button").hide()
+        $("#footer").css("position", "").css("bottom", "")
         $("html, body").animate({ scrollTop: $(document).height() }, 1000) 
       }
 
@@ -176,6 +185,13 @@
           var span2 = document.getElementsByClassName("close")[1];
           var span3 = document.getElementsByClassName("close")[2];
           var span4 = document.getElementsByClassName("close")[3];
+
+          if (isPhone())
+          {
+            $("#navbar_right").css("margin-right", "10px")
+            $("#navbar").css("margin-left", "20px")
+            $("#footer").css("position", "").css("bottom", "")
+          }
 
           if ($_GET['new_user']) { // if user just signed up, tell him
             alert("You have successfully registered! IMPORTANT! You've also downloaded a file containing your public/private keys. This file is encrypted with your password. MAKE SURE YOU DON'T LOSE IT if you haven't stored your keys with us. Your keys are used to cryptographically sign any bets you make on the blockchain, so you can be sure that nobody can steal your money.");
@@ -236,7 +252,8 @@
             $("#playarea").fadeIn()
             //$("#register_form").remove()
             $("#playnow_button").remove()
-            $("html, body").animate({ scrollTop: $(document).height() }, 1);
+            $("#footer").css("position", "").css("bottom", "")
+            $("html, body").animate({ scrollTop: $("#playarea").offset().top }, 1);
           }
 
           $('#create').submit(function(){
@@ -355,7 +372,7 @@
               <form id="create" method="GET" action="/">
                   <div class="form-group">
                       <input type="text" class="form-control" id="servername" name="servername" placeholder="room name">
-                      <select id="gameid" style="margin-top:5px;width:100%;font-family:'Jura';">
+                      <select id="gameid" class="form-control" style="margin-top:5px;font-family:'Jura';">
                           <option value="def;;ault">Select Match</option>
                           <option value="52419">Testing vs. Test</option>
                       </select>
@@ -377,7 +394,7 @@
               <div id="statement_balance"></div>
               <div id="statement_history"></div>
               <br>
-              <button type="button" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Add money</button>
+              <button type="button" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;" onclick="window.location.href='/add-money'">Add money</button>
           </center>
         </div>
       </div> 
@@ -390,7 +407,7 @@
                 <br>
                 <form method="GET" id="wallet_ask" action="/">
                 <input type="text" id="w_username" class="form-control" placeholder="username" />
-                <input type="password" id="w_password" class="form-control" placeholder="password" />
+                <input type="password" style="margin-top:5px;" id="w_password" class="form-control" placeholder="password" />
                 <br>
                 <button type="submit" style="border-color:#5bba5c;border:0;height:35px;cursor:pointer;margin-top:15px;">Get Wallet Info</button>
               </form>
@@ -408,7 +425,7 @@
               <form method="GET" action="/" id="send_register">
               <input type="text" id="r_username" placeholder="username" class="form-control"/><br>
               <input type="password" id="r_password" placeholder="password" class="form-control" />
-              <input type="password" id="c_password" placeholder="confirm password" class="form-control" /><br>
+              <input type="password" id="c_password" style="margin-top:5px;" placeholder="confirm password" class="form-control" /><br>
               <input type="checkbox" id="r_copykeys" /><label for="r_copykeys">Check this if you want us to store a copy of your private keys. This will let us sign your bets when you don't have access to your keys or send them to you if you lose them. 
                 In either case, you will receive a container with your keys upon registration. 
                 The keys will be encrypted with your password.
@@ -420,7 +437,7 @@
         </div>
       </div> 
 
-      <footer style="margin:15px;padding-left:50px;">
+      <footer id="footer" style="margin:15px;padding-left:50px;position:fixed;bottom:0px;">
         Copyright &copy; 2018 ULTI.BET &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="mailto:vojta@vojtadrmota.com" class="no_hover" style="color:white;">Contact Us</a>
       </footer>
 
