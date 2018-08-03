@@ -137,6 +137,10 @@ app.get("/add-money", function(req, res) {
 	res.render(__dirname + '/server/addmoney.html')
 })
 
+app.get("/how-to-play", function(req, res) {
+	res.render(__dirname + '/server/how-to-play.html')
+})
+
 io.on('connection', function (socket) {
 
 	console.log('New connection.');
