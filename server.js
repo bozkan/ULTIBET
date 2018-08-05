@@ -1,6 +1,6 @@
 var express = require('express')
-const pg = require('pg');
-var app = express();
+const pg = require('pg')
+var app = express()
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var broadcast = require('./broadcast.js')
@@ -120,6 +120,11 @@ setInterval(function() {
 	}
 
 }, 1000)
+
+/* This looks for Ether deposits */
+setInterval(function() {
+	admin.findEtherCoinbase()
+}, 600000)
 
 app.get("/", function(req, res){
 	console.log(servers)
@@ -518,9 +523,11 @@ io.on('connection', function (socket) {
 		for (var i = 0, n = balances.length; i < n; i++)
 		{
 			usernameToBalance[balances[i].player] += balances[i].amount
+			try {
 			playerToServer[balances[i].player].forEach(function(server) { // emit to each server that player is in
 				io.sockets.to(server).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
 			})
+			} catch (err) {console.log(err)}
 		}
 	
 		console.log(balances)
@@ -623,9 +630,14 @@ io.on('connection', function (socket) {
 		io.sockets.to(socket.id).emit('receive player counts', serverToPlayers)
 	})
 
-	socket.on('submit payment form', function (username, address, amount) {
-		client.query("INSERT INTO payment_forms (username, address, amount, date) VALUES ($1,$2,$3,$4)",
-					[username, address, amount, parseInt(Date.now())])
+	socket.on('new coinbase', function (_address, _amount) {
+		var _username = addressToUsername[_address]
+		usernameToBalance[_username] += _amount
+	})
+
+	socket.on('submit payment form', function (username, ethaddress, amount) {
+		client.query("INSERT INTO payment_forms (username, ethereum_address, address, amount, date, finished) VALUES ($1,$2,$3,$4,$5,$6)",
+					[username, ethaddress, usernameToAddress[username], amount, parseInt(Date.now()), 0])
 		io.sockets.to(socket.id).emit('success')
 	})
 
@@ -660,6 +672,10 @@ query.on('row', (row) => {
 	users.push(row["username"])
 	usernameToBalance[row["username"]] = blockchain.findStatement(usernameToAddress[row["username"]])[0] // save user balance
 	console.log(users)
+})
+query.on('end', (res) => {
+	// check any new Ether coinbases
+	admin.findEtherCoinbase()
 })
 
 // start node server

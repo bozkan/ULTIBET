@@ -102,7 +102,7 @@ module.exports = {
 
   getCoinbase: function(player, server)
   {
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return 0 }
 
 		var coinbaseAmount = 0
 
@@ -118,7 +118,7 @@ module.exports = {
 
   getWins: function(player, server)
   {
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return 0 }
 
 		var winAmount = 0
 
@@ -140,7 +140,7 @@ module.exports = {
 
   getLosses: function(player, server)
   {
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return 0 }
 
 		var lossAmount = 0
 
@@ -167,7 +167,7 @@ module.exports = {
 		// return true because there already exists an escrow
 		// else, this is a new escrow, and return false
 
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return false }
 
 		for (var i = 0, n = chain.length; i < n; i++)
 		{
@@ -200,7 +200,7 @@ module.exports = {
 		// calculate amounts that should be paid and to whom
 		// return transactions to be pushed
 
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return {} }
 		var escrows = []
 		
 		for (var i = 0, n = chain.length; i < n; i++)
@@ -270,8 +270,8 @@ module.exports = {
 					payouts.from.push(losers[j].player)
 					payouts.to.push(winners[z].player)
 					var deservedWin = (losers[j].amount / winners.length) > (winners[z].amount / winners.length) ? winners[z].amount / winners.length : losers[j].amount / winners.length // winner can only win as much as he bet
-					payouts.amount.push(parseFloat(deservedWin).toFixed(2))
-					remainingAmount -= parseFloat(deservedWin).toFixed(2)
+					payouts.amount.push(parseFloat(deservedWin))
+					remainingAmount -= parseFloat(deservedWin)
 				}
 				// return what winners haven't deserved to loser
 				payouts.from.push(losers[j].player)
@@ -286,7 +286,7 @@ module.exports = {
   timeDiff: function(server, event, currentTime)
   {
 		// find the block where the escrow took place
-		var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+		try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return false }
 		var timestamp = 0
 		
 		for (var i = 0, n = chain.length; i < n; i++)
@@ -308,7 +308,7 @@ module.exports = {
 
   findCoinbase: function (server, players)
   {
-	var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+	try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return false }
 	for (var i = 0, n = chain.length; i < n; i++)
 	{
 		block = chain[i]
@@ -326,7 +326,7 @@ module.exports = {
 
   getPayoutHistory: function (server, addressToUsername)
   {
-	var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain
+	try { var chain = JSON.parse(fs.readFileSync(blockchainFile).toString()).chain } catch (err) { return [] }
 	var payoutHistory = []
 	for (var i = 0, n = chain.length; i < n; i++)
 	{

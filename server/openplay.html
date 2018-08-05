@@ -316,14 +316,14 @@
           var new_amount = parseFloat(amount) + parseFloat($('#balance'+_username).html().replace(/\$/g, ""))
           if (username == _username)
             myBalance = new_amount
-          $('#balance'+_username).html('$'+new_amount)
+          $('#balance'+_username).html('$'+parseFloat(new_amount))
         })
 
         socket.on('delete pending bet timer', function(eventid, _username, amount){
           var new_amount = parseFloat(amount) + parseFloat($('#balance'+_username).html().replace(/\$/g, ""))
           if (username == _username)
             myBalance = new_amount
-          $('#balance'+_username).html('$'+new_amount)
+          $('#balance'+_username).html('$'+parseFloat(new_amount))
           $("#pending"+eventid).remove();
           $('#betevent'+eventid).prop('disabled', false);
         })
@@ -352,7 +352,7 @@
         socket.on('receive login user', function(i_username, _balance){
           if($("#"+i_username).length == 0)
           {
-            $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+i_username+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+i_username+'<right><span class="badge badge-success badge-pill" id="balance'+i_username+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+_balance+'</span></right></li>')
+            $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+i_username+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+i_username+'<right><span class="badge badge-success badge-pill" id="balance'+i_username+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+parseFloat(_balance)+'</span></right></li>')
           }
         })
 
@@ -361,11 +361,11 @@
               myBalance = balance
             if ($("#" + player).length == 0)
             {
-              $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+player+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+player+'<right><span class="badge badge-success badge-pill" id="balance'+player+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+balance+'</span></right></li>');
+              $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+player+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+player+'<right><span class="badge badge-success badge-pill" id="balance'+player+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+parseFloat(balance)+'</span></right></li>');
             }
             else
             {
-              $("#balance"+player).html('$'+balance);
+              $("#balance"+player).html('$'+parseFloat(balance))
             }
           
         })
@@ -573,7 +573,7 @@
         "<%= balances %>".replace(/&#34;/g, '').replace(/}/g, '').replace(/{/g, '').split(",").forEach(function(el){ el=el.split(":"); p_balances[el[0]]=el[1]; })
         for (var i = 0, n = p_players.length; i < n; i++)
         {
-          $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+p_players[i]+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+p_players[i]+'<right><span class="badge badge-success badge-pill" id="balance'+p_players[i]+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+p_balances[p_players[i]]+'</span></right></li>')
+          $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+p_players[i]+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+p_players[i]+'<right><span class="badge badge-success badge-pill" id="balance'+p_players[i]+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+parseFloat(p_balances[p_players[i]])+'</span></right></li>')
         }
 
         // handle commentary on load
