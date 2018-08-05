@@ -95,7 +95,7 @@ module.exports = {
         var res = []
         execPhp('./oracle.php', function(error, php, output){
             php.livematches(function(error, result, output, printed){
-                socket.emit('forward live match', JSON.parse(result))
+                try { socket.emit('forward live match', JSON.parse(result)) } catch (err) { console.log(err) }
             })
         })
     }
