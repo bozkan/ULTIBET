@@ -270,8 +270,8 @@ module.exports = {
 					payouts.from.push(losers[j].player)
 					payouts.to.push(winners[z].player)
 					var deservedWin = (losers[j].amount / winners.length) > (winners[z].amount / winners.length) ? winners[z].amount / winners.length : losers[j].amount / winners.length // winner can only win as much as he bet
-					payouts.amount.push(deservedWin)
-					remainingAmount -= deservedWin
+					payouts.amount.push(parseFloat(deservedWin).toFixed(2))
+					remainingAmount -= parseFloat(deservedWin).toFixed(2)
 				}
 				// return what winners haven't deserved to loser
 				payouts.from.push(losers[j].player)
