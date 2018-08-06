@@ -49,7 +49,7 @@ setInterval(function(){
 		var matches = getMatches(serverToGame)
 		console.log(matches)
 
-		// !for each of this matches, run oracle -> only one per game
+		// !for each of these matches, run oracle -> only one per game
 		// send servers and balances
 		// send out new balances after
 		matches.forEach(function(match) {
@@ -140,6 +140,10 @@ app.get("/play", function(req, res) {
 
 app.get("/add-money", function(req, res) {
 	res.render(__dirname + '/server/addmoney.html')
+})
+
+app.get("/cash-out", function(req, res) {
+	res.render(__dirname + '/server/cashout.html')
 })
 
 app.get("/how-to-play", function(req, res) {
@@ -638,6 +642,24 @@ io.on('connection', function (socket) {
 	socket.on('submit payment form', function (username, ethaddress, amount) {
 		client.query("INSERT INTO payment_forms (username, ethereum_address, address, amount, date, finished) VALUES ($1,$2,$3,$4,$5,$6)",
 					[username, ethaddress, usernameToAddress[username], amount, parseInt(Date.now()), 0])
+		io.sockets.to(socket.id).emit('success')
+	})
+
+	socket.on('submit paypal payment form', function (username, paypalEmail) {
+		client.query("INSERT INTO paypal_payment_forms (username, paypalEmail, date, finished) VALUES ($1,$2,$3,$4)",
+					[username, paypalEmail, parseInt(Date.now()), 0])
+		io.sockets.to(socket.id).emit('success')
+	})
+
+	socket.on('submit withdraw form', function (username, ethaddress, amount) {
+		client.query("INSERT INTO withdraw_forms (username, ethereumAddress, amount, date, finished) VALUES ($1,$2,$3,$4,$5)",
+					[username, ethaddress, amount, parseInt(Date.now()), 0])
+		io.sockets.to(socket.id).emit('success')
+	})
+
+	socket.on('submit paypal withdraw form', function (username, paypalEmail, amount) {
+		client.query("INSERT INTO paypal_withdraw_forms (username, paypalEmail, amount, date, finished) VALUES ($1,$2,$3,$4,$5)",
+					[username, paypalEmail, amount, parseInt(Date.now()), 0])
 		io.sockets.to(socket.id).emit('success')
 	})
 

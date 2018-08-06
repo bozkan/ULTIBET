@@ -128,7 +128,7 @@
 
     <div id="navbar" style="margin:30px;font-size:20pt;margin-left:100px;"><a href="/" class="no-hover"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a></div>
     
-    <div style="width:100%;font-size:15pt;padding-top:0px;" align="center"> <a href="/add-money" class="no_hover"><font color="#5bba5c" style="font-size:50pt;">Add</font> &nbsp;<font color="white" style="font-size:50pt;">Money</font></a><br><font style="font-size:15pt;">Deposit money into your ULTIBET account here.</font></div>
+    <div style="width:100%;font-size:15pt;padding-top:0px;" align="center"> <a href="/cash-out" class="no_hover"><font color="#5bba5c" style="font-size:50pt;">Cash</font> &nbsp;<font color="white" style="font-size:50pt;">Out</font></a><br><font style="font-size:15pt;">Retrieve money from your ULTIBET account here.</font></div>
       
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -174,7 +174,7 @@
       })
 
       socket.on('success', function() {
-          alert('Your deposit has been successfully saved! It will be processed within 12 hours.')
+          alert('Your withdrawal request has been successfully saved! It will be processed within 12 hours.')
           window.location.href = "/"
       })
 
@@ -184,7 +184,7 @@
           {
               if (
                   $("#m_ethereum_address").val().length == 0 ||
-                  $("#m_ether_amount").val().length == 0
+                  $("#m_amount").val().length == 0
                 )
                 {
                     alert('Please fill in all the required fields.')
@@ -192,12 +192,13 @@
                 }
 
                 // store payment in database
-                socket.emit('submit payment form', $("#m_username").val(), $("#m_ethereum_address").val(), $("#m_ether_amount").val())
+                socket.emit('submit withdraw form', $("#m_username").val(), $("#m_ethereum_address").val(), $("#m_amount").val())
           }
           else if (paymentMethod == "paypal")
           {
                   if (
-                    $("#m_paypal_email").val().length == 0
+                    $("#m_paypal_email").val().length == 0 || 
+                    $("#m_amount").val().length == 0
                   )
                   {
                       alert('Please fill in all the required fields.')
@@ -205,7 +206,7 @@
                   }
 
                   // store payment in database
-                  socket.emit('submit paypal payment form', $("#m_username").val(), $("#m_paypal_email").val())
+                  socket.emit('submit paypal withdraw form', $("#m_username").val(), $("#m_paypal_email").val(), $("#m_amount").val())
           }
           
        })
@@ -227,61 +228,37 @@
         <input type="text" id="m_username" placeholder="username" class="form-control" style="width:225px;" />
         <input type="password" id="m_password" placeholder="password" class="form-control" style="width:225px;margin-top:5px;" />
         <br>
-        <p> Step 2: Choose a payment method</p>
+        <p> Step 2: Choose a withdrawal method</p>
         <p style="margin-bottom:20px;" id="ether"><a href="#ether" class="no_hover" style="color:#5bba5c;" onclick="payment('ether');"><img src="/ether.png" width="50" height="50" /> Ether</a></p>
 
         <p style="font-size:12pt;display:none;" id="ether_more">
-            You can safely and anonymously deposit money using the Ether (Ethereum) cryptocurrency. Ether is a more transaction-friendly cryptocurrency
-            than Bitcoin and is the second largest cryptocurrency. It is very simple to legally buy Ether. <a href="http://coinbase.com">Coinbase</a> (United States)
-            and <a href="http://bitstamp.net">Bitstamp</a> (Europe) are the most trusted online exchanges where you can quickly purchase Ether. Your Ether will be converted
-            to USD using Bitstamp's conversion rate upon receival.<br><br>
-            Step A: Enter the Ethereum address from which you will send the Ether:
+            
+            Step A: Enter the Ethereum address to which you wish to receive the Ether:
             <input type="text" id="m_ethereum_address" class="form-control" style="width:410px;margin-top:5px;" placeholder="ethereum address" />
             Example: 0x46c27e9073d3aea1e68303b0e6c3ee79b4ccf515
 
             <br>
             <br>
 
-            Step B: Enter the amount of Ether you will send:
-            <input type="text" id="m_ether_amount" class="form-control" style="width:225px;margin-top:5px;" placeholder="amount (eth)" />
-            Example: 0.24
-
-            <br>
-            <br>
-
-            Step C: Send the Ether to our address:
-            <input type="text" class="form-control" value="0x46c27e9073d3aea1e68303b0e6c3ee79b4ccf515" style="width:410px;color:black;"  align="center" disabled />
-
-            <br>
-            <br>
-
-            Stepd D: Submit this form. Once the Ethereum transaction receives 12 network confirmations (~3 minutes), the money will be deposited into your ULTIBET account.
+            Stepd B: Submit this form. We will send you the money within 12 hours.
         
         </p>
 
         <p style="margin-bottom:20px;" id="paypal"><a href="#paypal" class="no_hover" style="color:#5bba5c;" onclick="payment('paypal');"><img src="/paypal.png" width="50" height="50" /> PayPal</a></p>
 
         <p style="font-size:12pt;display:none;" id="paypal_more">
-            You can safely deposit money using your PayPal account. It is very simple to <a href="http://paypal.com">register for a PayPal account</a>, link it to 
-            your bank account, and securely send money.
-
-            <br><br>
 
             Step A: Enter your PayPal account's email address:
             <input type="email" id="m_paypal_email" class="form-control" style="width:410px;margin-top:5px;" placeholder="paypal account email address" />
 
             <br><br>
 
-            Step B: Click on our PayPal link and complete the payment:<br>
-            <a href="http://paypal.me/ultibet" target="_blank">http://paypal.me/ultibet</a>
-
-            <br><br>
-
-            Step C: Submit this form. Once we receive the payment, the money will be deposited into your ULTIBET account.
+            Step B: Submit this form. We will send you the money within 12 hours.
         </p>
 
         <p style="margin-top:30px;">Step 3: Submit</p>
-        <p style="font-size:12pt;">The money will be deposited into your ULTIBET account within 12 hours of us receiving it.</p>
+        <p style="font-size:12pt;">Enter the amount you wish to withdraw:</p>
+        <input type="text" id="m_amount" class="form-control" style="width:225px;margin-top:5px;" placeholder="amount (usd)" />
         <button type="button" style="border-color:#5bba5c;border:0;height:50px;cursor:pointer;margin-top:15px;" onclick="submit()">Submit!</button> 
     </div>
 
@@ -291,5 +268,3 @@
 
   </body>
 </html>
-
-

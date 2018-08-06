@@ -13,6 +13,7 @@ var socket = io.connect("http://localhost:1338", {reconnect: true});
 // db params
 var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
 var client = new pg.Client(connectionString)
+client.connect()
 
 var mempoolFile = config.mempoolFile
 
@@ -54,7 +55,6 @@ module.exports = {
 
     findEtherCoinbase: function() {
         console.log("Searching for ether coinbase...")
-        client.connect()
         var q = client.query("SELECT * FROM payment_forms WHERE finished = 0")
 
         q.on('end', function(res) {
