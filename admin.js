@@ -9,13 +9,14 @@ var request = require('sync-request')
 const pg = require('pg')
 var io = require('socket.io-client')
 var socket = io.connect("http://localhost:1338", {reconnect: true});
-    
-// db params
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
-var client = new pg.Client(connectionString)
-client.connect()
 
 var mempoolFile = config.mempoolFile
+const postgresConnection = config.postgresConnection
+    
+// db params
+var connectionString = process.env.DATABASE_URL || postgresConnection
+var client = new pg.Client(connectionString)
+client.connect()
 
 var oraclePrivateKey = "643746514138627453444f617977645832735a63443077734b335a7668575669" // this is done to check signature by the oracle
 

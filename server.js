@@ -14,8 +14,10 @@ var bitcoin = require('bitcoinjs-lib');
 var bitcoinMessage = require('bitcoinjs-message');
 var CoinKey = require('coinkey');
 
+const postgresConnection = config.postgresConnection
+
 // db params
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/betcafe'
+var connectionString = process.env.DATABASE_URL || postgresConnection
 var client = new pg.Client(connectionString)
 
 function getMatches(dict)
