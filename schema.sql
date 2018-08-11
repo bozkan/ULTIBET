@@ -7,7 +7,6 @@
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -34,7 +33,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: ether_coinbases; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: ether_coinbases; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.ether_coinbases (
@@ -51,10 +50,10 @@ CREATE TABLE public.ether_coinbases (
 );
 
 
-ALTER TABLE public.ether_coinbases OWNER TO vojtad;
+ALTER TABLE public.ether_coinbases OWNER TO root;
 
 --
--- Name: ether_coinbases_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: ether_coinbases_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.ether_coinbases_id_seq
@@ -66,17 +65,17 @@ CREATE SEQUENCE public.ether_coinbases_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.ether_coinbases_id_seq OWNER TO vojtad;
+ALTER TABLE public.ether_coinbases_id_seq OWNER TO root;
 
 --
--- Name: ether_coinbases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: ether_coinbases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.ether_coinbases_id_seq OWNED BY public.ether_coinbases.id;
 
 
 --
--- Name: payment_forms; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: payment_forms; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.payment_forms (
@@ -90,10 +89,10 @@ CREATE TABLE public.payment_forms (
 );
 
 
-ALTER TABLE public.payment_forms OWNER TO vojtad;
+ALTER TABLE public.payment_forms OWNER TO root;
 
 --
--- Name: payment_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: payment_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.payment_forms_id_seq
@@ -105,17 +104,17 @@ CREATE SEQUENCE public.payment_forms_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.payment_forms_id_seq OWNER TO vojtad;
+ALTER TABLE public.payment_forms_id_seq OWNER TO root;
 
 --
--- Name: payment_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: payment_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.payment_forms_id_seq OWNED BY public.payment_forms.id;
 
 
 --
--- Name: paypal_payment_forms; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: paypal_payment_forms; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.paypal_payment_forms (
@@ -127,10 +126,10 @@ CREATE TABLE public.paypal_payment_forms (
 );
 
 
-ALTER TABLE public.paypal_payment_forms OWNER TO vojtad;
+ALTER TABLE public.paypal_payment_forms OWNER TO root;
 
 --
--- Name: paypal_payment_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: paypal_payment_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.paypal_payment_forms_id_seq
@@ -142,17 +141,17 @@ CREATE SEQUENCE public.paypal_payment_forms_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.paypal_payment_forms_id_seq OWNER TO vojtad;
+ALTER TABLE public.paypal_payment_forms_id_seq OWNER TO root;
 
 --
--- Name: paypal_payment_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: paypal_payment_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.paypal_payment_forms_id_seq OWNED BY public.paypal_payment_forms.id;
 
 
 --
--- Name: paypal_withdraw_forms; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: paypal_withdraw_forms; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.paypal_withdraw_forms (
@@ -165,10 +164,10 @@ CREATE TABLE public.paypal_withdraw_forms (
 );
 
 
-ALTER TABLE public.paypal_withdraw_forms OWNER TO vojtad;
+ALTER TABLE public.paypal_withdraw_forms OWNER TO root;
 
 --
--- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.paypal_withdraw_forms_id_seq
@@ -180,17 +179,17 @@ CREATE SEQUENCE public.paypal_withdraw_forms_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.paypal_withdraw_forms_id_seq OWNER TO vojtad;
+ALTER TABLE public.paypal_withdraw_forms_id_seq OWNER TO root;
 
 --
--- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.paypal_withdraw_forms_id_seq OWNED BY public.paypal_withdraw_forms.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: users; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.users (
@@ -203,10 +202,10 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO vojtad;
+ALTER TABLE public.users OWNER TO root;
 
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.users_id_seq
@@ -218,17 +217,17 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO vojtad;
+ALTER TABLE public.users_id_seq OWNER TO root;
 
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: withdraw_forms; Type: TABLE; Schema: public; Owner: vojtad
+-- Name: withdraw_forms; Type: TABLE; Schema: public; Owner: root
 --
 
 CREATE TABLE public.withdraw_forms (
@@ -241,10 +240,10 @@ CREATE TABLE public.withdraw_forms (
 );
 
 
-ALTER TABLE public.withdraw_forms OWNER TO vojtad;
+ALTER TABLE public.withdraw_forms OWNER TO root;
 
 --
--- Name: withdraw_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: vojtad
+-- Name: withdraw_forms_id_seq; Type: SEQUENCE; Schema: public; Owner: root
 --
 
 CREATE SEQUENCE public.withdraw_forms_id_seq
@@ -256,59 +255,59 @@ CREATE SEQUENCE public.withdraw_forms_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.withdraw_forms_id_seq OWNER TO vojtad;
+ALTER TABLE public.withdraw_forms_id_seq OWNER TO root;
 
 --
--- Name: withdraw_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vojtad
+-- Name: withdraw_forms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: root
 --
 
 ALTER SEQUENCE public.withdraw_forms_id_seq OWNED BY public.withdraw_forms.id;
 
 
 --
--- Name: ether_coinbases id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: ether_coinbases id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.ether_coinbases ALTER COLUMN id SET DEFAULT nextval('public.ether_coinbases_id_seq'::regclass);
 
 
 --
--- Name: payment_forms id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: payment_forms id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.payment_forms ALTER COLUMN id SET DEFAULT nextval('public.payment_forms_id_seq'::regclass);
 
 
 --
--- Name: paypal_payment_forms id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: paypal_payment_forms id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.paypal_payment_forms ALTER COLUMN id SET DEFAULT nextval('public.paypal_payment_forms_id_seq'::regclass);
 
 
 --
--- Name: paypal_withdraw_forms id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: paypal_withdraw_forms id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.paypal_withdraw_forms ALTER COLUMN id SET DEFAULT nextval('public.paypal_withdraw_forms_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- Name: withdraw_forms id; Type: DEFAULT; Schema: public; Owner: vojtad
+-- Name: withdraw_forms id; Type: DEFAULT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.withdraw_forms ALTER COLUMN id SET DEFAULT nextval('public.withdraw_forms_id_seq'::regclass);
 
 
 --
--- Data for Name: ether_coinbases; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: ether_coinbases; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.ether_coinbases (id, username, address, blockheight, "timestamp", hash, blockhash, date, amount, usdvalue) FROM stdin;
@@ -317,7 +316,7 @@ COPY public.ether_coinbases (id, username, address, blockheight, "timestamp", ha
 
 
 --
--- Data for Name: payment_forms; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: payment_forms; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.payment_forms (id, username, address, amount, date, finished, ethereum_address) FROM stdin;
@@ -327,7 +326,7 @@ COPY public.payment_forms (id, username, address, amount, date, finished, ethere
 
 
 --
--- Data for Name: paypal_payment_forms; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: paypal_payment_forms; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.paypal_payment_forms (id, username, paypalemail, date, finished) FROM stdin;
@@ -336,7 +335,7 @@ COPY public.paypal_payment_forms (id, username, paypalemail, date, finished) FRO
 
 
 --
--- Data for Name: paypal_withdraw_forms; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: paypal_withdraw_forms; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.paypal_withdraw_forms (id, username, paypalemail, amount, date, finished) FROM stdin;
@@ -345,19 +344,19 @@ COPY public.paypal_withdraw_forms (id, username, paypalemail, amount, date, fini
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.users (id, username, public, private, password, date) FROM stdin;
 10	oracle	1Hr3FvfAyEVBcRtrW9cfhCJbFqWG7nRGUq	643746514138627453444f617977645832735a63443077734b335a7668575669	1234123412341234	\N
-27	vojta	1MYupomntoz4r9sj54FEpWj4NMrQLq1b5x	7a31756f6371487159554859736b6b425550756a544445517430724169637a46	vojtadrmota	1533119574483
-35	tomas	1Mkn3tnbBFY6LbTKEBjHnwtNhSEJpF6pGX	-	vojtadrmota	1533327129771
-36	marketa	16D2gqVv3kqC2fwqdSWzQhwou7EYNK9rjp	-	vojtadrmota	1533327194748
+27	vojta	1MYupomntoz4r9sj54FEpWj4NMrQLq1b5x	7a31756f6371487159554859736b6b425550756a544445517430724169637a46	rootrmota	1533119574483
+35	tomas	1Mkn3tnbBFY6LbTKEBjHnwtNhSEJpF6pGX	-	rootrmota	1533327129771
+36	marketa	16D2gqVv3kqC2fwqdSWzQhwou7EYNK9rjp	-	rootrmota	1533327194748
 \.
 
 
 --
--- Data for Name: withdraw_forms; Type: TABLE DATA; Schema: public; Owner: vojtad
+-- Data for Name: withdraw_forms; Type: TABLE DATA; Schema: public; Owner: root
 --
 
 COPY public.withdraw_forms (id, username, ethereumaddress, amount, date, finished) FROM stdin;
@@ -366,49 +365,49 @@ COPY public.withdraw_forms (id, username, ethereumaddress, amount, date, finishe
 
 
 --
--- Name: ether_coinbases_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: ether_coinbases_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.ether_coinbases_id_seq', 13, true);
 
 
 --
--- Name: payment_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: payment_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.payment_forms_id_seq', 9, true);
 
 
 --
--- Name: paypal_payment_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: paypal_payment_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.paypal_payment_forms_id_seq', 1, true);
 
 
 --
--- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: paypal_withdraw_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.paypal_withdraw_forms_id_seq', 1, true);
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.users_id_seq', 37, true);
 
 
 --
--- Name: withdraw_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vojtad
+-- Name: withdraw_forms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
 SELECT pg_catalog.setval('public.withdraw_forms_id_seq', 1, true);
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: vojtad
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: root
 --
 
 ALTER TABLE ONLY public.users
