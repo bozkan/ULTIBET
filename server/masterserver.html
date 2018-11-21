@@ -110,6 +110,7 @@
       }
 
       .player-amount:hover {
+        font-size: 10pt;
         text-decoration: none;
       }
 
@@ -277,7 +278,7 @@
           socket.on('receive player counts', function(serverToPlayers){
             for (var key in serverToPlayers)
             {
-                $("#count"+key).html(serverToPlayers[key].length)
+                $("#count"+key).html(serverToPlayers[key].length + " online")
             }
           })
 
