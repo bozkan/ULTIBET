@@ -361,11 +361,11 @@
           {
             if (oracle)
             {
-              var balanceDiff = balance - myBalance
-              if (balanceDiff < 0)
-                alert("You lost $"+Math.abs(balanceDiff))
+              var balanceDiff = parseFloat(balance) - parseFloat(myBalance)
+              if (balanceDiff == 0)
+                alert("You lost a bet.")
               else
-                alert("You won $"+Math.abs(balanceDiff))
+                alert("You received $"+Math.abs(balanceDiff))
             }
             myBalance = balance
           }
@@ -410,10 +410,16 @@
           payoutHistory.forEach(function(el) {
             var output = ""
             output += map_events[el.event]+" "+prepositions[el.event]+" "+el.team+" at "+el.minute+"'<br>"
-            output += "<b><u>Transfers</u></b><br>"
+            output += "<b>Bet payouts:</b><br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
-              output += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
+              if (parseFloat(el.amount[i]) != 0) // don't display empty returns
+              {
+                if (el.from[i] == el.to[i])
+                  output += el.from[i]+" got back $"+el.amount[i]+"<br>"
+                else
+                  output += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
+              }
             }
             output += "Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>"
             $("#payouthistory").prepend(output) // latest payout entry is first
