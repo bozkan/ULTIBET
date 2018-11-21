@@ -133,6 +133,11 @@ app.get("/", function(req, res){
 	res.render(__dirname + '/server/masterserver.html', { })
 })
 
+app.get("/register", function(req, res){
+	console.log(servers)
+	res.render(__dirname + '/server/masterserver.html', { register: true })
+})
+
 app.get("/play", function(req, res) {
 	if (servers.indexOf(req.query.server) != -1 )
 		res.render(__dirname + '/server/openplay.html', { server: req.query.server, matchid: serverToGame[req.query.server], commentary: gameToCommentary[serverToGame[req.query.server]], players: serverToPlayers[req.query.server], coinbase: serverToCoinbase[req.query.server], balances: JSON.stringify(usernameToBalance) })
