@@ -409,18 +409,29 @@
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
+            var betLosers = []
+            var betWinners = "<b>Winners:</b><br>"
             output += map_events[el.event]+" "+prepositions[el.event]+" "+el.team+" at "+el.minute+"'<br>"
-            output += "<b>Bet payouts:</b><br>"
+            var betPayouts = "<b>Bet payouts:</b><br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
               if (parseFloat(el.amount[i]) != 0) // don't display empty returns
               {
                 if (el.from[i] == el.to[i])
-                  output += el.from[i]+" got back $"+el.amount[i]+"<br>"
+                  betPayouts += el.from[i]+" got back $"+el.amount[i]+"<br>"
                 else
-                  output += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
+                {
+                  betPayouts += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
+                  betLosers.push(el.from[i]) // store person who lost bet
+                }
               }
             }
+            el.from.forEach(function(d) {
+              if (betLosers.indexOf(d) == -1)
+                betWinners += d+"<br>"
+            })
+            output += betWinners
+            output += betPayouts
             output += "Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>"
             $("#payouthistory").prepend(output) // latest payout entry is first
           })
