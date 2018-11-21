@@ -124,7 +124,7 @@
   </head>
 
   <body style="padding-top:0;background-color:#1a1c1a;font-family:'Jura';">
-    <div id="navbar2" style="width:100%;font-size:20pt;padding-left:100px;padding-bottom:20px;padding-top:30px;"> <a href="/" class="no-underline"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a> <span id="navbar_right" style="float:right;margin-right:80px;color:white;font-size:17pt;margin-top:4px;"><a href="/add-money" class="no_hover" target="_blank" style="color:white;"><span style="padding-right:35px;">Add Money</span></a><a href="/how-to-play" class="no_hover" target="_blank" style="color:white;"><span style="padding-right:35px;">How to Play</span></a><font color="#5bba5c">Register</font></span></div>
+    <div id="navbar2" style="width:100%;font-size:20pt;padding-left:100px;padding-bottom:20px;padding-top:30px;"> <a href="/" class="no-underline"><img src="/logo4.png" width="40" height="40" /> <font color="#5bba5c">ULTI</font><font color="white">BET</font></a> <span id="navbar_right" style="float:right;margin-right:80px;color:white;font-size:17pt;margin-top:4px;"><a href="/add-money" class="no_hover" target="_blank" style="color:white;"><span style="padding-right:35px;">Add Money</span></a><a href="/how-to-play" class="no_hover" target="_blank" style="color:white;"><span style="padding-right:35px;">How to Play</span></a><a href="/register"><font color="#5bba5c">Register</font></a></span></div>
     <script>
       function isPhone() {
           return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
@@ -357,8 +357,17 @@
         })
 
         socket.on('receive balances', function(balance, player) {
-            if (player == username)
-              myBalance = balance
+          if (player == username)
+          {
+            var balanceDiff = balance - myBalance
+            if (balanceDiff < 0)
+              alert("You lost $"+Math.abs(balanceDiff))
+            else
+              alert("You won $"+Math.abs(balanceDiff))
+
+            myBalance = balance
+          }
+
             if ($("#" + player).length == 0)
             {
               $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+player+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+player+'<right><span class="badge badge-success badge-pill" id="balance'+player+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+parseFloat(balance)+'</span></right></li>');
@@ -398,13 +407,11 @@
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
-            output += "Event: "+map_events[el.event]+"<br>"
-            output += "Minute: "+el.minute+"'<br>"
-            output += "By: "+el.team+"<br>"
+            output += map_events[el.event]+" "+prepositions[el.event]+" "+el.team+" at "+el.minute+"'<br>"
             output += "<b><u>Transfers</u></b><br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
-              output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"
+              output += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
             }
             output += "Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>"
             $("#payouthistory").prepend(output) // latest payout entry is first
