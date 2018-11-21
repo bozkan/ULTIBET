@@ -228,6 +228,11 @@
               }
           }
 
+          // if user has requested register popup
+          var askingRegister = "<%= register %>"
+          if (askingRegister == "yes")
+            register()
+
           $('#send_register').submit(function(){
             if ($('#r_password').val().length < 8)
             {

@@ -130,12 +130,12 @@ setInterval(function() {
 
 app.get("/", function(req, res){
 	console.log(servers)
-	res.render(__dirname + '/server/masterserver.html', { })
+	res.render(__dirname + '/server/masterserver.html', { register: "no" })
 })
 
 app.get("/register", function(req, res){
 	console.log(servers)
-	res.render(__dirname + '/server/masterserver.html', { register: true })
+	res.render(__dirname + '/server/masterserver.html', { register: "yes" })
 })
 
 app.get("/play", function(req, res) {
