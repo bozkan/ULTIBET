@@ -530,13 +530,13 @@ io.on('connection', function (socket) {
 		}
 	})
 
-	socket.on('transfer balances', function (balances) {
+	socket.on('transfer balances', function (balances, oracle = false) {
 		for (var i = 0, n = balances.length; i < n; i++)
 		{
 			usernameToBalance[balances[i].player] += balances[i].amount
 			try {
 			playerToServer[balances[i].player].forEach(function(server) { // emit to each server that player is in
-				io.sockets.to(server).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player)
+				io.sockets.to(server).emit('receive balances', usernameToBalance[balances[i].player], balances[i].player, oracle)
 			})
 			} catch (err) {console.log(err)}
 		}

@@ -356,15 +356,17 @@
           }
         })
 
-        socket.on('receive balances', function(balance, player) {
+        socket.on('receive balances', function(balance, player, oracle) {
           if (player == username)
           {
-            var balanceDiff = balance - myBalance
-            if (balanceDiff < 0)
-              alert("You lost $"+Math.abs(balanceDiff))
-            else
-              alert("You won $"+Math.abs(balanceDiff))
-
+            if (oracle)
+            {
+              var balanceDiff = balance - myBalance
+              if (balanceDiff < 0)
+                alert("You lost $"+Math.abs(balanceDiff))
+              else
+                alert("You won $"+Math.abs(balanceDiff))
+            }
             myBalance = balance
           }
 

@@ -83,7 +83,7 @@ module.exports = {
                         }
                     }
                 }
-                socket.emit('transfer balances', balances)
+                socket.emit('transfer balances', balances, true)
                 socket.emit('lookup payout history')
             })
 
