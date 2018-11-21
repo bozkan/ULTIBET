@@ -362,10 +362,8 @@
             if (oracle)
             {
               var balanceDiff = parseFloat(balance) - parseFloat(myBalance)
-              if (balanceDiff == 0)
-                alert("You lost a bet.")
-              else
-                alert("You received $"+Math.abs(balanceDiff))
+              if (balanceDiff != 0)
+                alert("Congrats! You received $"+Math.abs(balanceDiff))
             }
             myBalance = balance
           }
