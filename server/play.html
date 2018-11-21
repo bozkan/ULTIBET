@@ -337,7 +337,16 @@
 
         socket.on('receive balances', function(balance, player) {
             if (player == username)
+            {
+              var balanceDiff = balance - myBalance
+              if (balanceDiff < 0)
+                alert("You lost $"+Math.abs(balanceDiff))
+              else
+                alert("You won $"+Math.abs(balanceDiff))
+
               myBalance = balance
+            }
+
             if ($("#" + player).length == 0)
             {
               $("#balances_list").append('<li class="list-group-item d-flex justify-content-between align-items-center" id="'+player+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;">'+player+'<right><span class="badge badge-success badge-pill" id="balance'+player+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">$'+balance+'</span></right></li>');
@@ -373,10 +382,10 @@
           $("#payouthistory").empty()
           payoutHistory.forEach(function(el) {
             var output = ""
-            output += "Event: "+el.event+"<br>"
+            output += el.team+" won the "+el.event+" at "+el.minute+"'<br>"
             for (var i = 0, n = el.amount.length; i < n; i++)
             {
-              output += "From: "+el.from[i]+"<br>To: "+el.to[i]+"<br>Amount: "+el.amount[i]+"<br>"
+              output += el.from[i]+" paid "+el.to[i]+" $"+el.amount[i]+"<br>"
             }
             output += "Hash: 0x..."+el.hash.slice(-12)+"<br><hr style='border-color:white;width:100%;'>"
             $("#payouthistory").prepend(output) // latest payout entry is first
