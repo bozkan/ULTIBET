@@ -279,7 +279,7 @@
         socket.on('receive pending bet', function(eventid, amount, i_username) {
           if (i_username != username)
           {
-            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="modalf('+eventid+','+amount+')" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span id="pendingtime'+eventid+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">&nbsp;&nbsp;&nbsp;</span></right></li>');
+            $('#pendingbets').append('<li class="list-group-item d-flex justify-content-between align-items-center hoverable" onclick="modalf('+eventid+','+amount+')" id="pending'+eventid+'" style="padding-top:2px;padding-bottom:2px;padding-right:5px;color:black;border-radius:0;cursor:pointer;">Next '+map_events[eventid].toLowerCase()+'<right><span id="pendingtime'+eventid+'" style="padding-top:2px;font-size:9pt;color:red;"></span> <span class="badge badge-danger badge-pill" id="pendingamount'+eventid+'" style="margin:0;font-size:8pt;padding-top:2px;margin-bottom:25%;border-radius:0;height:100%;font-family:sans-serif;">&nbsp;&#164;&nbsp;</span></right></li>');
             $('#betevent'+eventid).prop('disabled', true);
           }
         });
